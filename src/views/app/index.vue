@@ -1,88 +1,98 @@
 <template>
-  <div class="apps">
+  <div class="soa-app">
     <div
       v-for="(value,index) in moduleList"
-      :key="index"
-      class="apps-item">
-      <h3 class="title">{{ value.header }}</h3>
-      <!-- <ul class="list clearfix">
-        <li
-          v-for="(app,i) in value.list"
-          :key="i"
-          class="flex">
-          <router-link
-            :to="app.url">
-            <i class="van-icon van-icon-location-o"/>
-            <div>{{ app.label }}</div>
-          </router-link>
-        </li>
-      </ul> -->
-      <van-grid>
+      :key="index">
+      <h3
+        class="soa-app-title"
+        @click="handleClick(index)">{{ value.header }}
+      <i :class="['van-icon van-icon-play', activeIndex.indexOf(index)>=0 && 'trasform']"/></h3>
+      <van-grid
+        v-if="activeIndex.indexOf(index)>=0"
+        :border="false">
         <van-grid-item
-          icon="photo-o"
-          text="文字" />
-        <van-grid-item
-          icon="photo-o"
-          text="文字" />
-        <van-grid-item
-          icon="photo-o"
-          text="文字" />
-        <van-grid-item
-          icon="photo-o"
-          text="文字" />
-        <van-grid-item
-          icon="photo-o"
-          text="文字" />
+          v-for="item in value.list"
+          :key="item.label"
+          :to="item.to"
+          :url="item.url">
+          <menu-icon
+            :icon="item.icon"
+            :type="item.type"/>
+          <span class="soa-app_label">{{ item.label }}</span>
+        </van-grid-item>
       </van-grid>
+      <div
+        v-else
+        class="soa-app-list"
+        @click="handleClick(index)">
+        <menu-icon
+          v-for="item in value.list"
+          :key="item.label"
+          :icon="item.icon"
+          :type="item.type"
+          class="soa-app-list-icon"
+          size="mini"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { Grid, GridItem } from 'vant';
+import MenuIcon from '@/components/MenuIcon'
+import menu from './menu.js'
 export default {
   name: 'Home',
   components: {
     [Grid.name]: Grid,
-    [GridItem.name]: GridItem
+    [GridItem.name]: GridItem,
+    MenuIcon
   },
   data () {
     return {
-      moduleList: [
-        {
-          header: '任务管理',
-          list: [
-            {
-              url: './taskAdd',
-              label: '新建任务'
-            },
-            {
-              url: './taskList',
-              label: '任务列表'
-            },
-            {
-              url: './taskExamineList',
-              label: '任务审核'
-            },
-            {
-              url: './taskImport',
-              label: '导入任务'
-            },
-            {
-              url: './taskRank',
-              label: '任务榜'
-            }
-          ]
-        }
-      ]
+      moduleList: menu,
+      activeIndex: [0]
     }
   },
-  computed: {
+  methods: {
+    handleClick(index) {
+      const indexNum = this.activeIndex.indexOf(index)
+      if (indexNum >= 0) {
+        this.activeIndex.splice(indexNum, 1)
+      } else {
+        this.activeIndex.push(index)
+      }
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.soa-app_label{
+  font-size: 14px;
+  margin-top: 5px
+}
+.soa-app-title{
+  position: relative;
+}
+.soa-app-title i{
+  position: absolute;
+  top: 4px
+}
+.trasform{
+  transform:rotate(90deg);
+  -ms-transform:rotate(90deg); 	/* IE 9 */
+  -moz-transform:rotate(90deg); 	/* Firefox */
+  -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+  -o-transform:rotate(90deg); 	/* Opera */
+}
+.soa-app-list{
+  background-color: #f2f2f2;
+  padding: 10px 10px;
+  border-radius: 10px
+}
+.soa-app-list-icon{
+  margin-left: 5px
+}
 </style>
