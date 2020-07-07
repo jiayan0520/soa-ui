@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view class="app-router"/>
     <van-tabbar route>
       <van-tabbar-item
         replace
@@ -35,5 +35,8 @@ export default {
   max-width: 1024px;
   margin: 0 auto;
   padding: 10px
+}
+.app-router{
+  margin-bottom: 55px
 }
 </style>

@@ -18,6 +18,31 @@ export default new Router({
       path: '/message',
       name: 'message',
       component: () => import('@/views/message/index')
+    },
+    {
+      path: '/task-add',
+      name: 'taskAdd',
+      component: () => import('@/views/app/task/addTask/index')
+    },
+    {
+      path: '/task-list',
+      name: 'taskList',
+      component: () => import('@/views/app/task/taskList/index')
+    },
+    {
+      path: '/task-rank',
+      name: 'taskRank',
+      component: () => import('@/views/app/task/taskRank/index')
+    },
+    {
+      path: '/task-examine-list',
+      name: 'taskExamineList',
+      component: () => import('@/views/app/task/taskExamineList/index')
+    },
+    {
+      path: '/task-examine-detail',
+      name: 'taskExamineDetail',
+      component: () => import('@/views/app/task/taskExamineList/taskExamineDetail')
     }
   ]
 })
