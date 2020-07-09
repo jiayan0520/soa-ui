@@ -3,13 +3,13 @@
     class="soa-task-add"
     @submit="onSubmit">
     <van-field
-      v-model="title"
+      v-model="username"
       :rules="[{ required: true, message: '请输入任务标题' }]"
       name="请输入任务标题"
       placeholder="请输入任务标题"
     />
     <van-field
-      v-model="text"
+      v-model="username"
       :rules="[{ required: true, message: '请输入任务内容' }]"
       maxlength="200"
       show-word-limit
@@ -107,43 +107,6 @@
           accept="*"/>
       </template>
     </van-field>
-    <van-divider />
-    <div class="soa-task-add-child">
-      <div class="soa-task-add-list">
-        <div class="soa-task-add-list-cell">
-          <van-row>
-            <van-col span="12"><div class="font14">搜集党员子任务信息1</div></van-col>
-            <van-col span="6">
-              <div class="soa-task-add-list-cell-digist">
-                0/5完成
-              </div>
-            </van-col>
-            <van-col span="6">
-              <div class="cursor right">
-                <van-icon
-                  name="clear"
-                  color="#f00"/>
-              </div>
-              <div class="right mr10 cursor">
-                <span
-                  class="soa-icon soa-icon-icon_compile"
-                  @click="handleAddChildClick"/>
-              </div>
-            </van-col>
-          </van-row>
-        </div>
-      </div>
-      <div class="soa-task-add-btn">
-        <van-button
-          block
-          icon="add-o"
-          type="info"
-          @click="handleAddChildClick">
-          添加子任务
-        </van-button>
-      </div>
-    </div>
-    <van-divider />
     <div class="soa-task-add-submit">
       <van-button
         block
@@ -156,11 +119,10 @@
 </template>
 
 <script>
-import { Form, Field, Button, Cell, Switch, ActionSheet, Uploader, Divider, Col, Row, Icon } from 'vant';
+import { Form, Field, Button, Cell, Switch, ActionSheet, Uploader } from 'vant';
 import DatePicker from 'vue2-datepicker'
-// import formatData from '@/utils/index.js'
 export default {
-  name: 'AddTask',
+  name: 'Child',
   components: {
     [Form.name]: Form,
     [Field.name]: Field,
@@ -169,17 +131,13 @@ export default {
     [Switch.name]: Switch,
     [ActionSheet.name]: ActionSheet,
     [Uploader.name]: Uploader,
-    DatePicker,
-    [Divider.name]: Divider,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon
+    DatePicker
   },
   data() {
     return {
       checked: false,
-      title: '',
-      text: '',
+      username: '',
+      value1: '',
       deadline: '',
       minDate: '',
       info: '不提醒',
@@ -213,29 +171,16 @@ export default {
     onWeightSelect(item) {
       this.showWeightAction = false
       this.weight = item.name
-    },
-    handleAddChildClick() {
-      this.$router.push('/task-child')
     }
   }
 }
 </script>
 
 <style scoped>
-.soa-task-add-executor .van-field__right-icon{
-  color:#38A4F5
-}
-.soa-task-add-submit{
-  margin: 16px 16px 55px
-}
-.soa-task-add-child {
-  margin: 16px 16px 0;
-}
-.soa-task-add-list-cell {
-  background: #F8F8F8;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 16px;
-}
-.cursor{ cursor: pointer}
+    .soa-task-add-executor .van-field__right-icon{
+        color:#38A4F5
+    }
+    .soa-task-add-submit{
+        margin: 16px 16px 55px
+    }
 </style>

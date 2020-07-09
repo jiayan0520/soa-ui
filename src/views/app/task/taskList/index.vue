@@ -19,6 +19,7 @@
     />
     <van-tabs
       v-model="active"
+      title-active-color="#38A4F5"
       @click="onClick">
       <van-tab title="我发布的"/>
       <van-tab title="我收到的"/>
@@ -37,16 +38,72 @@
       class="soa-task-list-lists"
       @load="onLoad"
     >
-      <van-cell
-        v-for="item in list"
-        :key="item"
-        :title="item" />
+      <div
+        class="soa-task-list-list"
+        @click="bindDetailClick">
+        <div class="title ft18 fwb">202006071 收集班级学生旷课情况</div>
+        <div class="content">
+          <div class="t-light">2020年06月20 15时00分 截止</div>
+          <div>
+            <van-row>
+              <van-col span="16">
+                <div class="t-light">2020年06月07 15时00分 发布</div>
+              </van-col>
+              <van-col span="8">
+                <van-row>
+                  <van-col span="12">
+                    <span class="mr20 t-danger">未完成</span>
+                  </van-col>
+                  <van-col span="12">
+                    <div class="more">
+                      <van-icon
+                        name="more-o"
+                        @click="bindMoreClick"/>
+                      <ul
+                        v-if="showMore"
+                        class="show-more">
+                        <li>提交</li>
+                        <li>任务失败申请</li>
+                      </ul>
+                    </div>
+                  </van-col>
+                </van-row>
+              </van-col>
+            </van-row>
+          </div>
+          <div>
+            <span class="t-info">林小明</span> | <span class="t-success">距截止还剩下30天</span>
+          </div>
+          <div class="t-light">3条动态  2/3完成  （未结算）</div>
+        </div>
+      </div>
+      <div class="soa-task-list-list">
+        <div class="title ft18 fwb">202006071 收集班级学生旷课情况</div>
+        <div class="content">
+          <div class="t-light">2020年06月20 15时00分 截止</div>
+          <div>
+            <van-row>
+              <van-col span="16">
+                <div class="t-light">2020年06月07 15时00分 发布</div>
+              </van-col>
+              <van-col span="8">
+                <span class="mr20 t-warm">待审核</span>
+                <van-icon name="more-o" />
+              </van-col>
+            </van-row>
+          </div>
+          <div>
+            <span class="t-info">林小明</span> | <span class="t-danger">已逾期12天3时</span>
+          </div>
+          <div class="t-light">3条动态  2/3完成  （未结算）</div>
+        </div>
+      </div>
     </van-list>
   </div>
 </template>
 
 <script>
-import { Search, Tab, Tabs, Button, List, Cell } from 'vant';
+import { Search, Tab, Tabs, Button, List, Cell, Col, Row, Icon} from 'vant';
 export default {
   name: 'AddTask',
   components: {
@@ -55,16 +112,22 @@ export default {
     [Button.name]: Button,
     [Tabs.name]: Tabs,
     [List.name]: List,
-    [Cell.name]: Cell
+    [Cell.name]: Cell,
+    [Col.name]: Col,
+    [Row.name]: Row,
+    [Icon.name]: Icon
   },
   data() {
     return {
       active: 0,
       active1: 0,
       searchValue: '',
-      list: [],
+      list: [
+
+      ],
       loading: false,
-      finished: false
+      finished: true,
+      showMore: false
     }
   },
   methods: {
@@ -73,31 +136,26 @@ export default {
     },
     onLoad() {
       // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
     },
     onClick() {
-      this.loading = true
       this.list = []
       this.onLoad()
       console.log('onClick')
+    },
+    bindMoreClick() {
+      this.showMore = !this.showMore;
+    },
+    bindDetailClick() {
+      this.$router.push('/task-detail');
     }
   }
 }
 </script>
-
+<style>
+.van-tabs__line{
+ background-color: #1989FA!important;
+}
+</style>
 <style scoped>
 .soa-task-list-accounts{
   position: absolute;
@@ -105,5 +163,28 @@ export default {
 }
 .soa-task-list-title{
   position: relative;
+}
+  .soa-task-list-list{
+    margin-top: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .soa-task-list-list .content>div{
+    margin-top: 2px;
+  }
+.soa-task-list-list .content .more{
+  position: relative;
+}
+.soa-task-list-list .content .more>.show-more{
+  position: absolute;
+  top: 20px;
+  left: 0;
+  border: 1px solid #909399;
+  border-radius: 6px;
+  background: #ffffff;
+}
+.soa-task-list-list .content .more>.show-more>li{  padding: 6px 8px;cursor: pointer}
+.soa-task-list-list .content .more>.show-more>li:not(:last-child){
+  border-bottom: 1px solid #909399;
 }
 </style>

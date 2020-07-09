@@ -25,9 +25,19 @@ export default new Router({
       component: () => import('@/views/app/task/addTask/index')
     },
     {
+      path: '/task-child',
+      name: 'taskChild',
+      component: () => import('@/views/app/task/addTask/child')
+    },
+    {
       path: '/task-list',
       name: 'taskList',
       component: () => import('@/views/app/task/taskList/index')
+    },
+    {
+      path: '/task-detail',
+      name: 'taskDetail',
+      component: () => import('@/views/app/task/taskList/detail')
     },
     {
       path: '/task-rank',
