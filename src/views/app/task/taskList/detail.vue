@@ -1,7 +1,7 @@
 <template>
   <div class="soa-task-detail">
     <div class="divider ptb10">
-      <van-row>
+      <van-row gutter="10">
         <van-col span="6">
           <div class="tr">发起人</div>
         </van-col>
@@ -13,7 +13,7 @@
       </van-row>
     </div>
     <div class="divider ptb10">
-      <van-row>
+      <van-row gutter="10">
         <van-col span="6">
           <div class="tr">任务名称</div>
         </van-col>

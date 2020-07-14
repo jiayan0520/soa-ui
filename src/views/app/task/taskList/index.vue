@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { Search, Tab, Tabs, Button, List, Cell, Col, Row, Icon} from 'vant';
+import { Search, Tab, Tabs, Button, List, Cell, Col, Row, Icon } from 'vant';
 export default {
   name: 'AddTask',
   components: {
