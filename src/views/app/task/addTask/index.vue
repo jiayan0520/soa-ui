@@ -111,22 +111,23 @@
     <div class="soa-task-add-child">
       <div class="soa-task-add-list">
         <div class="soa-task-add-list-cell">
-          <van-row>
-            <van-col span="12"><div class="font14">搜集党员子任务信息1</div></van-col>
-            <van-col span="6">
-              <div class="soa-task-add-list-cell-digist">
-                0/5完成
-              </div>
+          <van-row gutter="10">
+            <van-col span="12"><div class="ft12">搜集党员子任务信息1</div></van-col>
+            <van-col span="4">
+              <div class="t-light ft12">3/5完成</div>
             </van-col>
-            <van-col span="6">
+            <van-col span="4">
+              <div class="t-danger ft12">未完成</div>
+            </van-col>
+            <van-col span="4">
               <div class="cursor right">
                 <van-icon
                   name="clear"
                   color="#f00"/>
               </div>
               <div class="right mr10 cursor">
-                <span
-                  class="soa-icon soa-icon-icon_compile"
+                <van-icon
+                  name="edit"
                   @click="handleAddChildClick"/>
               </div>
             </van-col>
@@ -177,6 +178,7 @@ export default {
   },
   data() {
     return {
+      value1: '',
       checked: false,
       title: '',
       text: '',

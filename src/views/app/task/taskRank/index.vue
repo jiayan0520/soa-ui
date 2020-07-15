@@ -21,19 +21,25 @@
     >
       <van-cell
         v-for="item in list"
-        :key="item" >
-        <!-- <van-grid-item
-          v-for="value in item"
-          :key="value"
-          :text="value"/> -->
-        {{ item }}
+        :key="item.index">
+        <van-row>
+          <van-col span="4">
+            <div class="tc">{{ item.index }}</div>
+          </van-col>
+          <van-col span="5">
+            <div class="tc">{{ item.name }}</div>
+          </van-col>
+          <van-col span="5"><div class="tc">{{ item.number }}</div></van-col>
+          <van-col span="5"><div class="tc">{{ item.total }}</div></van-col>
+          <van-col span="5"><div class="tc">{{ item.average }}</div></van-col>
+        </van-row>
       </van-cell>
     </van-list>
   </div>
 </template>
 
 <script>
-import { Tab, Tabs, List, Cell, Grid, GridItem } from 'vant';
+import { Tab, Tabs, List, Cell, Grid, GridItem, Col, Row } from 'vant';
 export default {
   name: 'TaskRank',
   components: {
@@ -42,16 +48,21 @@ export default {
     [List.name]: List,
     [Cell.name]: Cell,
     [Grid.name]: Grid,
-    [GridItem.name]: GridItem
+    [GridItem.name]: GridItem,
+    [Col.name]: Col,
+    [Row.name]: Row
   },
   data() {
     return {
       active: 0,
       active1: 0,
       searchValue: '',
-      list: [],
+      list: [
+        { index: 1, name: '黎明', number: '90', total: '9900', average: '110.3' },
+        { index: 2, name: '黎明', number: '90', total: '9900', average: '110.3' }
+      ],
       loading: false,
-      finished: false,
+      finished: true,
       title: ['排名', '姓名', '完成数量', '总质量分', '平均质量分']
     }
   },
@@ -61,23 +72,9 @@ export default {
     },
     onLoad() {
       // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
     },
     onClick() {
-      this.loading = true
+      this.loading = false
       this.list = []
       this.onLoad()
       console.log('onClick')

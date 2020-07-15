@@ -30,6 +30,38 @@ const menu = [
         type: 'success'
       }
     ]
+  },
+  {
+    header: '宿舍管理',
+    list: [
+      {
+        to: './dorm-list',
+        label: '宿舍管理',
+        icon: 'icon_compile'
+      },
+      {
+        to: './dorm-list',
+        label: '数据导入',
+        icon: 'icon_calendar'
+      },
+      {
+        to: './dorm-examine-list',
+        label: '任务审核',
+        icon: 'shenhe',
+        type: 'warming'
+      },
+      // {
+      //   to: './dorm-import',
+      //   label: '导入任务',
+      //   icon: 'daoru'
+      // },
+      {
+        to: './dorm-rank',
+        label: '任务榜',
+        icon: 'paihang',
+        type: 'success'
+      }
+    ]
   }
 ]
 

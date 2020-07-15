@@ -6,10 +6,13 @@
 
 .ptb10 {padding: 10px 0;}
 .ptb20 {padding: 20px 0;}
+.plr20 {padding: 0 20px;}
+.pd20{padding: 20px;}
 
 .right {float: right;}
 .left {float: left;}
 
+.ft12 {font-size: 12px;}
 .ft14 {font-size: 14px;}
 .ft18 {font-size: 18px;}
 .ft20 {font-size: 20px;}

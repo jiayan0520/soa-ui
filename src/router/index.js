@@ -30,6 +30,11 @@ export default new Router({
       component: () => import('@/views/app/task/addTask/child')
     },
     {
+      path: '/task-child-detail',
+      name: 'taskChildDetail',
+      component: () => import('@/views/app/task/taskList/childDetail')
+    },
+    {
       path: '/task-list',
       name: 'taskList',
       component: () => import('@/views/app/task/taskList/index')
@@ -38,6 +43,16 @@ export default new Router({
       path: '/task-detail',
       name: 'taskDetail',
       component: () => import('@/views/app/task/taskList/detail')
+    },
+    {
+      path: '/task-receive-detail',
+      name: 'taskReceiveDetail',
+      component: () => import('@/views/app/task/taskList/receiveDetail')
+    },
+    {
+      path: '/task-single-detail',
+      name: 'taskSingleDetail',
+      component: () => import('@/views/app/task/taskList/singleDetail')
     },
     {
       path: '/task-rank',
@@ -53,6 +68,11 @@ export default new Router({
       path: '/task-examine-detail',
       name: 'taskExamineDetail',
       component: () => import('@/views/app/task/taskExamineList/taskExamineDetail')
+    },
+    {
+      path: '/dorm-list',
+      name: 'dormList',
+      component: () => import('@/views/app/dorm/dormList/index')
     }
   ]
 })

@@ -21,6 +21,18 @@
       </van-cell>
       <van-cell>
         <van-row gutter="10">
+          <van-col span="5">备注</van-col>
+          <van-col span="19"><div class="t-danger">审核不通过原因：没有附件</div></van-col>
+        </van-row>
+      </van-cell>
+      <van-cell>
+        <van-row gutter="10">
+          <van-col span="5">质量分</van-col>
+          <van-col span="19"><div class="t-light"><span class="t-danger">未评定</span>/100分</div></van-col>
+        </van-row>
+      </van-cell>
+      <van-cell>
+        <van-row gutter="10">
           <van-col span="5">截止时间</van-col>
           <van-col span="19"><div class="t-light">2020年6月19日 18时00分</div></van-col>
         </van-row>
@@ -39,34 +51,7 @@
                 <van-col span="6">
                   <div class="t-light">吴笑笑</div>
                 </van-col>
-                <van-col span="12">
-                  <div class="tr">
-                    <van-button
-                      type="info"
-                      size="mini"
-                      @click="bindDetail">查看</van-button>
-                  </div>
-                </van-col>
               </van-row>
-            </div>
-            <div>
-              <van-row class="mt10">
-                <van-col span="12">
-                  <div class="t-light">任务反馈附件集合.zip</div>
-                </van-col>
-                <van-col span="12">
-                  <div class="tr">
-                    <van-button
-                      type="info"
-                      size="mini">下载</van-button>
-                  </div>
-                </van-col>
-              </van-row>
-            </div>
-            <div class="tc">
-              <van-button
-                type="info"
-                size="small">审核</van-button>
             </div>
           </div>
         </van-collapse-item>
@@ -144,12 +129,11 @@
 </template>
 
 <script>
-import { Button, Divider, Col, Row, Icon, Cell, CellGroup, Collapse, CollapseItem, Field } from 'vant';
+import { Button, Col, Row, Icon, Cell, CellGroup, Collapse, CollapseItem, Field } from 'vant';
 export default {
-  name: 'Detail',
+  name: 'ReceiveDetail',
   components: {
     [Button.name]: Button,
-    [Divider.name]: Divider,
     [Col.name]: Col,
     [Row.name]: Row,
     [Icon.name]: Icon,
@@ -178,19 +162,18 @@ export default {
 </script>
 
 <style scoped>
-.soa-task-file-list > a{
-  text-decoration: underline;
-  color: #1989FA;
-  margin-right: 10px;
-}
-.soa-task-list-cell {
-  background: #F8F8F8;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 16px;
-}
-  .soa-task-complateList>div{
-    margin-top: 8px;
-  }
-
+    .soa-task-file-list > a{
+        text-decoration: underline;
+        color: #1989FA;
+        margin-right: 10px;
+    }
+    .soa-task-list-cell {
+        background: #F8F8F8;
+        border-radius: 8px;
+        padding: 8px;
+        margin-bottom: 16px;
+    }
+    .soa-task-complateList>div{
+        margin-top: 8px;
+    }
 </style>
