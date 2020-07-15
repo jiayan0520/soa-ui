@@ -7,6 +7,7 @@ import 'vant/lib/index.css'
 import './assets/index.css'
 import './assets/style/index.css'
 import 'vue2-datepicker/index.css';
+import '@/assist/permission'; // 权限控制
 import { Dialog } from 'vant';
 
 Vue.config.productionTip = false

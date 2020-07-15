@@ -25,7 +25,13 @@
     </van-collapse>
     <van-cell
       title="附件信息"
-      value="李晓明" />
+      value="李晓明" >
+      <template #default>
+        <a
+          href="/images/myw3schoolimage.jpg"
+          download="w3logo">w3logo</a>
+      </template>
+    </van-cell>
     <div class="soa-task-examine-detail-btn">
       <van-button
         type="info"
