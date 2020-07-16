@@ -6,7 +6,8 @@
           class="soa-task-list-accounts"
           size="normal"
           type="warning"
-          native-type="submit">
+          native-type="submit"
+          @click="onSubmit">
           任务结算
       </van-button></h3>
     </div>
@@ -36,128 +37,60 @@
       <van-tab title="所有"/>
     </van-tabs>
     <van-list
-      v-if="active==1"
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
       class="soa-task-list-lists"
       @load="onLoad"
     >
-      <van-row>
+      <van-row
+        v-for="(item,index) in list"
+        :key="item.id">
         <van-col span="22">
           <div
             class="soa-task-list-list"
             @click="bindDetailClick">
-            <div class="title ft18 fwb">202006071 收集班级学生旷课情况</div>
+            <div class="title ft18 fwb">{{ item.label }}</div>
             <div class="content">
-              <div class="t-light">2020年06月20 15时00分 截止</div>
+              <div class="t-light">{{ item.end }}</div>
+              <van-row>
+                <van-col span="18">
+                  <div class="t-light">{{ item.start }}</div>
+                </van-col>
+                <van-col span="6">
+                  <span class="t-danger">{{ item.state }}</span>
+                </van-col>
+              </van-row>
               <div>
-                <van-row>
-                  <van-col span="16">
-                    <div class="t-light">2020年06月07 15时00分 发布</div>
-                  </van-col>
-                  <van-col span="8">
-                    <span class="mr20 t-danger">未完成</span>
-                  </van-col>
-                </van-row>
+                <span class="t-info">{{ item.charge }}</span> | <span class="t-success">{{ item.info }}</span>
               </div>
-              <div>
-                <span class="t-info">林小明</span> | <span class="t-success">距截止还剩下30天</span>
-              </div>
-              <div class="t-light">3条动态  2/3完成  （未结算）</div>
+              <div class="t-light">{{ item.infoNum }}条动态  {{ item.done }}/{{ item.infoNum }}完成  （未结算）</div>
             </div>
           </div>
         </van-col>
         <van-col span="2">
-          <div class="more">
+          <div class="soa-task-more">
             <span
               class="soa-icon soa-icon-gengduo"
-              @click="bindMoreClick"/>
+              @click="bindMoreClick(index)"/>
             <ul
-              v-if="showMore"
-              class="show-more">
-              <li>提交</li>
-              <li>任务失败申请</li>
+              v-if="showMore===index"
+              class="soa-task-dropdown">
+              <li
+                v-for="items in item.btn"
+                :key="items.index"
+                class="pd10"
+                @click="bindTaskDrownClick(items)">{{ items }}</li>
             </ul>
           </div>
         </van-col>
       </van-row>
-
-      <div class="soa-task-list-list">
-        <div class="title ft18 fwb">202006071 收集班级学生旷课情况</div>
-        <div class="content">
-          <div class="t-light">2020年06月20 15时00分 截止</div>
-          <div>
-            <van-row>
-              <van-col span="16">
-                <div class="t-light">2020年06月07 15时00分 发布</div>
-              </van-col>
-              <van-col span="8">
-                <span class="mr20 t-warm">待审核</span>
-                <span class="soa-icon">&#xe6dd;</span>
-              </van-col>
-            </van-row>
-          </div>
-          <div>
-            <span class="t-info">林小明</span> | <span class="t-danger">已逾期12天3时</span>
-          </div>
-          <div class="t-light">3条动态  2/3完成  （未结算）</div>
-        </div>
-      </div>
-    </van-list>
-    <van-list
-      v-else
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      class="soa-task-list-lists"
-      @load="onLoad"
-    >
-      <div
-        class="soa-task-list-list"
-        @click="bindReceiveDetailClick">
-        <div class="title ft18 fwb">202006071 收集班级学生旷课情况</div>
-        <div class="content">
-          <div class="t-light">2020年06月20 15时00分 截止</div>
-          <div>
-            <van-row>
-              <van-col span="16">
-                <div class="t-light">2020年06月07 15时00分 发布</div>
-              </van-col>
-              <van-col span="8">
-                <van-row>
-                  <van-col span="16">
-                    <span class="mr20 t-danger">未完成</span>
-                  </van-col>
-                  <van-col span="8">
-                    <div class="more">
-                      <van-icon
-                        name="more-o"
-                        @click="bindMoreClick"/>
-                      <ul
-                        v-if="showMore"
-                        class="show-more">
-                        <li>提交</li>
-                        <li>任务失败申请</li>
-                      </ul>
-                    </div>
-                  </van-col>
-                </van-row>
-              </van-col>
-            </van-row>
-          </div>
-          <div>
-            <span class="t-info">林小明</span> | <span class="t-success">距截止还剩下30天</span>
-          </div>
-          <div class="t-light">3条动态  2/3完成  （未结算）</div>
-        </div>
-      </div>
     </van-list>
   </div>
 </template>
 
 <script>
-import { Search, Tab, Tabs, Button, List, Cell, Col, Row, Icon } from 'vant';
+import { Search, Tab, Tabs, Button, List, Cell, Col, Row, Icon, Dialog } from 'vant';
 export default {
   name: 'AddTask',
   components: {
@@ -169,10 +102,17 @@ export default {
     [Cell.name]: Cell,
     [Col.name]: Col,
     [Row.name]: Row,
-    [Icon.name]: Icon
+    [Icon.name]: Icon,
+    Dialog
   },
   data() {
     return {
+      value1: '',
+      option1: [
+        { text: '全部商品', value: 0 },
+        { text: '新款商品', value: 1 },
+        { text: '活动商品', value: 2 }
+      ],
       active: 0,
       active1: 0,
       searchValue: '',
@@ -180,24 +120,62 @@ export default {
 
       ],
       loading: false,
-      finished: true,
-      showMore: false
+      finished: false,
+      showMore: ''
     }
   },
   methods: {
+    // 任务结算
+    onSubmit() {
+      const nowDate = this.format();
+      Dialog.confirm({
+        title: '提示',
+        message: '今天是' + nowDate + '，确定任务结算？'
+      })
+        .then(() => {
+          // on confirm
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
     onSearch(searchValue) {
       console.log(searchValue)
     },
     onLoad() {
       // 异步更新数据
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+          this.list.push({ id: this.list.length + 1, label: '20200705收集班级学生旷课情况',
+            end: '2020年06月20日 15时30分 截止', start: '2020年06月20日 15时30分 发布',
+            state: '审核中', info: '距截止还剩3天1小时', charge: '林小明', infoNum: '3', done: '2',
+            btn: ['已提交', '任务失败申请'] });
+        }
+
+        // 加载状态结束
+        this.loading = false;
+
+        // 数据全部加载完成
+        if (this.list.length >= 40) {
+          this.finished = true;
+        }
+      }, 1000);
     },
     onClick() {
       this.list = []
       this.onLoad()
       console.log('onClick')
     },
-    bindMoreClick() {
-      this.showMore = !this.showMore;
+    bindMoreClick(index) {
+      this.showMore = this.showMore === index ? '' : index
+    },
+    // 下拉点击事件
+    bindTaskDrownClick(item) {
+      if (item === '已提交') {
+        this.$router.push('/task-list-feekback')
+      } else {
+        this.$router.push('/task-receive-detail')
+      }
     },
     // 我发布的任务详情
     bindDetailClick() {
@@ -206,6 +184,13 @@ export default {
     // 我接收的任务详情
     bindReceiveDetailClick() {
       this.$router.push('/task-receive-detail');
+    },
+    // 日期转换
+    format() {
+      var days = new Date();
+      var month = (days.getMonth() + 1) < 10 ? '0' + (days.getMonth() + 1) : (days.getMonth() + 1);
+      var strDate = (days.getDate() < 10 ? '0' + days.getDate() : days.getDate());
+      return days.getFullYear() + '年' + month + '月' + strDate + '日';
     }
   }
 }
@@ -243,8 +228,19 @@ export default {
   border-radius: 6px;
   background: #ffffff;
 }
- .more>.show-more>li{  padding: 6px 8px;cursor: pointer;width: 100px;}
- .more>.show-more>li:not(:last-child){
-  border-bottom: 1px solid #909399;
+
+.soa-task-more {margin-top: 65px;position: relative;}
+.soa-task-dropdown {
+    position: absolute;
+    right: 10px;
+    top: 25px;
+    width: 120px;
+    border: 1px solid #F5F6F8;
+    border-radius: 5px;
+    background: #ffffff;
 }
+.soa-task-dropdown > li:not(:last-child){
+  border-bottom: 1px solid #F5F6F8;
+}
+
 </style>

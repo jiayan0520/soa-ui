@@ -25,11 +25,6 @@ export default new Router({
       component: () => import('@/views/app/task/addTask/index')
     },
     {
-      path: '/task-child',
-      name: 'taskChild',
-      component: () => import('@/views/app/task/addTask/child')
-    },
-    {
       path: '/task-child-detail',
       name: 'taskChildDetail',
       component: () => import('@/views/app/task/taskList/childDetail')
@@ -38,6 +33,11 @@ export default new Router({
       path: '/task-list',
       name: 'taskList',
       component: () => import('@/views/app/task/taskList/index')
+    },
+    {
+      path: '/task-list-feekback',
+      name: 'taskFeekback',
+      component: () => import('@/views/app/task/taskList/feekBack')
     },
     {
       path: '/task-detail',
