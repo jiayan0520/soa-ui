@@ -58,11 +58,10 @@ export default {
       active1: 0,
       searchValue: '',
       list: [
-        { index: 1, name: '黎明', number: '90', total: '9900', average: '110.3' },
-        { index: 2, name: '黎明', number: '90', total: '9900', average: '110.3' }
+
       ],
       loading: false,
-      finished: true,
+      finished: false,
       title: ['排名', '姓名', '完成数量', '总质量分', '平均质量分']
     }
   },
@@ -72,6 +71,19 @@ export default {
     },
     onLoad() {
       // 异步更新数据
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+          this.list.push({ index: this.list.length + 1, name: '林好好', number: '90', total: '9900', average: '110.3' });
+        }
+
+        // 加载状态结束
+        this.loading = false;
+
+        // 数据全部加载完成
+        if (this.list.length >= 40) {
+          this.finished = true;
+        }
+      }, 1000);
     },
     onClick() {
       this.loading = false

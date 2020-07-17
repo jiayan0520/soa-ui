@@ -376,6 +376,7 @@ export default {
     },
     handleAddChildClick() {
       this.showModel = true;
+      this.childQuery = {}
     },
     handleChildEdit(index) {
       this.childQuery = this.query.child[index];
