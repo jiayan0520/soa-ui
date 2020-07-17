@@ -25,6 +25,11 @@ export default new Router({
       component: () => import('@/views/app/task/addTask/index')
     },
     {
+      path: '/task-add-executor',
+      name: 'taskAddExecutor',
+      component: () => import('@/views/app/task/addTask/executor')
+    },
+    {
       path: '/task-child-detail',
       name: 'taskChildDetail',
       component: () => import('@/views/app/task/taskList/childDetail')
@@ -68,6 +73,11 @@ export default new Router({
       path: '/task-examine-detail',
       name: 'taskExamineDetail',
       component: () => import('@/views/app/task/taskExamineList/taskExamineDetail')
+    },
+    {
+      path: '/task-import',
+      name: 'taskImport',
+      component: () => import('@/views/app/task/taskImport/index')
     },
     {
       path: '/dorm-list',

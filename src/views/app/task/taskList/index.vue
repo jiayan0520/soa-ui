@@ -149,7 +149,7 @@ export default {
           this.list.push({ id: this.list.length + 1, label: '20200705收集班级学生旷课情况',
             end: '2020年06月20日 15时30分 截止', start: '2020年06月20日 15时30分 发布',
             state: '审核中', info: '距截止还剩3天1小时', charge: '林小明', infoNum: '3', done: '2',
-            btn: ['已提交', '任务失败申请'] });
+            btn: ['编辑', '失败', '删除'] });
         }
 
         // 加载状态结束
@@ -220,21 +220,13 @@ export default {
   position: relative;
   margin-top: 65px;
 }
- .more>.show-more{
-  position: absolute;
-  top: 20px;
-  right: 0;
-  border: 1px solid #909399;
-  border-radius: 6px;
-  background: #ffffff;
-}
 
 .soa-task-more {margin-top: 65px;position: relative;}
 .soa-task-dropdown {
     position: absolute;
     right: 10px;
     top: 25px;
-    width: 120px;
+    width: 80px;
     border: 1px solid #F5F6F8;
     border-radius: 5px;
     background: #ffffff;

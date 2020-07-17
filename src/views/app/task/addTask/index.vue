@@ -360,6 +360,7 @@ export default {
       console.log('')
     },
     handleExecutorClick() {
+      this.$router.push('/task-add-executor');
       console.log('handleExecutorClick')
     },
     onInfoSelect(item) {
