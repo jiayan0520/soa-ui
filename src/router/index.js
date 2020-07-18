@@ -83,6 +83,11 @@ export default new Router({
       path: '/dorm-list',
       name: 'dormList',
       component: () => import('@/views/app/dorm/dormList/index')
+    },
+    {
+      path: '/dorm-room',
+      name: 'dormRoom',
+      component: () => import('@/views/app/dorm/dormList/room')
     }
   ]
 })

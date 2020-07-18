@@ -6,25 +6,33 @@
       left-text="返回"
       @click-left="onClickLeft"
     />
-    <van-cell-group>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">示例</van-col>
-          <van-col span="19"><div class="t-info">导入示例下载>></div></van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">导入</van-col>
-          <van-col span="19">
-            <van-uploader
-              v-model="fileList"
-              upload-icon="upgrade"
-              accept="*"/>
-          </van-col>
-        </van-row>
-      </van-cell>
-    </van-cell-group>
+    <van-form
+      class="soa-task-add"
+      @submit="onSubmit">
+      <van-cell-group>
+        <van-cell>
+          <van-row gutter="10">
+            <van-col span="5">示例</van-col>
+            <van-col span="19"><a
+              href="/images/myw3schoolimage.jpg"
+              download="w3logo"
+              class="t-info">导入示例下载>></a></van-col>
+          </van-row>
+        </van-cell>
+      </van-cell-group>
+      <van-field
+        v-model="files"
+        :readonly="true"
+        label="导入"
+      >
+        <template #input>
+          <van-uploader
+            v-model="fileList"
+            upload-icon="upgrade"
+            accept="*"/>
+        </template>
+      </van-field>
+    </van-form>
     <div class="soa-task-add-submit">
       <van-button
         block
@@ -37,7 +45,7 @@
 </template>
 
 <script>
-import { NavBar, Button, Col, Row, Icon, Cell, CellGroup, Uploader } from 'vant';
+import { NavBar, Button, Col, Row, Icon, Cell, CellGroup, Uploader, Field, Form } from 'vant';
 export default {
   name: 'Index',
   components: {
@@ -48,7 +56,9 @@ export default {
     [Icon.name]: Icon,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
-    [Uploader.name]: Uploader
+    [Uploader.name]: Uploader,
+    [Field.name]: Field,
+    [Form.name]: Form
   },
   data() {
     return {
@@ -59,6 +69,9 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.go(-1)
+    },
+    onSubmit() {
+      console.log('提交文件')
     }
   }
 }
