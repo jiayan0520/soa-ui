@@ -93,7 +93,7 @@ export default {
       console.log('更多')
     },
     bindRoomClick() {
-      this.$router.push('/dorm-room')
+      this.$router.push('/dormitory-room')
     }
   }
 }
