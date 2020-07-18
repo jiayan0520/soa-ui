@@ -25,9 +25,9 @@ export default new Router({
       component: () => import('@/views/app/task/addTask/index')
     },
     {
-      path: '/task-child',
-      name: 'taskChild',
-      component: () => import('@/views/app/task/addTask/child')
+      path: '/task-add-executor',
+      name: 'taskAddExecutor',
+      component: () => import('@/views/app/task/addTask/executor')
     },
     {
       path: '/task-child-detail',
@@ -38,6 +38,11 @@ export default new Router({
       path: '/task-list',
       name: 'taskList',
       component: () => import('@/views/app/task/taskList/index')
+    },
+    {
+      path: '/task-list-feekback',
+      name: 'taskFeekback',
+      component: () => import('@/views/app/task/taskList/feekBack')
     },
     {
       path: '/task-detail',
@@ -68,6 +73,11 @@ export default new Router({
       path: '/task-examine-detail',
       name: 'taskExamineDetail',
       component: () => import('@/views/app/task/taskExamineList/taskExamineDetail')
+    },
+    {
+      path: '/task-import',
+      name: 'taskImport',
+      component: () => import('@/views/app/task/taskImport/index')
     },
     {
       path: '/dorm-list',

@@ -4,9 +4,12 @@
 .mb10 {margin-bottom: 10px;}
 .ml10 {margin-left: 10px;}
 
+.mtb10{margin: 10px 0;}
+
 .ptb10 {padding: 10px 0;}
 .ptb20 {padding: 20px 0;}
 .plr20 {padding: 0 20px;}
+.pd10{padding: 10px;}
 .pd20{padding: 20px;}
 
 .right {float: right;}
@@ -14,6 +17,7 @@
 
 .ft12 {font-size: 12px;}
 .ft14 {font-size: 14px;}
+.ft16 {font-size: 16px;}
 .ft18 {font-size: 18px;}
 .ft20 {font-size: 20px;}
 .fwb {font-weight: bold;}

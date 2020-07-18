@@ -18,11 +18,11 @@ const menu = [
         icon: 'shenhe',
         type: 'warming'
       },
-      // {
-      //   to: './task-import',
-      //   label: '导入任务',
-      //   icon: 'daoru'
-      // },
+      {
+        to: './task-import',
+        label: '导入任务',
+        icon: 'daoru'
+      },
       {
         to: './task-rank',
         label: '任务榜',
@@ -50,11 +50,6 @@ const menu = [
         icon: 'shenhe',
         type: 'warming'
       },
-      // {
-      //   to: './dorm-import',
-      //   label: '导入任务',
-      //   icon: 'daoru'
-      // },
       {
         to: './dorm-rank',
         label: '任务榜',
