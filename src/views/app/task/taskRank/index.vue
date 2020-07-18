@@ -6,7 +6,9 @@
       <van-tab title="个人"/>
       <van-tab title="部门"/>
     </van-tabs>
-    <van-grid :column-num="5">
+    <van-grid
+      :column-num="5"
+      :border="false">
       <van-grid-item
         v-for="item in title"
         :key="item"
@@ -19,7 +21,17 @@
       class="soa-task-rank-lists"
       @load="onLoad"
     >
-      <van-cell
+      <van-grid
+        v-for="item in list"
+        :column-num="5"
+        :border="false"
+        :key="item.id">
+        <van-grid-item
+          v-for="itemIndex in item"
+          :key="itemIndex"
+          :text="itemIndex"/>
+      </van-grid>
+      <!-- <van-cell
         v-for="item in list"
         :key="item.index">
         <van-row>
@@ -33,7 +45,7 @@
           <van-col span="5"><div class="tc">{{ item.total }}</div></van-col>
           <van-col span="5"><div class="tc">{{ item.average }}</div></van-col>
         </van-row>
-      </van-cell>
+      </van-cell> -->
     </van-list>
   </div>
 </template>

@@ -13,15 +13,15 @@ const menu = [
         icon: 'icon_calendar'
       },
       {
+        to: './task-import',
+        label: '导入任务',
+        icon: 'daoru'
+      },
+      {
         to: './task-examine-list',
         label: '任务审核',
         icon: 'shenhe',
         type: 'warming'
-      },
-      {
-        to: './task-import',
-        label: '导入任务',
-        icon: 'daoru'
       },
       {
         to: './task-rank',
@@ -36,23 +36,40 @@ const menu = [
     list: [
       {
         to: './dorm-list',
-        label: '宿舍管理',
-        icon: 'icon_compile'
+        label: '宿舍列表',
+        icon: 'dorm'
       },
       {
         to: './dorm-list',
-        label: '数据导入',
-        icon: 'icon_calendar'
+        label: '未分配人员',
+        icon: 'kuaisufenpei'
       },
       {
         to: './dorm-examine-list',
-        label: '任务审核',
+        label: '导入宿舍',
+        icon: 'daoru'
+      },
+      {
+        to: './dorm-rank',
+        label: '调换审核',
         icon: 'shenhe',
         type: 'warming'
       },
       {
         to: './dorm-rank',
-        label: '任务榜',
+        label: '检查信息',
+        icon: 'checklist',
+        type: 'success'
+      },
+      {
+        to: './dorm-rank',
+        label: '检查信息统计',
+        icon: 'results',
+        type: 'success'
+      },
+      {
+        to: './dorm-rank',
+        label: '评分榜',
         icon: 'paihang',
         type: 'success'
       }
