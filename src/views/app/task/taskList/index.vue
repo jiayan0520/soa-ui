@@ -216,11 +216,6 @@ export default {
   .soa-task-list-list .content>div{
     margin-top: 2px;
   }
- .more{
-  position: relative;
-  margin-top: 65px;
-}
-
 .soa-task-more {margin-top: 65px;position: relative;}
 .soa-task-dropdown {
     position: absolute;

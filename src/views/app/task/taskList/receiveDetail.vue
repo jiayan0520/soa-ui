@@ -61,8 +61,12 @@
           <van-col span="5"><div class="">附件信息</div></van-col>
           <van-col span="19">
             <div class="soa-task-file-list">
-              <a>学生信息.xls</a>
-              <a>学生信息.xls</a>
+              <a
+                href="/images/myw3schoolimage.jpg"
+                download="w3logo" >学生信息.xls</a>
+              <a
+                href="/images/myw3schoolimage.jpg"
+                download="w3logo">学生信息.xls</a>
             </div>
           </van-col>
         </van-row>
