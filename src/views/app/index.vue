@@ -51,7 +51,7 @@ export default {
   data () {
     return {
       moduleList: menu,
-      activeIndex: [1]
+      activeIndex: [0, 1]
     }
   },
   methods: {

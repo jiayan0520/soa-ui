@@ -11,7 +11,10 @@ import { Dialog } from 'vant';
 
 Vue.config.productionTip = false
 Vue.use(Dialog);
-
+// 是否开启mock
+if (process.env.NODE_ENV !== 'production') {
+  require('@/mock');
+}
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
