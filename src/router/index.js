@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import task from './task'
-import dormitory from './dormitory'
+import dorm from './dorm'
 Vue.use(Router)
 
 export default new Router({
@@ -27,6 +27,6 @@ export default new Router({
       component: () => import('@/views/author/index')
     },
     ...task,
-    ...dormitory
+    ...dorm
   ]
 })

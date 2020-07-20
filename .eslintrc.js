@@ -4,13 +4,14 @@ module.exports = {
     parser: 'babel-eslint',
     sourceType: 'module'
   },
-  
+
   env: {
     browser: true,
     node: true,
     es6: true,
   },
   extends: ['plugin:vue/recommended', 'eslint:recommended'],
+  plugins: ['vue'],
   // add your custom rules here
   // 基于vue源码eslint 代码规范
   // "off" 或 0 - 关闭规则

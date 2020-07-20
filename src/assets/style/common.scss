@@ -1,41 +1,101 @@
-.mr10 {margin-right: 10px;}
-.mr20 {margin-right: 20px;}
-.mt10 {margin-top: 10px;}
-.mb10 {margin-bottom: 10px;}
-.ml10 {margin-left: 10px;}
-.ml20 {margin-left: 20px;}
+.mr10 {
+    margin-right: 10px;
+}
+.mr20 {
+    margin-right: 20px;
+}
+.mt10 {
+    margin-top: 10px;
+}
+.mb10 {
+    margin-bottom: 10px;
+}
+.ml10 {
+    margin-left: 10px;
+}
+.ml20 {
+    margin-left: 20px;
+}
 
-.mtb10{margin: 10px 0;}
+.mtb10 {
+    margin: 10px 0;
+}
 
-.ptb10 {padding: 10px 0;}
-.ptb20 {padding: 20px 0;}
-.plr20 {padding: 0 20px;}
-.pd10{padding: 10px;}
-.pd20{padding: 20px;}
+.ptb10 {
+    padding: 10px 0;
+}
+.ptb20 {
+    padding: 20px 0;
+}
+.plr20 {
+    padding: 0 20px;
+}
+.pd10 {
+    padding: 10px;
+}
+.pd20 {
+    padding: 20px;
+}
 
-.right {float: right;}
-.left {float: left;}
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
 
-.ft12 {font-size: 12px;}
-.ft14 {font-size: 14px;}
-.ft16 {font-size: 16px;}
-.ft18 {font-size: 18px;}
-.ft20 {font-size: 20px;}
-.fwb {font-weight: bold;}
+.ft12 {
+    font-size: 12px;
+}
+.ft14 {
+    font-size: 14px;
+}
+.ft16 {
+    font-size: 16px;
+}
+.ft18 {
+    font-size: 18px;
+}
+.ft20 {
+    font-size: 20px;
+}
+.fwb {
+    font-weight: bold;
+}
 
-.tc{text-align: center;}
-.tr{text-align: right;}
+.tc {
+    text-align: center;
+}
+.tr {
+    text-align: right;
+}
 
-.t-light{color:#909399;}
-.t-danger{color: #EE0A24;}
-.t-info{color: #1989FA;}
-.t-warm{color: #FF976A;}
-.t-success{color: #07C160;}
+.t-light {
+    color: #909399;
+}
+.t-danger {
+    color: #ee0a24;
+}
+.t-info {
+    color: #1989fa;
+}
+.t-warm {
+    color: #ff976a;
+}
+.t-success {
+    color: #07c160;
+}
 
-.divider{
+.divider {
     border-bottom: 1px solid #909399;
 }
 
-.van-tabs__line{
-    background-color: #1989FA!important;
+.van-tabs__line {
+    background-color: #1989fa !important;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }

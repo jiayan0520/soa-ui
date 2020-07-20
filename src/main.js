@@ -7,10 +7,10 @@ import 'vant/lib/index.css'
 import './assets/index.scss'
 import 'vue2-datepicker/index.css';
 import '@/assist/permission'; // 权限控制
-import { Dialog } from 'vant';
+import Vant from 'vant'
 
 Vue.config.productionTip = false
-Vue.use(Dialog);
+Vue.use(Vant)
 // 是否开启mock
 if (process.env.NODE_ENV !== 'production') {
   require('@/mock');
