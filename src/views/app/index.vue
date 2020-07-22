@@ -38,14 +38,11 @@
 </template>
 
 <script>
-import { Grid, GridItem } from 'vant';
 import MenuIcon from '@/components/MenuIcon'
 import menu from './menu.js'
 export default {
   name: 'Home',
   components: {
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
     MenuIcon
   },
   data () {

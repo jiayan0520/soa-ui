@@ -65,15 +65,8 @@
 </template>
 
 <script>
-import { Col, Row, Cell, CellGroup } from 'vant';
 export default {
   name: 'SingleDetail',
-  components: {
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup
-  },
   data() {
     return {
       params: {

@@ -85,20 +85,8 @@
 </template>
 
 <script>
-import { Search, Button, Col, CellGroup, Cell, Row, Icon, Checkbox, CheckboxGroup } from 'vant';
 export default {
   name: 'Executor',
-  components: {
-    [Search.name]: Search,
-    [Button.name]: Button,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    [Cell.name]: Cell,
-    [Checkbox.name]: Checkbox,
-    [CheckboxGroup.name]: CheckboxGroup,
-    [CellGroup.name]: CellGroup
-  },
   data() {
     return {
       searchValue: '',

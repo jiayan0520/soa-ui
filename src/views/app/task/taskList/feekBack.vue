@@ -72,19 +72,8 @@
 </template>
 
 <script>
-import { Button, Col, Row, Icon, Cell, CellGroup, Field, Uploader } from 'vant';
 export default {
   name: 'FeekBack',
-  components: {
-    [Button.name]: Button,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Uploader.name]: Uploader,
-    [Field.name]: Field
-  },
   data() {
     return {
       files: '',

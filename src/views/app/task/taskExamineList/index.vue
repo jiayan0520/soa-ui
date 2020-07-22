@@ -43,19 +43,8 @@
 </template>
 
 <script>
-import { Search, Tab, Tabs, Button, List, Cell, Col, Row } from 'vant';
 export default {
   name: 'TaskExamineList',
-  components: {
-    [Search.name]: Search,
-    [Tab.name]: Tab,
-    [Button.name]: Button,
-    [Tabs.name]: Tabs,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Col.name]: Col,
-    [Row.name]: Row
-  },
   data() {
     return {
       active: 0,

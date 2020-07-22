@@ -20,20 +20,10 @@
 </template>
 
 <script>
-import { Tab, Tabs, Button, List, Cell, Col, Row, Icon } from 'vant';
 import dormList from './dormList/dorm-list'
 export default {
   name: 'Index',
   components: {
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Button.name]: Button,
-    [Tabs.name]: Tabs,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
     dormList
   },
   data() {

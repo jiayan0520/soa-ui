@@ -31,13 +31,8 @@
 </template>
 
 <script>
-import { List, Cell } from 'vant';
 export default {
   name: 'Message',
-  components: {
-    [List.name]: List,
-    [Cell.name]: Cell
-  },
   data () {
     return {
       list: [],

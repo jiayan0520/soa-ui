@@ -75,18 +75,8 @@
 </template>
 
 <script>
-import { CollapseItem, Collapse, Dialog, Button, Cell, Form, Field } from 'vant';
 export default {
   name: 'TaskExamineList',
-  components: {
-    [CollapseItem.name]: CollapseItem,
-    [Collapse.name]: Collapse,
-    [Button.name]: Button,
-    [Dialog.name]: Dialog,
-    [Cell.name]: Cell,
-    [Form.name]: Form,
-    [Field.name]: Field
-  },
   data() {
     return {
       activeNames: [],
