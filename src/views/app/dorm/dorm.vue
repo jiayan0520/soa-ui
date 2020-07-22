@@ -7,34 +7,32 @@
       <van-tab
         title="床位列表"
         name="1">
-        <dorm-list />
+        <bed-list />
       </van-tab>
       <van-tab
         title="宿舍列表"
-        name="2" />
+        name="2">
+        <dorm-list />
+      </van-tab>
       <van-tab
         title="楼栋列表"
-        name="3" />
+        name="3" >
+        <floor-list />
+      </van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
-import { Tab, Tabs, Button, List, Cell, Col, Row, Icon } from 'vant';
 import dormList from './dormList/dorm-list'
+import bedList from './dormList/bed-list'
+import floorList from './dormList/floor-list'
 export default {
-  name: 'Index',
+  name: 'Dorm',
   components: {
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Button.name]: Button,
-    [Tabs.name]: Tabs,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    dormList
+    dormList,
+    bedList,
+    floorList
   },
   data() {
     return {
@@ -60,7 +58,16 @@ export default {
 <style lang="scss">
 .soa-dorm {
   .van-tabs {
-    padding-top: 45px;
+    height: 100%;
+    width: 100%;
+    height: calc(100% - 40px);
+    padding-top: 40px;
+    .van-tabs__content {
+      height: calc(100% - 44px);
+      .van-tab__pane {
+        height: 100%;
+      }
+    }
   }
 }
 </style>

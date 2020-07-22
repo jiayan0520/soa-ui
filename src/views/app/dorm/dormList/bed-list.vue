@@ -4,7 +4,7 @@
     :more-op-list="moreOpList"
     :data-list="dataList"
     :is-show-bar="isShowBar"
-    class="dorm-list"
+    class="bed-list"
     @search="onSearch"
     @loadData="loadData"
   >
@@ -12,7 +12,7 @@
       <div
         v-if="!isShowBar"
         class="tool-bar">
-        <div class="head-title">宿舍列表</div>
+        <div class="head-title">宿舍床位列表</div>
         <van-button
           class="btn-op"
           type="warning"
@@ -29,10 +29,23 @@
         </van-button>
         <van-button
           class="btn-op"
-          type="info">清空宿舍</van-button>
+          type="info">新增</van-button>
         <van-button
           class="btn-op"
-          type="info">删除</van-button>
+          type="info">提醒</van-button>
+        <van-button
+          class="btn-op"
+          type="info"
+          @click="showMore = !showMore">更多</van-button>
+        <ul
+          v-if="showMore"
+          class="soa-op__dropdown op-more">
+          <li
+            v-for="item in moreOpList"
+            :key="item.index"
+            @click.stop="clickMoreBtn(item.value)"
+          >{{ item.label }}</li>
+        </ul>
         <van-button
           class="btn-op"
           type="warning"
@@ -44,7 +57,7 @@
         <van-search
           v-model="searchForm.searchValue"
           show-action
-          placeholder="宿舍号/宿舍楼"
+          placeholder="姓名/班级/宿舍号/宿舍楼"
           @search="onSearch"
           @cancel="isShowSearch=false"
         />
@@ -59,13 +72,18 @@
         </van-dropdown-menu>
         <van-dropdown-menu :overlay="false">
           <van-dropdown-item
-            v-model="searchForm.dormType"
-            :options="dormTypeList" />
+            v-model="searchForm.isHead"
+            :options="isHeadList" />
         </van-dropdown-menu>
         <van-dropdown-menu :overlay="false">
           <van-dropdown-item
-            v-model="searchForm.isFull"
-            :options="isFullList" />
+            v-model="searchForm.isDivide"
+            :options="isDivideList" />
+        </van-dropdown-menu>
+        <van-dropdown-menu :overlay="false">
+          <van-dropdown-item
+            v-model="searchForm.dormType"
+            :options="dormTypeList" />
         </van-dropdown-menu>
         <van-icon
           name="search"
@@ -86,18 +104,20 @@
     <template
       slot="item-content"
       slot-scope="slotProps">
+      <img src="../../../../assets/images/timg.jpg" >
       <div class="soa-list-item-content">
-        <div class="item-row">
-          <span class>{{ slotProps.item.dormInfo }}</span>
-          <span class="ml10">{{ slotProps.item.headName }}</span>
+        <div>
+          <span class="t-info">{{ slotProps.item.userName }}</span>
           <span class="t-info ml10">{{ slotProps.item.telephone }}</span>
+          <span>{{ slotProps.item.banji }}</span>
         </div>
-        <div class="item-row flex-between t-light">
-          {{ slotProps.item.dormType }}
-          <div>
-            <span>人数：{{ slotProps.item.num }}/{{ slotProps.item.num }}</span>
-            <span class="ml10 t-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
-          </div>
+        <div class="t-light">
+          {{ slotProps.item.dormInfo }}
+          <span class="ml10">舍长</span>
+        </div>
+        <div class="flex-between">
+          <span>学生宿舍</span>
+          <span class="t-warm ml10">未激活</span>
         </div>
       </div>
     </template>
@@ -107,50 +127,75 @@
 <script>
 import listLayout from './list-layout'
 export default {
-  name: 'DormList',
+  name: 'BedList',
   components: {
     listLayout
   },
   data() {
     return {
       totalList: [
-        { lable: '宿舍树', filed: 'total_num', value: 200 },
-        { lable: '未分配满', filed: 'total_num', value: 200 },
-        { lable: '学生', filed: 'total_num', value: 200 },
-        { lable: '已分配满', filed: 'total_num', value: 200 },
-        { lable: '老师', filed: 'total_num', value: 200 }
+        { lable: '可容纳', filed: 'total_num', value: 200 },
+        { lable: '已容纳', filed: 'total_num', value: 200 },
+        { lable: '需激活', filed: 'total_num', value: 200 },
+        { lable: '可容纳学生', filed: 'total_num', value: 200 },
+        { lable: '已容纳学生', filed: 'total_num', value: 200 },
+        { lable: '未激活', filed: 'total_num', value: 200 },
+        { lable: '可容纳老师', filed: 'total_num', value: 20 },
+        { lable: '已容纳老师', filed: 'total_num', value: 20 },
+        { lable: '请假中', filed: 'total_num', value: 200 }
       ], // 统计信息
+
       isShowBar: false, // 是否展示checkbox框
       isShowSearch: false, // 是否展示搜索弹框
       statusList: [
-        { text: '激活状态', value: null },
-        { text: '全部激活', value: 1 },
-        { text: '部分激活', value: 2 },
-        { text: '全未激活', value: 3 }
+        { text: '全部状态', value: null },
+        { text: '正常', value: 1 },
+        { text: '未激活', value: 2 },
+        { text: '请假中', value: 3 }
+      ],
+      isHeadList: [
+        { text: '是否舍长', value: null },
+        { text: '是舍长', value: 1 },
+        { text: '非舍长', value: 0 }
+      ],
+      isDivideList: [
+        { text: '是否分配', value: null },
+        { text: '已分配', value: 1 },
+        { text: '否分配', value: 0 }
       ],
       dormTypeList: [
         { text: '宿舍类型', value: null },
         { text: '学生宿舍', value: 1 },
-        { text: '老师宿舍', value: 2 }
-      ],
-      isFullList: [
-        { text: '是否住满', value: null },
-        { text: '全住满', value: 1 },
-        { text: '未住满', value: 0 }
+        { text: '教师宿舍', value: 2 }
       ],
       searchForm: {
         status: null,
+        isHead: 1,
+        isDivide: null,
         dormType: null,
-        isFull: null,
         searchValue: ''
       },
       dataList: [],
+      pageIndex: 0, // 前端分页页码
+      pageSize: 10,
+      pageTotal: 9999, // 总页数
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
       moreOpList: [
-        { value: 'ts', label: '清空宿舍' },
+        { value: 'qc', label: '生成二维码' },
+        { value: 'exp', label: '导出数据' },
+        { value: 'ts', label: '退舍' },
         { value: 'del', label: '删除' }
       ]
+    }
+  },
+  computed: {
+    params() {
+      return {
+        ...this.searchForm,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      }
     }
   },
   created() {
@@ -189,12 +234,10 @@ export default {
             isCheck: false,
             isShowMore: false,
             id: this.dataList.length + 1,
-            dormInfo: '福大生活一区103栋108宿舍-A床',
-            headName: '李四四',
-            telephone: '18823412111',
-            dormType: '学生宿舍',
-            num: 6,
-            aNum: 5
+            userName: '张三峰',
+            telephone: '18233422111',
+            banji: '石油化工学院-2019级化工一班',
+            dormInfo: '福大生活一区103栋108宿舍-A床'
           });
         }
         // 加载状态结束
@@ -214,8 +257,8 @@ export default {
 </script>
 
 <style lang="scss">
-.dorm-list{
-  // .soa-list-total {
+.bed-list {
+  // .dorm-total {
   //   .total-item {
   //     width: 50%;
   //   }

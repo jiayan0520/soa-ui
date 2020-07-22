@@ -2,7 +2,7 @@ export default [
   {
     path: '/dorm',
     name: 'dorm',
-    component: () => import('@/views/app/dorm/index')
+    component: () => import('@/views/app/dorm')
   },
   {
     path: '/dormitory-room',

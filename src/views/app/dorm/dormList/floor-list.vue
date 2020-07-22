@@ -4,7 +4,7 @@
     :more-op-list="moreOpList"
     :data-list="dataList"
     :is-show-bar="isShowBar"
-    class="dorm-list"
+    class="floor-list"
     @search="onSearch"
     @loadData="loadData"
   >
@@ -12,7 +12,7 @@
       <div
         v-if="!isShowBar"
         class="tool-bar">
-        <div class="head-title">宿舍列表</div>
+        <div class="head-title">宿舍楼列表</div>
         <van-button
           class="btn-op"
           type="warning"
@@ -44,7 +44,7 @@
         <van-search
           v-model="searchForm.searchValue"
           show-action
-          placeholder="宿舍号/宿舍楼"
+          placeholder="请输入宿舍楼名称"
           @search="onSearch"
           @cancel="isShowSearch=false"
         />
@@ -52,16 +52,6 @@
       <div
         v-else
         class="search-bar">
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.status"
-            :options="statusList" />
-        </van-dropdown-menu>
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.dormType"
-            :options="dormTypeList" />
-        </van-dropdown-menu>
         <van-dropdown-menu :overlay="false">
           <van-dropdown-item
             v-model="searchForm.isFull"
@@ -72,31 +62,60 @@
           @click="isShowSearch = true" />
       </div>
     </template>
-    <template slot="refresh-top">
-      <div class="soa-list-total">
-        <div
-          v-for="(item,index) in totalList"
-          :key="index"
-          class="total-item">
-          <span class="lable">{{ item.lable }}：</span>
-          <span class="val">{{ item.value }}人</span>
-        </div>
-      </div>
-    </template>
     <template
       slot="item-content"
       slot-scope="slotProps">
-      <div class="soa-list-item-content">
-        <div class="item-row">
-          <span class>{{ slotProps.item.dormInfo }}</span>
-          <span class="ml10">{{ slotProps.item.headName }}</span>
-          <span class="t-info ml10">{{ slotProps.item.telephone }}</span>
+      <div class="floor-item-content">
+        <div class="flex-between">
+          <img src="../../../../assets/images/timg.jpg" >
+          <div class="soa-list-item-content">
+            <div>{{ slotProps.item.floorName }}</div>
+            <div class="t-light">
+              <span>{{ slotProps.item.headName }}</span>
+              <span class="ml10 t-info">{{ slotProps.item.telephone }}</span>
+            </div>
+          </div>
         </div>
-        <div class="item-row flex-between t-light">
-          {{ slotProps.item.dormType }}
-          <div>
-            <span>人数：{{ slotProps.item.num }}/{{ slotProps.item.num }}</span>
-            <span class="ml10 t-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
+        <div class="list-item-total">
+          <div class="total-item">
+            <span class="lable">可容纳：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">可容纳：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">已容纳：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">宿舍数：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">可容纳学生：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">已容纳学生：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">学生：</span>
+            <span class="val">200间</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">可容纳老师：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">已容纳老师：</span>
+            <span class="val">200人</span>
+          </div>
+          <div class="total-item">
+            <span class="lable">老师：</span>
+            <span class="val">200间</span>
           </div>
         </div>
       </div>
@@ -107,50 +126,42 @@
 <script>
 import listLayout from './list-layout'
 export default {
-  name: 'DormList',
+  name: 'FloorList',
   components: {
     listLayout
   },
   data() {
     return {
-      totalList: [
-        { lable: '宿舍树', filed: 'total_num', value: 200 },
-        { lable: '未分配满', filed: 'total_num', value: 200 },
-        { lable: '学生', filed: 'total_num', value: 200 },
-        { lable: '已分配满', filed: 'total_num', value: 200 },
-        { lable: '老师', filed: 'total_num', value: 200 }
-      ], // 统计信息
       isShowBar: false, // 是否展示checkbox框
       isShowSearch: false, // 是否展示搜索弹框
-      statusList: [
-        { text: '激活状态', value: null },
-        { text: '全部激活', value: 1 },
-        { text: '部分激活', value: 2 },
-        { text: '全未激活', value: 3 }
-      ],
-      dormTypeList: [
-        { text: '宿舍类型', value: null },
-        { text: '学生宿舍', value: 1 },
-        { text: '老师宿舍', value: 2 }
-      ],
       isFullList: [
         { text: '是否住满', value: null },
         { text: '全住满', value: 1 },
         { text: '未住满', value: 0 }
       ],
       searchForm: {
-        status: null,
-        dormType: null,
         isFull: null,
         searchValue: ''
       },
       dataList: [],
+      pageIndex: 0, // 前端分页页码
+      pageSize: 10,
+      pageTotal: 9999, // 总页数
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
       moreOpList: [
         { value: 'ts', label: '清空宿舍' },
         { value: 'del', label: '删除' }
       ]
+    }
+  },
+  computed: {
+    params() {
+      return {
+        ...this.searchForm,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize
+      }
     }
   },
   created() {
@@ -189,12 +200,9 @@ export default {
             isCheck: false,
             isShowMore: false,
             id: this.dataList.length + 1,
-            dormInfo: '福大生活一区103栋108宿舍-A床',
-            headName: '李四四',
-            telephone: '18823412111',
-            dormType: '学生宿舍',
-            num: 6,
-            aNum: 5
+            floorName: '福大生活一区103栋',
+            headName: '李幸福',
+            telephone: '18233422111'
           });
         }
         // 加载状态结束
@@ -214,11 +222,21 @@ export default {
 </script>
 
 <style lang="scss">
-.dorm-list{
-  // .soa-list-total {
+.floor-list {
+  // .dorm-total {
   //   .total-item {
   //     width: 50%;
   //   }
   // }
+  .floor-item-content {
+    flex-direction: column;
+    .list-item-total {
+      display: flex;
+      flex-wrap: wrap;
+      .total-item {
+        margin: 0 10px;
+      }
+    }
+  }
 }
 </style>
