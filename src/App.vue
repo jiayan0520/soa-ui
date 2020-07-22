@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <router-view class="app-router" />
+    <router-view class="app-router"/>
     <van-tabbar
-      class="soa-bottom-bar"
-      route
-      border>
+      v-model="active"
+    >
       <van-tabbar-item
         replace
         to="/message"
@@ -18,12 +17,15 @@
 </template>
 
 <script>
-import { Tabbar, TabbarItem } from 'vant'
 export default {
   name: 'App',
-  components: {
-    [Tabbar.name]: Tabbar,
-    [TabbarItem.name]: TabbarItem
+  data() {
+    return {
+      active: 1
+    }
+  },
+  mounted() {
+    this.active = window.location.href.indexOf('message') >= 0 ? 0 : 1
   }
 }
 </script>

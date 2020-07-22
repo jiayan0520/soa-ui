@@ -24,27 +24,28 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import '@/assets/style/var.scss';
 .soa-menu-icon{
   display: inline-block;
   width: 60px;
   height: 60px;
   text-align: center;
   line-height: 60px;
-  border-radius: 10px;
+  border-radius: 25px;
 }
 .soa-icon{
-  font-size: 40px;
+  font-size: 38px;
   color:#fff
 }
 .soa-menu-icon-normal{
-  background-color: #38A4F5;
+  background-color: $--color-info;
 }
 .soa-menu-icon-warming{
-  background-color: #E69D01;
+  background-color: $--color-warning;
 }
 .soa-menu-icon-success{
-  background-color: #3BB113;
+  background-color: $--color-success;
 }
 .soa-menu-icon-mini{
   border-radius: 5px;

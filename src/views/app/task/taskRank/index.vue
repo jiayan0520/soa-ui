@@ -51,19 +51,8 @@
 </template>
 
 <script>
-import { Tab, Tabs, List, Cell, Grid, GridItem, Col, Row } from 'vant';
 export default {
   name: 'TaskRank',
-  components: {
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
-    [Col.name]: Col,
-    [Row.name]: Row
-  },
   data() {
     return {
       active: 0,

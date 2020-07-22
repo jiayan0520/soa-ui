@@ -69,16 +69,8 @@
 </template>
 
 <script>
-import { NavBar, Cell, Col, Row, Icon } from 'vant';
 export default {
   name: 'Room',
-  components: {
-    [NavBar.name]: NavBar,
-    [Cell.name]: Cell,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon
-  },
   methods: {
     onClickBack() {
       this.$router.go(-1)
