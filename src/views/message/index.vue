@@ -51,7 +51,7 @@ export default {
             title: '你有一条新的任务信息',
             brief: '20200705 至 20200705',
             time: '04-04',
-            url: `/taskDetail?id=${this.list.length + 1}&type=1`
+            url: `/task-message?id=${this.list.length + 1}&type=1`
           }
           this.list.push(data);
         }

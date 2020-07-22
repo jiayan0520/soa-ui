@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <router-view class="app-router"/>
-    <van-tabbar route>
+    <van-tabbar
+      v-model="active"
+    >
       <van-tabbar-item
         replace
         to="/message"
@@ -20,7 +22,15 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return {
+      active: 1
+    }
+  },
+  mounted() {
+    this.active = window.location.href.indexOf('message') >= 0 ? 0 : 1
+  }
 }
 </script>
 

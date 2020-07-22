@@ -26,7 +26,12 @@ export default [
   },
   {
     path: '/task-detail',
-    name: 'taskDetail',
+    name: 'taskMessage',
+    component: () => import('@/views/app/task/taskList/detail')
+  },
+  {
+    path: '/task-message',
+    name: 'taskMessage',
     component: () => import('@/views/app/task/taskList/detail')
   },
   {
