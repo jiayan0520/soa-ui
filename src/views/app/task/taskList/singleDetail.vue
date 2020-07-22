@@ -84,10 +84,11 @@ export default {
 }
 </script>
 
-<style scoped>
-    .soa-task-file-list > a{
-        text-decoration: underline;
-        color: #1989FA;
-        margin-right: 10px;
-    }
+<style lang="scss">
+  @import '@/assets/style/var.scss';
+  .soa-task-file-list > a{
+      text-decoration: underline;
+      color: $--color-info;
+      margin-right: 10px;
+  }
 </style>

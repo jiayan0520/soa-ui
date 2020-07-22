@@ -1,3 +1,4 @@
+@import './var.scss';
 .mr10 {
     margin-right: 10px;
 }
@@ -71,19 +72,19 @@
 }
 
 .t-light {
-    color: #909399;
+    color: $--color-light;
 }
 .t-danger {
-    color: #ee0a24;
+    color: $--color-danger;
 }
 .t-info {
-    color: #1989fa;
+    color: $--color-info;
 }
 .t-warm {
-    color: #ff976a;
+    color: $--color-warning;
 }
 .t-success {
-    color: #07c160;
+    color: $--color-success;
 }
 
 .divider {
@@ -91,7 +92,7 @@
 }
 
 .van-tabs__line {
-    background-color: #1989fa !important;
+    background-color: $--color-info !important;
 }
 
 .flex-between {

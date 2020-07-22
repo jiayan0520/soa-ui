@@ -413,9 +413,10 @@ export default {
 <style>
   .mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
 </style>
-<style scoped>
+<style lang="scss">
+@import '@/assets/style/var.scss';
 .soa-task-add-executor .van-field__right-icon{
-  color:#38A4F5
+  color:$--color-info
 }
 .soa-task-add-submit{
   margin: 16px 16px 55px

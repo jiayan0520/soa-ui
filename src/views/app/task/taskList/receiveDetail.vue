@@ -383,10 +383,11 @@ export default {
 <style>
   .mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
 </style>
-<style scoped>
+<style lang="scss">
+@import '@/assets/style/var.scss';
     .soa-task-file-list > a{
         text-decoration: underline;
-        color: #1989FA;
+        color: $--color-info;
         margin-right: 10px;
     }
     .soa-task-list-cell {
