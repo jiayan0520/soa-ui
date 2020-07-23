@@ -21,7 +21,6 @@
       <van-field
         v-model="query.executor"
         :readonly="true"
-        class="soa-task-add-executor"
         label="执行人"
         right-icon="add"
         placeholder=""
@@ -110,7 +109,7 @@
       </van-field>
       <van-divider />
       <div class="soa-task-add-child">
-        <div class="soa-task-add-list">
+        <div class="soa-task-add-child__list">
           <div
             v-for="(item, index) in query.child"
             :key="index"
@@ -188,7 +187,6 @@
         <van-field
           v-model="childQuery.executor"
           :readonly="true"
-          class="soa-task-add-executor"
           label="执行人"
           right-icon="add"
           placeholder=""
@@ -424,19 +422,19 @@ export default {
   }
 }
 </script>
-<style>
-  .mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
-</style>
-<style scoped>
-.soa-task-add-executor .van-field__right-icon{
-  color:#38A4F5
+
+<style lang="scss">
+@import '@/assets/mixins/mixins.scss';
+
+@include b(task-add){
+  @include e(submit){
+    margin: 16px 16px 55px
+  }
+  @include e(child){
+    margin: 16px 16px 0;
+  }
 }
-.soa-task-add-submit{
-  margin: 16px 16px 55px
-}
-.soa-task-add-child {
-  margin: 16px 16px 0;
-}
+
 .soa-task-add-list-cell {
   background: #F8F8F8;
   border-radius: 8px;
@@ -444,4 +442,5 @@ export default {
   margin-bottom: 16px;
 }
 .cursor{ cursor: pointer}
+.mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
 </style>

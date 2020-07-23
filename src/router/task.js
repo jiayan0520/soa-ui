@@ -22,7 +22,7 @@ export default [
   {
     path: '/task-list-feekback',
     name: 'taskFeekback',
-    component: () => import('@/views/app/task/taskList/feekBack')
+    component: () => import('@/views/app/task/taskList/feedBack')
   },
   {
     path: '/task-detail',

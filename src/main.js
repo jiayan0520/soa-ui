@@ -9,11 +9,11 @@ import 'vue2-datepicker/index.css';
 import '@/assist/permission'; // 权限控制
 import { Dialog } from 'vant';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 Vue.use(Dialog);
 // 是否开启mock
 if (process.env.NODE_ENV !== 'production') {
-  require('@/mock');
+  // require('@/mock');
 }
 /* eslint-disable no-new */
 new Vue({
@@ -21,4 +21,4 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
-})
+});
