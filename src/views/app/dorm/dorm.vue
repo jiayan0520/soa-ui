@@ -16,7 +16,7 @@
       </van-tab>
       <van-tab
         title="楼栋列表"
-        name="3" >
+        name="3">
         <floor-list />
       </van-tab>
     </van-tabs>

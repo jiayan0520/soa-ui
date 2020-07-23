@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import listLayout from './list-layout'
+import listLayout from '../components/list-layout'
 export default {
   name: 'FloorList',
   components: {

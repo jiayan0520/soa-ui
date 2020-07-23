@@ -44,7 +44,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
-    overflow: hidden;
+    // overflow: hidden;
   }
   .soa-bottom-bar {
     border-top: 1px solid rgba(0, 0, 0, 0.1);

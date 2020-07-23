@@ -172,10 +172,6 @@ export default {
       font-size: 20px;
       font-weight: bold;
     }
-    .btn-op {
-      height: 38px;
-      border-radius: 6px;
-    }
   }
   .search-bar {
     z-index: 10;
@@ -248,37 +244,10 @@ export default {
                 // }
               }
             }
-            .soa-icon-gengduo {
-              width: 10%;
-              text-align: center;
-              position: relative;
-            }
           }
         }
       }
     }
-  }
-}
-.soa-op__dropdown {
-  z-index: 5;
-  position: absolute;
-  right: 10px;
-  top: 25px;
-  width: 100px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  background: #ffffff;
-  padding: 10px;
-  li {
-    height: 40px;
-    line-height: 40px;
-  }
-  & > li:not(:last-child) {
-    border-bottom: 1px solid #f5f6f8;
-  }
-  &.op-more {
-    right: 40px;
-    top: 45px;
   }
 }
 </style>
