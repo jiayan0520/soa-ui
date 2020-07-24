@@ -5,9 +5,9 @@ export default [
     component: () => import('@/views/app/dorm')
   },
   {
-    path: '/dormitory-room',
-    name: 'dormitoryRoom',
-    component: () => import('@/views/app/dorm/dormList/room')
+    path: '/dorm/bedDetail',
+    name: 'bedDetail',
+    component: () => import('@/views/app/dorm/dormList/bed-detail')
   },
   {
     path: '/dorm-count',

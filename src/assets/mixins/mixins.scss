@@ -55,3 +55,20 @@
     }
 }
 
+@mixin base-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin base-nowrap {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin base-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

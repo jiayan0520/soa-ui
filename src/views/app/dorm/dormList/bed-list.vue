@@ -4,6 +4,7 @@
     :more-op-list="moreOpList"
     :data-list="dataList"
     :is-show-bar="isShowBar"
+    detail-url="/dorm/bedDetail"
     class="bed-list"
     @search="onSearch"
     @loadData="loadData"
@@ -125,7 +126,7 @@
 </template>
 
 <script>
-import listLayout from './list-layout'
+import listLayout from '../components/list-layout'
 export default {
   name: 'BedList',
   components: {
@@ -144,7 +145,6 @@ export default {
         { lable: '已容纳老师', filed: 'total_num', value: 20 },
         { lable: '请假中', filed: 'total_num', value: 200 }
       ], // 统计信息
-
       isShowBar: false, // 是否展示checkbox框
       isShowSearch: false, // 是否展示搜索弹框
       statusList: [
