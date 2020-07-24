@@ -33,7 +33,7 @@
         </template>
       </van-field>
     </van-form>
-    <div class="soa-task-add-submit">
+    <div>
       <van-button
         block
         type="info"

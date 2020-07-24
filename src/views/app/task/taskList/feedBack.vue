@@ -1,5 +1,5 @@
 <template>
-  <div class="soa-task-detail">
+  <div class="soa-task-feedback">
     <van-cell-group>
       <van-cell>
         <van-row gutter="10">
@@ -60,7 +60,7 @@
         </template>
       </van-field>
     </van-cell-group>
-    <div class="soa-task-add-submit">
+    <div>
       <van-button
         block
         type="info"

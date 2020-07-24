@@ -17,7 +17,6 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
-      class="soa-task-list-lists"
       @load="onLoad"
     >
       <van-cell
@@ -28,14 +27,14 @@
           align="center"
           type="flex">
           <van-col span="18">
-            <div class="soa-task-examine-list-label">{{ item.label }}</div>
-            <div class="soa-task-examine-list-item">{{ item.end }}</div>
-            <div class="soa-task-examine-list-item">{{ item.star }}</div>
+            <div class="fwb">{{ item.label }}</div>
+            <div class="t-light">{{ item.end }}</div>
+            <div class="t-light">{{ item.star }}</div>
             <div :class="[item.info.indexOf('距截止')>=0? 't-success': 't-danger']">{{ item.info }}</div>
           </van-col>
           <van-col
             span="6"
-            class="soa-task-examine-list-state">{{ item.state }}</van-col>
+            class="t-warm">{{ item.state }}</van-col>
         </van-row>
       </van-cell>
     </van-list>
@@ -96,14 +95,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/style/var.scss';
-.soa-task-examine-list-label{
-  font-weight: 600
-}
-.soa-task-examine-list-state{
-  color:$--color-warning
-}
-.soa-task-examine-list-item{
-  color: #aaaaaa
-}
+
 </style>

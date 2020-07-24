@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="soa-task-single">
     <van-cell-group>
       <van-cell>
         <van-row gutter="10">
@@ -53,7 +53,7 @@
         <van-row gutter="10">
           <van-col span="5"><div class="">附件信息</div></van-col>
           <van-col span="19">
-            <div class="soa-task-file-list">
+            <div class="soa-task-singledetail__file">
               <a>学生信息.xls</a>
               <a>学生信息.xls</a>
             </div>
@@ -85,10 +85,12 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '@/assets/style/var.scss';
-  .soa-task-file-list > a{
+  @import '@/assets/mixins/mixins.scss';
+  @include b(task-single){
+    & > a{
       text-decoration: underline;
-      color: $--color-info;
+      color: #1989fa;
       margin-right: 10px;
+    }
   }
 </style>

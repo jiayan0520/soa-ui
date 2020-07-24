@@ -32,7 +32,7 @@
           download="w3logo">w3logo</a>
       </template>
     </van-cell>
-    <div class="soa-task-examine-detail-btn">
+    <div class="soa-task-examine-detail__btn">
       <van-button
         type="info"
         icon="checked"
@@ -52,8 +52,7 @@
       show-cancel-button
       @confirm="handleConfirm"
       @cancle="handlecCancle">
-      <van-form
-        class="soa-task-add">
+      <van-form>
         <template v-if="isCheck">
           <van-field
             v-model="number"
@@ -109,9 +108,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.soa-task-examine-detail-btn{
-  margin-top: 60px;
-  text-align: center
-}
+<style lang="scss">
+  @import '@/assets/mixins/mixins.scss';
+  @include b(task-examine-detail){
+    @include e(btn){
+      margin-top: 60px;
+      text-align: center
+    }
+  }
 </style>
