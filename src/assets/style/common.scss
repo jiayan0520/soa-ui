@@ -1,49 +1,102 @@
-$grey: #909399;
-$lightGrey: #F8F8F8;
-$danger: #EE0A24;
-$primary: #1989FA;
-$warm: #FF976A;
-$success: #07C160;
+@import './var.scss';
+.mr10 {
+    margin-right: 10px;
+}
+.mr20 {
+    margin-right: 20px;
+}
+.mt10 {
+    margin-top: 10px;
+}
+.mb10 {
+    margin-bottom: 10px;
+}
+.ml10 {
+    margin-left: 10px;
+}
+.ml20 {
+    margin-left: 20px;
+}
 
+.mtb10 {
+    margin: 10px 0;
+}
 
-.mr10 {margin-right: 10px;}
-.mr20 {margin-right: 20px;}
-.mt10 {margin-top: 10px;}
-.mb10 {margin-bottom: 10px;}
-.ml10 {margin-left: 10px;}
-.ml20 {margin-left: 20px;}
+.ptb10 {
+    padding: 10px 0;
+}
+.ptb20 {
+    padding: 20px 0;
+}
+.plr20 {
+    padding: 0 20px;
+}
+.pd10 {
+    padding: 10px;
+}
+.pd20 {
+    padding: 20px;
+}
 
-.mtb10{margin: 10px 0;}
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
 
-.ptb10 {padding: 10px 0;}
-.ptb20 {padding: 20px 0;}
-.plr20 {padding: 0 20px;}
-.pd10{padding: 10px;}
-.pd20{padding: 20px;}
+.ft12 {
+    font-size: 12px;
+}
+.ft14 {
+    font-size: 14px;
+}
+.ft16 {
+    font-size: 16px;
+}
+.ft18 {
+    font-size: 18px;
+}
+.ft20 {
+    font-size: 20px;
+}
+.fwb {
+    font-weight: bold;
+}
 
-.right {float: right;}
-.left {float: left;}
+.tc {
+    text-align: center;
+}
+.tr {
+    text-align: right;
+}
 
-.ft12 {font-size: 12px;}
-.ft14 {font-size: 14px;}
-.ft16 {font-size: 16px;}
-.ft18 {font-size: 18px;}
-.ft20 {font-size: 20px;}
-.fwb {font-weight: bold;}
+.t-light {
+    color: $--color-light;
+}
+.t-danger {
+    color: $--color-danger;
+}
+.t-info {
+    color: $--color-info;
+}
+.t-warm {
+    color: $--color-warning;
+}
+.t-success {
+    color: $--color-success;
+}
 
-.tc{text-align: center;}
-.tr{text-align: right;}
+.divider {
+    border-bottom: 1px solid #909399;
+}
 
+.van-tabs__line {
+    background-color: $--color-info !important;
+}
 
-.t-light{color:$grey;}
-.t-danger{color: $danger;}
-.t-info{color: $primary;}
-.t-warm{color: $warm;}
-.t-success{color: $success;}
-
-.divider{border-bottom: 1px solid $grey;}
-
-.van-tabs__line{background-color: $primary!important;}
-
-
-
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

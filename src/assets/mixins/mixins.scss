@@ -4,7 +4,7 @@
  -------------------------- */
 
 @mixin b($block) {
-    $B: $namespace+'-'+$block !global;
+    $B: $namespace + "-" + $block !global;
     .#{$B} {
         @content;
     }
@@ -25,8 +25,7 @@
                 }
             }
         }
-    }
-    @else {
+    } @else {
         @at-root {
             #{$currentSelector} {
                 @content;
@@ -55,3 +54,4 @@
         }
     }
 }
+

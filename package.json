@@ -10,11 +10,12 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run e2e",
     "lint": "eslint --ext .js,.vue src test/e2e/specs",
-    "build": "node build/build.js",
+    "build": "node build/build.js --report",
     "update": "npm install css-loader style-loader --save-dev && npm install node-sass sass-loader --save-dev"
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "mockjs": "^1.1.0",
     "vant": "^2.8.7",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

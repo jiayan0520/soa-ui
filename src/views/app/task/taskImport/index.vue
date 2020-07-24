@@ -45,21 +45,8 @@
 </template>
 
 <script>
-import { NavBar, Button, Col, Row, Icon, Cell, CellGroup, Uploader, Field, Form } from 'vant';
 export default {
   name: 'Index',
-  components: {
-    [NavBar.name]: NavBar,
-    [Button.name]: Button,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Uploader.name]: Uploader,
-    [Field.name]: Field,
-    [Form.name]: Form
-  },
   data() {
     return {
       fileList: [],

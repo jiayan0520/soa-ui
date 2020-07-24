@@ -65,15 +65,8 @@
 </template>
 
 <script>
-import { Col, Row, Cell, CellGroup } from 'vant';
 export default {
   name: 'SingleDetail',
-  components: {
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup
-  },
   data() {
     return {
       params: {
@@ -91,11 +84,11 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
- @import '../../../../assets/index.scss';
-.soa-task-file-list > a{
-    text-decoration: underline;
-    color: $primary;
-    margin-right: 10px;
-}
+<style lang="scss">
+  @import '@/assets/style/var.scss';
+  .soa-task-file-list > a{
+      text-decoration: underline;
+      color: $--color-info;
+      margin-right: 10px;
+  }
 </style>

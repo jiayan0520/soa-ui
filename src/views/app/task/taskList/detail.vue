@@ -298,26 +298,10 @@
 </template>
 
 <script>
-import { Form, Button, Col, Row, Icon, ActionSheet, Cell, CellGroup, Collapse, CollapseItem, Field, Notify, Popup, Switch, Uploader } from 'vant';
 import DatePicker from 'vue2-datepicker'
 export default {
   name: 'Detail',
   components: {
-    [Form.name]: Form,
-    [Button.name]: Button,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Collapse.name]: Collapse,
-    [CollapseItem.name]: CollapseItem,
-    [Field.name]: Field,
-    [Popup.name]: Popup,
-    [Switch.name]: Switch,
-    [ActionSheet.name]: ActionSheet,
-    [Uploader.name]: Uploader,
-    Notify,
     DatePicker
   },
   data() {
@@ -374,7 +358,7 @@ export default {
     // 子任务事件
     onChildSubmit() {
       if (this.data.deadline > this.query.deadline) {
-        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
+        this.$notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
       } else {
         const arr = this.query.child;
         // 虚拟数据
@@ -418,7 +402,7 @@ export default {
     // 子任务截止时间不能超过主任务的截止时间
     bindChildDeadlineChange(e) {
       if (e > this.params.deadline) {
-        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
+        this.$notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
       }
     }
   }

@@ -35,7 +35,7 @@ const menu = [
     header: '宿舍管理',
     list: [
       {
-        to: './dormitory-list',
+        to: './dorm',
         label: '宿舍列表',
         icon: 'dorm'
       },

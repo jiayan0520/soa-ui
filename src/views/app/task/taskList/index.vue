@@ -20,7 +20,7 @@
     />
     <van-tabs
       v-model="active"
-      title-active-color="#38A4F5"
+      title-active-color="#1989fa"
       @click="onClick">
       <van-tab
         title="我发布的"
