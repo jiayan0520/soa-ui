@@ -90,22 +90,9 @@
 </template>
 
 <script>
-import { Search, Tab, Tabs, Button, List, Cell, Col, Row, Icon, Dialog } from 'vant';
 import { addTask } from '@/api/task'
 export default {
   name: 'AddTask',
-  components: {
-    [Search.name]: Search,
-    [Tab.name]: Tab,
-    [Button.name]: Button,
-    [Tabs.name]: Tabs,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    Dialog
-  },
   data() {
     return {
       value1: '',
@@ -129,7 +116,7 @@ export default {
     // 任务结算
     onSubmit() {
       const nowDate = this.format();
-      Dialog.confirm({
+      this.$dialog.confirm({
         title: '提示',
         message: '今天是' + nowDate + '，确定任务结算？'
       })

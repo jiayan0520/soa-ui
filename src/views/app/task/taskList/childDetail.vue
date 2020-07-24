@@ -70,7 +70,7 @@
         <van-row gutter="10">
           <van-col span="5"><div class="">附件信息</div></van-col>
           <van-col span="19">
-            <div class="soa-task-file-list">
+            <div class="soa-task-detail__file">
               <a>学生信息.xls</a>
               <a>学生信息.xls</a>
             </div>

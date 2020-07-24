@@ -62,7 +62,7 @@ const menu = [
         type: 'success'
       },
       {
-        to: './dorm-rank',
+        to: './dorm-count',
         label: '检查信息统计',
         icon: 'results',
         type: 'success'

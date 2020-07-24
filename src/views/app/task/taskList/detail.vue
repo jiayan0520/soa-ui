@@ -42,7 +42,7 @@
           title="完成情况"
           value="3/5完成"
           name="1">
-          <div class="soa-task-complateList plr20">
+          <div class="soa-task-detail__complateList">
             <div>
               <van-row>
                 <van-col span="6">
@@ -87,7 +87,7 @@
         <van-row gutter="10">
           <van-col span="5"><div class="">附件信息</div></van-col>
           <van-col span="19">
-            <div class="soa-task-file-list">
+            <div class="soa-task-detail__file">
               <a
                 href="/images/myw3schoolimage.jpg"
                 download="w3logo">学生信息.xls</a>
@@ -102,7 +102,7 @@
         <div
           v-for="(item, index) in params.child"
           :key="index"
-          class="soa-task-list-cell">
+          class="soa-task-detail__cell">
           <van-row gutter="10">
             <van-col span="12"><div class="ft12">{{ item.title }}</div></van-col>
             <van-col span="4">
@@ -114,13 +114,13 @@
                 class="ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
             </van-col>
             <van-col span="4">
-              <div class="cursor right">
+              <div class="icon">
                 <van-icon
                   name="clear"
                   color="#f00"
                   @click="handleChildClear(index)"/>
               </div>
-              <div class="right mr10 cursor">
+              <div class="icon mr10">
                 <van-icon
                   name="edit"
                   @click="handleChildEdit(index)"/>
@@ -174,7 +174,6 @@
         position="bottom">
         <div class="mtb10 tc ft20">添加子任务</div>
         <van-form
-          class="soa-task-add"
           @submit="onChildSubmit">
           <van-field
             v-model="childQuery.title"
@@ -194,7 +193,6 @@
           <van-field
             v-model="childQuery.executor"
             :readonly="true"
-            class="soa-task-add-executor"
             label="执行人"
             right-icon="add"
             placeholder=""
@@ -237,7 +235,6 @@
             v-model="showChildInfoAction"
             :actions="infoActions"
             @select="onChildInfoSelect" />
-
           <van-field
             v-model="childQuery.critical"
             :readonly="true"
@@ -409,20 +406,31 @@ export default {
 }
 </script>
 
-<style scoped>
-.soa-task-file-list > a{
-  text-decoration: underline;
-  color: #1989FA;
-  margin-right: 10px;
-}
-.soa-task-list-cell {
-  background: #F8F8F8;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 16px;
-}
-  .soa-task-complateList>div{
-    margin-top: 8px;
+<style lang="scss">
+@include b(task-detail){
+  @include e(complateList){
+    padding: 0 20px;
+    & > div{
+      margin-top: 8px;
+    }
   }
+  @include e(file){
+    & > a{
+      text-decoration: underline;
+      color: #1989FA;
+      margin-right: 10px;
+    }
+  }
+  @include e(cell){
+    background: #F8F8F8;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 16px;
+    & > .icon{
+      cursor: pointer;
+      float: right;
+    }
+  }
+}
 
 </style>

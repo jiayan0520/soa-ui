@@ -108,39 +108,37 @@
         </template>
       </van-field>
       <van-divider />
-      <div class="soa-task-add-child">
-        <div class="soa-task-add-child__list">
-          <div
-            v-for="(item, index) in query.child"
-            :key="index"
-            class="soa-task-add-list-cell">
-            <van-row gutter="10">
-              <van-col span="12"><div class="ft12">{{ item.title }}</div></van-col>
-              <van-col span="4">
-                <div class="t-light ft12">{{ item.done }}/{{ item.total }}完成</div>
-              </van-col>
-              <van-col span="4">
-                <div
-                  :class="{'t-success':item.total==item.done,'t-danger':item.total!=item.done}"
-                  class="ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-              </van-col>
-              <van-col span="4">
-                <div class="cursor right">
-                  <van-icon
-                    name="clear"
-                    color="#f00"
-                    @click="handleChildClear(index)"/>
-                </div>
-                <div class="right mr10 cursor">
-                  <van-icon
-                    name="edit"
-                    @click="handleChildEdit(index)"/>
-                </div>
-              </van-col>
-            </van-row>
-          </div>
+      <div class="soa-task-add__child">
+        <div
+          v-for="(item, index) in query.child"
+          :key="index"
+          class="soa-task-add__child--list">
+          <van-row gutter="10">
+            <van-col span="12"><div class="ft12">{{ item.title }}</div></van-col>
+            <van-col span="4">
+              <div class="t-light ft12">{{ item.done }}/{{ item.total }}完成</div>
+            </van-col>
+            <van-col span="4">
+              <div
+                :class="{'t-success':item.total==item.done,'t-danger':item.total!=item.done}"
+                class="ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
+            </van-col>
+            <van-col span="4">
+              <div class="icon">
+                <van-icon
+                  name="clear"
+                  color="#f00"
+                  @click="handleChildClear(index)"/>
+              </div>
+              <div class="icon mr10">
+                <van-icon
+                  name="edit"
+                  @click="handleChildEdit(index)"/>
+              </div>
+            </van-col>
+          </van-row>
         </div>
-        <div class="soa-task-add-btn">
+        <div class="soa-task-add__btn">
           <van-button
             block
             icon="add-o"
@@ -151,7 +149,7 @@
         </div>
       </div>
       <van-divider />
-      <div class="soa-task-add-submit">
+      <div class="soa-task-add__submit">
         <van-button
           block
           type="info"
@@ -165,7 +163,7 @@
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <div class="mtb10 tc ft20">添加子任务</div>
+      <div class="soa-task-add__popup--title">添加子任务</div>
       <van-form
         class="soa-task-add"
         @submit="onChildSubmit">
@@ -274,7 +272,7 @@
               accept="*"/>
           </template>
         </van-field>
-        <div class="soa-task-add-submit">
+        <div class="soa-task-add__submit">
           <van-button
             block
             type="info"
@@ -418,15 +416,24 @@ export default {
   }
   @include e(child){
     margin: 16px 16px 0;
+    @include m(list){
+      background: #F8F8F8;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 16px;
+      & .icon{
+        cursor: pointer;
+        font-size: 12px;
+      }
+    }
+  }
+  @include e(popup){
+    @include m(title){
+      margin:0 10px;
+      text-align: center;
+      font-size: 20px;
+    }
   }
 }
-
-.soa-task-add-list-cell {
-  background: #F8F8F8;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 16px;
-}
-.cursor{ cursor: pointer}
 .mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
 </style>
