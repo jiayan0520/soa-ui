@@ -27,7 +27,7 @@
           align="center"
           type="flex">
           <van-col span="18">
-            <div class="c-fwb">{{ item.label }}</div>
+            <div class="c-ft16">{{ item.label }}</div>
             <div class="c-light">{{ item.end }}</div>
             <div class="c-light">{{ item.star }}</div>
             <div :class="[item.info.indexOf('距截止')>=0? 'c-success': 'c-danger']">{{ item.info }}</div>

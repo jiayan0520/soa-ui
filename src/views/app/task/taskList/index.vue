@@ -42,7 +42,7 @@
       slot-scope="slotProps">
       <div class="soa-list-item-content content">
         <div>
-          <div class="title c-ft18 c-fwb">{{ slotProps.item.label }}</div>
+          <div class="c-ft16">{{ slotProps.item.label }}</div>
           <div class="c-light">{{ slotProps.item.end }}</div>
           <div class="c-light">{{ slotProps.item.start }}</div>
           <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
