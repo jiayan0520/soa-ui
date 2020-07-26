@@ -31,6 +31,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/style/var.scss";
 body {
   box-sizing: border-box;
 }
@@ -38,6 +39,7 @@ body {
   height: 100vh;
   max-width: 1024px;
   margin: 0 auto;
+  font-size: $--font-size-base;
   .app-router {
     padding: 10px 10px 55px 10px;
     height: 100%;

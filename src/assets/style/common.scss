@@ -46,19 +46,19 @@
 }
 
 .c-ft12 {
-    font-size: 12px;
+    font-size: $--font-size-extra-small;
 }
 .c-ft14 {
-    font-size: 14px;
+    font-size: $--font-size-base;
 }
 .c-ft16 {
-    font-size: 16px;
+    font-size: $--font-size-medium;
 }
 .c-ft18 {
-    font-size: 18px;
+    font-size: $--font-size-large;
 }
 .c-ft20 {
-    font-size: 20px;
+    font-size: $--font-size-extra-large;
 }
 .c-fwb {
     font-weight: bold;
