@@ -1,5 +1,14 @@
 <template>
   <div class="soa-list-container">
+    <div
+      v-if="title"
+      class="tool-bar">
+      <h3>{{ title }}</h3>
+      <van-button
+        v-if="opLabel"
+        type="warning"
+        @click="handleOperator">{{ opLabel }}</van-button>
+    </div>
     <section
       v-if="$slots.top"
       class="soa-list-container-top">
@@ -66,6 +75,20 @@ export default {
   name: 'ListLayout',
   props: {
     /**
+     * 表单title
+     */
+    title: {
+      type: String,
+      default: ''
+    },
+    /**
+     * 操作按钮
+     */
+    opLabel: {
+      type: String,
+      default: ''
+    },
+    /**
      * 更多操作按钮
      */
     moreOpList: {
@@ -109,6 +132,7 @@ export default {
   methods: {
     // 下拉刷新
     onRefresh() {
+      this.showMoreIndex === -1
       setTimeout(() => {
         this.refreshing = false
         this.$emit('search')
@@ -116,6 +140,7 @@ export default {
     },
     // 加载数据
     loadData() {
+      this.showMoreIndex === -1
       this.$emit('loadData')
     },
     // 行复选框点击
@@ -133,15 +158,19 @@ export default {
         case 'qc':
           break
       }
+      this.$emit('clickMoreBtn', val)
       this.showMoreIndex = -1
     },
     handleClick(item) {
-      console.log(item)
+      console.log('handleClick', item, this.detailUrl)
       const id = item.id
       this.$router.push({
         path: this.detailUrl,
         query: { id }
       })
+    },
+    handleOperator() {
+      this.$emit('clickOperator')
     }
   }
 }
@@ -158,8 +187,8 @@ export default {
     width: 100%;
   }
   .tool-bar {
-    position: absolute;
-    top: 0;
+    // position: absolute;
+    // top: 0;
     height: 50px;
     line-height: 50px;
     width: 100%;
@@ -167,11 +196,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #f5f5f5;
-    .head-title {
-      font-size: 20px;
-      font-weight: bold;
-    }
+    // border-bottom: 1px solid #f5f5f5;
   }
   .search-bar {
     z-index: 10;

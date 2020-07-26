@@ -60,10 +60,14 @@ export default {
   .van-tabs {
     height: 100%;
     width: 100%;
-    height: calc(100% - 40px);
-    padding-top: 40px;
+    height: calc(100% - 50px);
+    padding-top: 50px;
     .van-tabs__content {
       height: calc(100% - 44px);
+      & .tool-bar{
+        position: absolute;
+        top: 0;
+      }
       .van-tab__pane {
         height: 100%;
       }

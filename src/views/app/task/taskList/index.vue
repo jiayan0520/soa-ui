@@ -1,115 +1,82 @@
 <template>
-  <div class="soa-task-list">
-    <div>
-      <h3 class="soa-task-list__title">任务列表
-        <van-button
-          class="soa-task-list__accounts"
-          size="normal"
-          type="warning"
-          native-type="submit"
-          @click="onSubmit">
-          任务结算
-      </van-button></h3>
-    </div>
-    <van-search
-      v-model="searchValue"
-      show-action
-      label="任务内容"
-      placeholder="请输入搜索关键词"
-      @search="onSearch"
-    />
-    <van-tabs
-      v-model="active"
-      title-active-color="#1989fa"
-      @click="onClick">
-      <van-tab
-        title="我发布的"
-        name="1"/>
-      <van-tab
-        title="我收到的"
-        name="2"/>
-    </van-tabs>
-    <van-tabs
-      v-model="active1"
-      @click="onClick">
-      <van-tab title="未完成"/>
-      <van-tab title="已完成"/>
-      <van-tab title="所有"/>
-    </van-tabs>
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      class="soa-task-list__lists"
-      @load="onLoad"
-    >
-      <van-row
-        v-for="(item,index) in list"
-        :key="item.id">
-        <van-col span="22">
-          <div
-            class="soa-task-list__list"
-            @click="bindDetailClick">
-            <div class="title ft18 fwb">{{ item.label }}</div>
-            <div class="content">
-              <div class="t-light">{{ item.end }}</div>
-              <van-row>
-                <van-col span="18">
-                  <div class="t-light">{{ item.start }}</div>
-                </van-col>
-                <van-col span="6">
-                  <span class="t-danger">{{ item.state }}</span>
-                </van-col>
-              </van-row>
-              <div>
-                <span class="t-info">{{ item.charge }}</span> | <span class="t-success">{{ item.info }}</span>
-              </div>
-              <div class="t-light">{{ item.infoNum }}条动态  {{ item.done }}/{{ item.infoNum }}完成  （未结算）</div>
-            </div>
-          </div>
-        </van-col>
-        <van-col span="2">
-          <div class="soa-task-list__more">
-            <span
-              class="soa-icon soa-icon-gengduo"
-              @click="bindMoreClick(index)"/>
-            <ul
-              v-if="showMore===index"
-              class="soa-task-list__dropdown">
-              <li
-                v-for="items in item.btn"
-                :key="items.index"
-                class="pd10"
-                @click="bindTaskDrownClick(items)">{{ items }}</li>
-            </ul>
-          </div>
-        </van-col>
-      </van-row>
-    </van-list>
-  </div>
+  <list-layout
+    ref="listLayout"
+    :more-op-list="moreOpList"
+    :data-list="dataList"
+    :detail-url="detailUrl"
+    title="任务列表"
+    op-label="任务结算"
+    class="soa-task-list"
+    @search="onSearch"
+    @loadData="onLoad"
+    @clickOperator="onSubmit"
+    @clickMoreBtn="clickMoreBtn"
+  >
+    <template slot="top">
+      <van-search
+        v-model="searchValue"
+        show-action
+        label="任务内容"
+        placeholder="请输入搜索关键词"
+        @search="onSearch"
+      />
+      <van-tabs
+        v-model="active"
+        @click="onSearch">
+        <van-tab
+          v-for="item in tab"
+          :key="item"
+          :title="item"/>
+      </van-tabs>
+      <van-tabs
+        v-model="active1"
+        @click="onSearch">
+        <van-tab
+          v-for="item in tab1"
+          :key="item"
+          :title="item"/>
+      </van-tabs>
+    </template>
+    <template
+      slot="item-content"
+      slot-scope="slotProps">
+      <div class="soa-list-item-content">
+        <div class="title ft18 fwb">{{ slotProps.item.label }}</div>
+        <div class="t-light">{{ slotProps.item.end }}</div>
+        <div class="t-light">{{ slotProps.item.start }}</div>
+        <span class="t-info">{{ slotProps.item.charge }}</span> | <span class="t-success">{{ slotProps.item.info }}</span>
+        <div class="t-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
+        <span class="t-danger">{{ slotProps.item.state }}</span>
+      </div>
+    </template>
+  </list-layout>
 </template>
 
 <script>
 import { addTask } from '@/api/task'
+import listLayout from '@/components/listLayout'
 export default {
   name: 'AddTask',
+  components: {
+    listLayout
+  },
   data() {
     return {
-      value1: '',
-      option1: [
-        { text: '全部商品', value: 0 },
-        { text: '新款商品', value: 1 },
-        { text: '活动商品', value: 2 }
-      ],
       active: 0,
       active1: 0,
       searchValue: '',
-      list: [
-
-      ],
-      loading: false,
-      finished: false,
-      showMore: ''
+      dataList: [],
+      tab: ['我发布的', '我收到的'],
+      tab1: ['未完成', '已完成', '所有'],
+      moreOpList: [
+        { value: 'submit', label: '提交' },
+        { value: 'apply', label: '任务失败申请' }
+      ]
+    }
+  },
+  computed: {
+    detailUrl() {
+      return this.active === 0 ? '/task-detail' : '/task-receive-detail'
     }
   },
   methods: {
@@ -122,13 +89,13 @@ export default {
       })
         .then(() => {
           // on confirm
-        })
-        .catch(() => {
-          // on cancel
         });
     },
     onSearch(searchValue) {
-      console.log(searchValue)
+      this.dataList = []
+      this.$refs.listLayout.loading = true
+      this.$refs.listLayout.finished = false
+      this.onLoad()
     },
     onLoad() {
       // 异步更新数据
@@ -137,44 +104,36 @@ export default {
           console.log(response)
         })
         for (let i = 0; i < 10; i++) {
-          this.list.push({ id: this.list.length + 1, label: '20200705收集班级学生旷课情况',
-            end: '2020年06月20日 15时30分 截止', start: '2020年06月20日 15时30分 发布',
-            state: '审核中', info: '距截止还剩3天1小时', charge: '林小明', infoNum: '3', done: '2',
+          this.dataList.push({
+            id: this.dataList.length + 1,
+            label: '20200705收集班级学生旷课情况',
+            end: '2020年06月20日 15时30分 截止',
+            start: '2020年06月20日 15时30分 发布',
+            state: '审核中',
+            info: '距截止还剩3天1小时',
+            charge: '林小明',
+            infoNum: '3',
+            done: '2',
             btn: ['编辑', '失败', '删除'] });
         }
 
         // 加载状态结束
-        this.loading = false;
-
+        this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
+        if (this.dataList.length >= 20) {
+          this.$refs.listLayout.finished = true
         }
       }, 1000);
     },
-    onClick() {
-      this.list = []
-      this.onLoad()
-      console.log('onClick')
-    },
-    bindMoreClick(index) {
-      this.showMore = this.showMore === index ? '' : index
-    },
     // 下拉点击事件
-    bindTaskDrownClick(item) {
+    clickMoreBtn(item) {
+      console.log('clickMoreBtn', item)
+
       if (item === '已提交') {
         this.$router.push('/task-list-feekback')
       } else {
         this.$router.push('/task-receive-detail')
       }
-    },
-    // 我发布的任务详情
-    bindDetailClick() {
-      this.$router.push('/task-detail');
-    },
-    // 我接收的任务详情
-    bindReceiveDetailClick() {
-      this.$router.push('/task-receive-detail');
     },
     // 日期转换
     format() {
@@ -186,18 +145,10 @@ export default {
   }
 }
 </script>
-
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
 
 @include b(task-list){
-  @include e(accounts){
-     position: absolute;
-      right: 0;
-  }
-  @include e(title){
-     position: relative;
-  }
   @include e(list){
     margin-top: 15px;
     padding-bottom: 10px;
@@ -209,18 +160,6 @@ export default {
   @include e(more){
     margin-top: 65px;
     position: relative;
-  }
-   @include e(dropdown){
-    position: absolute;
-    right: 10px;
-    top: 25px;
-    width: 80px;
-    border: 1px solid #F5F6F8;
-    border-radius: 5px;
-    background: #ffffff;
-    & > li:not(:last-child){
-      border-bottom: 1px solid #F5F6F8;
-    }
   }
 }
 </style>

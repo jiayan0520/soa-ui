@@ -90,7 +90,9 @@
 .divider {
     border-bottom: 1px solid #909399;
 }
-
+.van-tab--active{
+    color: $--color-info !important;
+}
 .van-tabs__line {
     background-color: $--color-info !important;
 }
@@ -100,10 +102,9 @@
     align-items: center;
     justify-content: space-between;
 }
-// 操作按钮
-.btn-op {
-    height: 38px;
-    border-radius: 6px;
+.van-button{
+   border-radius: 6px;
+   height: 38px;
 }
 // 更多按钮
 .soa-icon-gengduo {

@@ -42,7 +42,7 @@ body {
     padding: 10px 10px 55px 10px;
     height: 100%;
     // display: flex;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
     box-sizing: border-box;
     // overflow: hidden;
   }

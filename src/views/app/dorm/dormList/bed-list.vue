@@ -4,23 +4,17 @@
     :more-op-list="moreOpList"
     :data-list="dataList"
     :is-show-bar="isShowBar"
+    :title="isShowBar ? '':'宿舍床位列表'"
     detail-url="/dorm/bedDetail"
     class="bed-list"
+    op-label="管理"
     @search="onSearch"
     @loadData="loadData"
+    @clickOperator="isShowBar = true"
   >
     <template slot="top">
       <div
-        v-if="!isShowBar"
-        class="tool-bar">
-        <div class="head-title">宿舍床位列表</div>
-        <van-button
-          class="btn-op"
-          type="warning"
-          @click="isShowBar = true">管理</van-button>
-      </div>
-      <div
-        v-else
+        v-if="isShowBar"
         class="tool-bar">
         <van-button
           class="btn-op"
@@ -126,7 +120,7 @@
 </template>
 
 <script>
-import listLayout from '../components/list-layout'
+import listLayout from '@/components/listLayout'
 export default {
   name: 'BedList',
   components: {
