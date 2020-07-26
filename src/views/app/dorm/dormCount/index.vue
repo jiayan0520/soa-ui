@@ -87,7 +87,7 @@
       </div>
     </div>
     <div class="soa-dorm-count__circle">
-      <div class="tc">占比统计</div>
+      <div class="c-tc">占比统计</div>
       <v-chart :data="data">
         <v-scale
           :options="yOptions"
@@ -100,7 +100,7 @@
       </v-chart>
     </div>
     <div class="soa-dorm-count__bar">
-      <div class="tc">次数统计</div>
+      <div class="c-tc">次数统计</div>
       <v-chart
         ref="demo"
         :data="barData">

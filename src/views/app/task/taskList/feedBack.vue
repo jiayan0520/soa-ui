@@ -4,37 +4,37 @@
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">发起人</van-col>
-          <van-col span="19"><div class="t-light">李晓明</div></van-col>
+          <van-col span="19"><div class="c-light">李晓明</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务名称</van-col>
-          <van-col span="19"><div class="t-light">收集党员信息</div></van-col>
+          <van-col span="19"><div class="c-light">收集党员信息</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务详情</van-col>
-          <van-col span="19"><div class="t-light">请各位尽快收拾好党员信息，按照excel表格里要求的数据进行填写</div></van-col>
+          <van-col span="19"><div class="c-light">请各位尽快收拾好党员信息，按照excel表格里要求的数据进行填写</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">截止时间</van-col>
-          <van-col span="19"><div class="t-light">2020年6月19日 18时00分</div></van-col>
+          <van-col span="19"><div class="c-light">2020年6月19日 18时00分</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务状态</van-col>
-          <van-col span="19"><div class="t-warm">未完成</div></van-col>
+          <van-col span="19"><div class="c-warm">未完成</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">备注</van-col>
-          <van-col span="19"><div class="t-warm">审核不通过原因：没有附件信息</div></van-col>
+          <van-col span="19"><div class="c-warm">审核不通过原因：没有附件信息</div></van-col>
         </van-row>
       </van-cell>
       <van-field

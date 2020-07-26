@@ -27,14 +27,14 @@
           align="center"
           type="flex">
           <van-col span="18">
-            <div class="fwb">{{ item.label }}</div>
-            <div class="t-light">{{ item.end }}</div>
-            <div class="t-light">{{ item.star }}</div>
-            <div :class="[item.info.indexOf('距截止')>=0? 't-success': 't-danger']">{{ item.info }}</div>
+            <div class="c-fwb">{{ item.label }}</div>
+            <div class="c-light">{{ item.end }}</div>
+            <div class="c-light">{{ item.star }}</div>
+            <div :class="[item.info.indexOf('距截止')>=0? 'c-success': 'c-danger']">{{ item.info }}</div>
           </van-col>
           <van-col
             span="6"
-            class="t-warm">{{ item.state }}</van-col>
+            class="c-warm">{{ item.state }}</van-col>
         </van-row>
       </van-cell>
     </van-list>

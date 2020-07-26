@@ -64,9 +64,9 @@
           <img src="../../../../assets/images/timg.jpg" >
           <div class="soa-list-item-content">
             <div>{{ slotProps.item.floorName }}</div>
-            <div class="t-light">
+            <div class="c-light">
               <span>{{ slotProps.item.headName }}</span>
-              <span class="ml10 t-info">{{ slotProps.item.telephone }}</span>
+              <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
             </div>
           </div>
         </div>

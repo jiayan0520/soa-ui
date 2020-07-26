@@ -83,14 +83,14 @@
       <div class="soa-list-item-content">
         <div class="item-row">
           <span class>{{ slotProps.item.dormInfo }}</span>
-          <span class="ml10">{{ slotProps.item.headName }}</span>
-          <span class="t-info ml10">{{ slotProps.item.telephone }}</span>
+          <span class="c-ml10">{{ slotProps.item.headName }}</span>
+          <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
         </div>
-        <div class="item-row flex-between t-light">
+        <div class="item-row flex-between c-light">
           {{ slotProps.item.dormType }}
           <div>
             <span>人数：{{ slotProps.item.num }}/{{ slotProps.item.num }}</span>
-            <span class="ml10 t-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
+            <span class="c-ml10 c-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
           </div>
         </div>
       </div>

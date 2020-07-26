@@ -102,17 +102,17 @@
       <img src="../../../../assets/images/timg.jpg" >
       <div class="soa-list-item-content">
         <div>
-          <span class="t-info">{{ slotProps.item.userName }}</span>
-          <span class="t-info ml10">{{ slotProps.item.telephone }}</span>
+          <span class="c-info">{{ slotProps.item.userName }}</span>
+          <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
           <span>{{ slotProps.item.banji }}</span>
         </div>
-        <div class="t-light">
+        <div class="c-light">
           {{ slotProps.item.dormInfo }}
-          <span class="ml10">舍长</span>
+          <span class="c-ml10">舍长</span>
         </div>
         <div class="flex-between">
           <span>学生宿舍</span>
-          <span class="t-warm ml10">未激活</span>
+          <span class="c-warm c-ml10">未激活</span>
         </div>
       </div>
     </template>

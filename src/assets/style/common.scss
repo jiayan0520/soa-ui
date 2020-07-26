@@ -1,100 +1,94 @@
 @import "./var.scss";
-.mr10 {
+.c-mr10 {
     margin-right: 10px;
 }
-.mr20 {
+.c-mr20 {
     margin-right: 20px;
 }
-.mt10 {
+.c-mt10 {
     margin-top: 10px;
 }
-.mb10 {
+.c-mb10 {
     margin-bottom: 10px;
 }
-.ml10 {
+.c-ml10 {
     margin-left: 10px;
 }
-.ml20 {
+.c-ml20 {
     margin-left: 20px;
 }
 
-.mtb10 {
+.c-mtb10 {
     margin: 10px 0;
 }
 
-.ptb10 {
+.c-ptb10 {
     padding: 10px 0;
 }
-.ptb20 {
+.c-ptb20 {
     padding: 20px 0;
 }
-.plr20 {
+.c-plr20 {
     padding: 0 20px;
 }
-.pd10 {
+.c-pd10 {
     padding: 10px;
 }
-.pd20 {
+.c-pd20 {
     padding: 20px;
 }
 
-.right {
+.c-right {
     float: right;
 }
-.left {
+.c-left {
     float: left;
 }
 
-.ft12 {
+.c-ft12 {
     font-size: 12px;
 }
-.ft14 {
+.c-ft14 {
     font-size: 14px;
 }
-.ft16 {
+.c-ft16 {
     font-size: 16px;
 }
-.ft18 {
+.c-ft18 {
     font-size: 18px;
 }
-.ft20 {
+.c-ft20 {
     font-size: 20px;
 }
-.fwb {
+.c-fwb {
     font-weight: bold;
 }
 
-.tc {
+.c-tc {
     text-align: center;
 }
-.tr {
+.c-tr {
     text-align: right;
 }
 
-.t-light {
+.c-light {
     color: $--color-light;
 }
-.t-danger {
+.c-danger {
     color: $--color-danger;
 }
-.t-info {
+.c-info {
     color: $--color-info;
 }
-.t-warm {
+.c-warm {
     color: $--color-warning;
 }
-.t-success {
+.c-success {
     color: $--color-success;
 }
 
 .divider {
     border-bottom: 1px solid #909399;
-}
-.van-tab--active{
-    color: $--color-info !important;
-}
-.van-tabs__line {
-    background-color: $--color-info !important;
 }
 
 .flex-between {
@@ -102,10 +96,27 @@
     align-items: center;
     justify-content: space-between;
 }
-.van-button{
-   border-radius: 6px;
-   height: 38px;
+
+
+/* vant组件样式 
+ -------------------------- */
+.van-tab--active{
+    color: $--color-info !important;
 }
+.van-tabs__line {
+    background-color: $--color-info !important;
+}
+.van-button{
+    border-radius: 6px;
+    height: 38px;
+ }
+
+
+
+
+/* 业务样式 
+ -------------------------- */
+
 // 更多按钮
 .soa-icon-gengduo {
     width: 10%;

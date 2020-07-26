@@ -4,49 +4,49 @@
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">发起人</van-col>
-          <van-col span="19"><div class="t-light">{{ params.promoter }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.promoter }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务名称</van-col>
-          <van-col span="19"><div class="t-light">{{ params.task }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.task }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务详情</van-col>
-          <van-col span="19"><div class="t-light">{{ params.detail }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.detail }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">截止时间</van-col>
-          <van-col span="19"><div class="t-light">{{ params.deadline }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.deadline }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务状态</van-col>
-          <van-col span="19"><div class="t-success">{{ params.state }}</div></van-col>
+          <van-col span="19"><div class="c-success">{{ params.state }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
-          <van-col span="5 tr">备注</van-col>
-          <van-col span="19"><div class="t-danger">{{ params.remark }}</div></van-col>
+          <van-col span="5 c-tr">备注</van-col>
+          <van-col span="19"><div class="c-danger">{{ params.remark }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
-          <van-col span="5 tr">质量分</van-col>
-          <van-col span="19"><div class="t-light">{{ params.quality }}</div></van-col>
+          <van-col span="5 c-tr">质量分</van-col>
+          <van-col span="19"><div class="c-light">{{ params.quality }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
-          <van-col span="5 tr">任务总结</van-col>
-          <van-col span="19"><div class="t-light">{{ params.summary }}</div></van-col>
+          <van-col span="5 c-tr">任务总结</van-col>
+          <van-col span="19"><div class="c-light">{{ params.summary }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>

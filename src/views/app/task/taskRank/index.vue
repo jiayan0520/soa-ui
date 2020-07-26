@@ -36,14 +36,14 @@
         :key="item.index">
         <van-row>
           <van-col span="4">
-            <div class="tc">{{ item.index }}</div>
+            <div class="c-tc">{{ item.index }}</div>
           </van-col>
           <van-col span="5">
-            <div class="tc">{{ item.name }}</div>
+            <div class="c-tc">{{ item.name }}</div>
           </van-col>
-          <van-col span="5"><div class="tc">{{ item.number }}</div></van-col>
-          <van-col span="5"><div class="tc">{{ item.total }}</div></van-col>
-          <van-col span="5"><div class="tc">{{ item.average }}</div></van-col>
+          <van-col span="5"><div class="c-tc">{{ item.number }}</div></van-col>
+          <van-col span="5"><div class="c-tc">{{ item.total }}</div></van-col>
+          <van-col span="5"><div class="c-tc">{{ item.average }}</div></van-col>
         </van-row>
       </van-cell> -->
     </van-list>

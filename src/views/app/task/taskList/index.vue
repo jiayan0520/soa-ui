@@ -42,11 +42,11 @@
       slot-scope="slotProps">
       <div class="soa-list-item-content content">
         <div>
-          <div class="title ft18 fwb">{{ slotProps.item.label }}</div>
-          <div class="t-light">{{ slotProps.item.end }}</div>
-          <div class="t-light">{{ slotProps.item.start }}</div>
-          <span class="t-info">{{ slotProps.item.charge }}</span> | <span class="t-success">{{ slotProps.item.info }}</span>
-          <div class="t-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
+          <div class="title c-ft18 c-fwb">{{ slotProps.item.label }}</div>
+          <div class="c-light">{{ slotProps.item.end }}</div>
+          <div class="c-light">{{ slotProps.item.start }}</div>
+          <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
+          <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
         </div>
         <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
       </div>
@@ -75,7 +75,7 @@ export default {
         { value: 'apply', label: '任务失败申请' }
       ],
       stateMap: {
-        '审核中': 't-warm'
+        '审核中': 'c-warm'
       }
     }
   },

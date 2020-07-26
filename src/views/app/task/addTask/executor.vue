@@ -41,7 +41,7 @@
                         name="cluster-o"
                         size="18"
                         color="#1989FA"/>
-                      <span class="ft18 t-info">下级</span>
+                      <span class="c-ft18 c-info">下级</span>
                     </van-col>
                   </van-row>
                 </div>
@@ -74,7 +74,7 @@
     <div class="soa-tsk-checked-bottom">
       <van-row>
         <van-col span="14">
-          <div class="mt10 t-info">已选择:12人</div>
+          <div class="c-mt10 c-info">已选择:12人</div>
         </van-col>
         <van-col span="10">
           <van-button type="info">确定（14/100）</van-button>

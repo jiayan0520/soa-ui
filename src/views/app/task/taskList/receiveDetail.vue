@@ -4,37 +4,37 @@
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">发起人</van-col>
-          <van-col span="19"><div class="t-light">{{ params.promoter }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.promoter }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务名称</van-col>
-          <van-col span="19"><div class="t-light">{{ params.task }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.task }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务详情</van-col>
-          <van-col span="19"><div class="t-light">{{ params.detail }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.detail }}</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">备注</van-col>
-          <van-col span="19">{{ params.remark }}<div class="t-danger"/></van-col>
+          <van-col span="19">{{ params.remark }}<div class="c-danger"/></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">质量分</van-col>
-          <van-col span="19"><div class="t-light"><span class="t-danger">未评定</span>/{{ params.quality }}分</div></van-col>
+          <van-col span="19"><div class="c-light"><span class="c-danger">未评定</span>/{{ params.quality }}分</div></van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">截止时间</van-col>
-          <van-col span="19"><div class="t-light">{{ params.deadline }}</div></van-col>
+          <van-col span="19"><div class="c-light">{{ params.deadline }}</div></van-col>
         </van-row>
       </van-cell>
       <van-collapse v-model="activeNames">
@@ -45,10 +45,10 @@
           <div class="soa-task-receive__complateList">
             <van-row>
               <van-col span="6">
-                <div class="t-danger">待审核</div>
+                <div class="c-danger">待审核</div>
               </van-col>
               <van-col span="6">
-                <div class="t-light">吴笑笑</div>
+                <div class="c-light">吴笑笑</div>
               </van-col>
             </van-row>
           </div>
@@ -75,14 +75,14 @@
           :key="index"
           class="soa-task-receive__cell">
           <van-row gutter="10">
-            <van-col span="12"><div class="ft12">{{ item.title }}</div></van-col>
+            <van-col span="12"><div class="c-ft12">{{ item.title }}</div></van-col>
             <van-col span="4">
-              <div class="t-light ft12">{{ item.done }}/{{ item.total }}完成</div>
+              <div class="c-light c-ft12">{{ item.done }}/{{ item.total }}完成</div>
             </van-col>
             <van-col span="4">
               <div
-                :class="{'t-success':item.total==item.done,'t-danger':item.total!=item.done}"
-                class="ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
+                :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
+                class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
             </van-col>
             <van-col span="4">
               <div class="icon">
@@ -91,7 +91,7 @@
                   color="#f00"
                   @click="handleChildClear(index)"/>
               </div>
-              <div class="icon mr10">
+              <div class="icon c-mr10">
                 <van-icon
                   name="edit"
                   @click="handleChildEdit(index)"/>
@@ -99,7 +99,7 @@
             </van-col>
           </van-row>
         </div>
-        <div class="tc">
+        <div class="c-tc">
           <van-button
             block
             icon="add-o"
@@ -115,10 +115,10 @@
         <van-row gutter="10">
           <van-col span="6">【{{ items.name }}】</van-col>
           <van-col span="10">
-            <div class="t-light">{{ items.content }}</div>
+            <div class="c-light">{{ items.content }}</div>
           </van-col>
           <van-col span="8">
-            <div class="t-light tr ft12">{{ items.time }}</div>
+            <div class="c-light c-tr c-ft12">{{ items.time }}</div>
           </van-col>
         </van-row>
       </van-cell>

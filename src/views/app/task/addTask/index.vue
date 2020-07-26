@@ -114,14 +114,14 @@
           :key="index"
           class="soa-task-add__child--list">
           <van-row gutter="10">
-            <van-col span="12"><div class="ft12">{{ item.title }}</div></van-col>
+            <van-col span="12"><div class="c-ft12">{{ item.title }}</div></van-col>
             <van-col span="4">
-              <div class="t-light ft12">{{ item.done }}/{{ item.total }}完成</div>
+              <div class="c-light c-ft12">{{ item.done }}/{{ item.total }}完成</div>
             </van-col>
             <van-col span="4">
               <div
-                :class="{'t-success':item.total==item.done,'t-danger':item.total!=item.done}"
-                class="ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
+                :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
+                class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
             </van-col>
             <van-col span="4">
               <div class="icon">
@@ -130,7 +130,7 @@
                   color="#f00"
                   @click="handleChildClear(index)"/>
               </div>
-              <div class="icon ml10">
+              <div class="icon c-ml10">
                 <van-icon
                   name="edit"
                   @click="handleChildEdit(index)"/>

@@ -8,7 +8,7 @@
             span="5">宿舍名称：</van-col>
           <van-col
             span="19"
-            class="t-light">{{ data.dormName }}</van-col>
+            class="c-light">{{ data.dormName }}</van-col>
         </van-row>
       </van-cell>
       <van-cell>
@@ -18,7 +18,7 @@
             span="5">姓名：</van-col>
           <van-col
             span="19"
-            class="t-light">{{ data.userName }}</van-col>
+            class="c-light">{{ data.userName }}</van-col>
         </van-row>
       </van-cell>
       <van-cell>
@@ -28,7 +28,7 @@
             span="5">床位：</van-col>
           <van-col
             span="19"
-            class="t-light">{{ data.bedName }}</van-col>
+            class="c-light">{{ data.bedName }}</van-col>
         </van-row>
       </van-cell>
       <van-cell>
@@ -37,7 +37,7 @@
             class="label"
             span="5">状态：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.statusName }}</van-col>
         </van-row>
       </van-cell>
@@ -47,7 +47,7 @@
             class="label"
             span="5">学号：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.sno }}</van-col>
         </van-row>
       </van-cell>
@@ -57,7 +57,7 @@
             class="label"
             span="5">电话：</van-col>
           <van-col
-            class="t-info"
+            class="c-info"
             span="19">{{ data.telephone }}</van-col>
         </van-row>
       </van-cell>
@@ -67,7 +67,7 @@
             class="label"
             span="5">政治面貌：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.zzmm }}</van-col>
         </van-row>
       </van-cell>
@@ -77,7 +77,7 @@
             class="label"
             span="5">学院专业：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.college }}</van-col>
         </van-row>
       </van-cell>
@@ -87,7 +87,7 @@
             class="label"
             span="5">籍贯：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.place }}</van-col>
         </van-row>
       </van-cell>
@@ -97,7 +97,7 @@
             class="label"
             span="5">家庭住址：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.address }}</van-col>
         </van-row>
       </van-cell>
@@ -107,13 +107,13 @@
             class="label"
             span="5">辅导员：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">
             <div
               v-for="(item,index) in data.instructorList"
               :key="index">
               {{ item.userName }}
-              <span class="t-info ml10">{{ item.telephone }}</span>
+              <span class="c-info c-ml10">{{ item.telephone }}</span>
             </div>
           </van-col>
         </van-row>
@@ -124,13 +124,13 @@
             class="label"
             span="5">家长信息：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">
             <div
               v-for="(item,index) in data.parentList"
               :key="index">
               {{ item.userName }}
-              <span class="t-info ml10">{{ item.telephone }}</span>
+              <span class="c-info c-ml10">{{ item.telephone }}</span>
             </div>
           </van-col>
         </van-row>
@@ -141,7 +141,7 @@
             class="label"
             span="5">宿舍费用：</van-col>
           <van-col
-            class="t-light"
+            class="c-light"
             span="19">{{ data.cost }}</van-col>
         </van-row>
       </van-cell>
@@ -156,7 +156,7 @@
             class="check-item">
             <div class="check-item-left">
               <div class="time">{{ item.time }}</div>
-              <div class="t-info">结果：{{ item.checkResult }}</div>
+              <div class="c-info">结果：{{ item.checkResult }}</div>
             </div>
             <div class="check-item-grade">{{ item.grade }}</div>
             <i
