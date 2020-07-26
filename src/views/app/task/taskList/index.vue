@@ -40,13 +40,15 @@
     <template
       slot="item-content"
       slot-scope="slotProps">
-      <div class="soa-list-item-content">
-        <div class="title ft18 fwb">{{ slotProps.item.label }}</div>
-        <div class="t-light">{{ slotProps.item.end }}</div>
-        <div class="t-light">{{ slotProps.item.start }}</div>
-        <span class="t-info">{{ slotProps.item.charge }}</span> | <span class="t-success">{{ slotProps.item.info }}</span>
-        <div class="t-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
-        <span class="t-danger">{{ slotProps.item.state }}</span>
+      <div class="soa-list-item-content content">
+        <div>
+          <div class="title ft18 fwb">{{ slotProps.item.label }}</div>
+          <div class="t-light">{{ slotProps.item.end }}</div>
+          <div class="t-light">{{ slotProps.item.start }}</div>
+          <span class="t-info">{{ slotProps.item.charge }}</span> | <span class="t-success">{{ slotProps.item.info }}</span>
+          <div class="t-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
+        </div>
+        <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
       </div>
     </template>
   </list-layout>
@@ -71,7 +73,10 @@ export default {
       moreOpList: [
         { value: 'submit', label: '提交' },
         { value: 'apply', label: '任务失败申请' }
-      ]
+      ],
+      stateMap: {
+        '审核中': 't-warm'
+      }
     }
   },
   computed: {
@@ -157,9 +162,8 @@ export default {
       margin-top: 2px;
     }
   }
-  @include e(more){
-    margin-top: 65px;
-    position: relative;
+  & .content{
+     @include base-between
   }
 }
 </style>
