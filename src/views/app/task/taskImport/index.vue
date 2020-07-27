@@ -16,7 +16,7 @@
             <van-col span="19"><a
               href="/images/myw3schoolimage.jpg"
               download="w3logo"
-              class="c-info">导入示例下载>></a></van-col>
+              class="c-info">导入示例下载</a></van-col>
           </van-row>
         </van-cell>
       </van-cell-group>

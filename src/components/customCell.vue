@@ -18,6 +18,10 @@ export default {
       type: String,
       default: '6.2em'
     },
+    textAlign: {
+      type: String,
+      default: 'right'
+    },
     title: {
       type: String,
       default: 'normal'
@@ -30,7 +34,8 @@ export default {
   computed: {
     titleStyle() {
       return {
-        width: this.labelWidth
+        width: this.labelWidth,
+        textAlign: this.textAlign
       }
     }
   }
@@ -42,13 +47,13 @@ export default {
 @import '@/assets/mixins/mixins.scss';
 
 @include b(custom-cell){
-    @include e(title){
-      width: 6.2em;
-      margin-right: 12px;
-    }
-    @include e(value){
-      width: 100%;
-      color:$--color-light
-    }
+  @include e(title){
+    width: 6.2em;
+    margin-right: 12px;
+  }
+  @include e(value){
+    width: 100%;
+    color:$--color-light
+  }
 }
 </style>
