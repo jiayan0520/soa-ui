@@ -59,7 +59,7 @@
                 <li
                   v-for="btn in moreOpList"
                   :key="btn.index"
-                  @click.stop="clickMoreBtn(btn.value)"
+                  @click.stop="clickMoreBtn(btn.value,item)"
                 >{{ btn.label }}</li>
               </ul>
             </div>
@@ -158,9 +158,10 @@ export default {
         case 'qc':
           break
       }
-      this.$emit('clickMoreBtn', val)
+      this.$emit('clickMoreBtn', val, item)
       this.showMoreIndex = -1
     },
+    // 点击行进入详情页
     handleClick(item) {
       console.log('handleClick', item, this.detailUrl)
       const id = item.id
@@ -169,6 +170,7 @@ export default {
         query: { id }
       })
     },
+    // 管理操作按钮
     handleOperator() {
       this.$emit('clickOperator')
     }

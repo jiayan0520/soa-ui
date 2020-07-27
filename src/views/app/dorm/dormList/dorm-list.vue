@@ -1,109 +1,121 @@
 <template>
-  <list-layout
-    ref="listLayout"
-    :more-op-list="moreOpList"
-    :data-list="dataList"
-    :is-show-bar="isShowBar"
-    :title="isShowBar ? '':'宿舍列表'"
-    op-label="管理"
-    class="dorm-list"
-    @search="onSearch"
-    @loadData="loadData"
-    @clickOperator="isShowBar = true"
-  >
-    <template slot="top">
-      <div
-        v-if="isShowBar"
-        class="tool-bar">
-        <van-button
-          class="btn-op"
-          type="info"
-          @click="changeCheckAll">
-          <span v-text="isCheckAll?'取消全选':'全选'" />
-        </van-button>
-        <van-button
-          class="btn-op"
-          type="info">清空宿舍</van-button>
-        <van-button
-          class="btn-op"
-          type="info">删除</van-button>
-        <van-button
-          class="btn-op"
-          type="warning"
-          @click="isShowBar = false">取消管理</van-button>
-      </div>
-      <form
-        v-if="isShowSearch"
-        action="/">
-        <van-search
-          v-model="searchForm.searchValue"
-          show-action
-          placeholder="宿舍号/宿舍楼"
-          @search="onSearch"
-          @cancel="isShowSearch=false"
-        />
-      </form>
-      <div
-        v-else
-        class="search-bar">
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.status"
-            :options="statusList" />
-        </van-dropdown-menu>
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.dormType"
-            :options="dormTypeList" />
-        </van-dropdown-menu>
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.isFull"
-            :options="isFullList" />
-        </van-dropdown-menu>
-        <van-icon
-          name="search"
-          @click="isShowSearch = true" />
-      </div>
-    </template>
-    <template slot="refresh-top">
-      <div class="soa-list-total">
+  <div>
+    <list-layout
+      ref="listLayout"
+      :more-op-list="moreOpList"
+      :data-list="dataList"
+      :is-show-bar="isShowBar"
+      :title="isShowBar ? '':'宿舍列表'"
+      op-label="管理"
+      class="dorm-list"
+      @search="onSearch"
+      @loadData="loadData"
+      @clickOperator="isShowBar = true"
+      @clickMoreBtn="clickMoreBtn"
+    >
+      <template slot="top">
         <div
-          v-for="(item,index) in totalList"
-          :key="index"
-          class="total-item">
-          <span class="lable">{{ item.lable }}：</span>
-          <span class="val">{{ item.value }}人</span>
+          v-if="isShowBar"
+          class="tool-bar">
+          <van-button
+            class="btn-op"
+            type="info"
+            @click="changeCheckAll">
+            <span v-text="isCheckAll?'取消全选':'全选'" />
+          </van-button>
+          <van-button
+            class="btn-op"
+            type="info">清空宿舍</van-button>
+          <van-button
+            class="btn-op"
+            type="info">删除</van-button>
+          <van-button
+            class="btn-op"
+            type="warning"
+            @click="isShowBar = false">取消管理</van-button>
         </div>
-      </div>
-    </template>
-    <template
-      slot="item-content"
-      slot-scope="slotProps">
-      <div class="soa-list-item-content">
-        <div class="item-row">
-          <span class>{{ slotProps.item.dormInfo }}</span>
-          <span class="c-ml10">{{ slotProps.item.headName }}</span>
-          <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
+        <form
+          v-if="isShowSearch"
+          action="/">
+          <van-search
+            v-model="searchForm.searchValue"
+            show-action
+            placeholder="宿舍号/宿舍楼"
+            @search="onSearch"
+            @cancel="isShowSearch=false"
+          />
+        </form>
+        <div
+          v-else
+          class="search-bar">
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.status"
+              :options="statusList" />
+          </van-dropdown-menu>
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.dormType"
+              :options="dormTypeList" />
+          </van-dropdown-menu>
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.isFull"
+              :options="isFullList" />
+          </van-dropdown-menu>
+          <van-icon
+            name="search"
+            @click="isShowSearch = true" />
         </div>
-        <div class="item-row flex-between c-light">
-          {{ slotProps.item.dormType }}
-          <div>
-            <span>人数：{{ slotProps.item.num }}/{{ slotProps.item.num }}</span>
-            <span class="c-ml10 c-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
+      </template>
+      <template slot="refresh-top">
+        <div class="soa-list-total">
+          <div
+            v-for="(item,index) in totalList"
+            :key="index"
+            class="total-item">
+            <span class="lable">{{ item.lable }}：</span>
+            <span class="val">{{ item.value }}人</span>
           </div>
         </div>
-      </div>
-    </template>
-  </list-layout>
+      </template>
+      <template
+        slot="item-content"
+        slot-scope="slotProps">
+        <div class="soa-list-item-content">
+          <div class="item-row">
+            <span class>{{ slotProps.item.dormInfo }}</span>
+            <span class="c-ml10">{{ slotProps.item.headName }}</span>
+            <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
+          </div>
+          <div class="item-row flex-between c-light">
+            {{ slotProps.item.dormType }}
+            <div>
+              <span>人数：{{ slotProps.item.num }}/{{ slotProps.item.num }}</span>
+              <span class="c-ml10 c-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </list-layout>
+    <van-popup
+      v-model="isShowEditPopup"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom">
+      <dorm-edit :id="rowId" />
+    </van-popup>
+  </div>
 </template>
 
 <script>
 import listLayout from '@/components/listLayout'
+import dormEdit from './dorm-edit'
 export default {
   name: 'DormList',
   components: {
-    listLayout
+    listLayout,
+    dormEdit
   },
   data() {
     return {
@@ -142,9 +154,12 @@ export default {
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
       moreOpList: [
+        { value: 'edit', label: '编辑' },
         { value: 'ts', label: '清空宿舍' },
         { value: 'del', label: '删除' }
-      ]
+      ],
+      isShowEditPopup: false, // 是否展示宿舍编辑弹框
+      rowId: null // 当前编辑的id
     }
   },
   created() {
@@ -160,6 +175,11 @@ export default {
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
+        // 编辑
+        case 'edit':
+          this.rowId = item.id
+          this.isShowEditPopup = true
+          break
         case 'qc':
           break
       }
@@ -208,7 +228,7 @@ export default {
 </script>
 
 <style lang="scss">
-.dorm-list{
+.dorm-list {
   // .soa-list-total {
   //   .total-item {
   //     width: 50%;

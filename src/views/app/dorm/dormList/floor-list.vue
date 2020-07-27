@@ -1,120 +1,128 @@
 <template>
-  <list-layout
-    ref="listLayout"
-    :more-op-list="moreOpList"
-    :data-list="dataList"
-    :is-show-bar="isShowBar"
-    :title="isShowBar ? '':'宿舍楼列表'"
-    class="floor-list"
-    op-label="管理"
-    @search="onSearch"
-    @loadData="loadData"
-    @clickOperator="isShowBar = true"
-  >
-    <template slot="top">
-      <div
-        v-if="isShowBar"
-        class="tool-bar">
-        <van-button
-          class="btn-op"
-          type="info"
-          @click="changeCheckAll">
-          <span v-text="isCheckAll?'取消全选':'全选'" />
-        </van-button>
-        <van-button
-          class="btn-op"
-          type="info">清空宿舍</van-button>
-        <van-button
-          class="btn-op"
-          type="info">删除</van-button>
-        <van-button
-          class="btn-op"
-          type="warning"
-          @click="isShowBar = false">取消管理</van-button>
-      </div>
-      <form
-        v-if="isShowSearch"
-        action="/">
-        <van-search
-          v-model="searchForm.searchValue"
-          show-action
-          placeholder="请输入宿舍楼名称"
-          @search="onSearch"
-          @cancel="isShowSearch=false"
-        />
-      </form>
-      <div
-        v-else
-        class="search-bar">
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.isFull"
-            :options="isFullList" />
-        </van-dropdown-menu>
-        <van-icon
-          name="search"
-          @click="isShowSearch = true" />
-      </div>
-    </template>
-    <template
-      slot="item-content"
-      slot-scope="slotProps">
-      <div class="floor-item-content">
-        <div class="flex-between">
-          <img src="../../../../assets/images/timg.jpg" >
-          <div class="soa-list-item-content">
-            <div>{{ slotProps.item.floorName }}</div>
-            <div class="c-light">
-              <span>{{ slotProps.item.headName }}</span>
-              <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
+  <div class="floor-list">
+    <list-layout
+      ref="listLayout"
+      :more-op-list="moreOpList"
+      :data-list="dataList"
+      :is-show-bar="isShowBar"
+      :title="isShowBar ? '':'宿舍楼列表'"
+      op-label="管理"
+      @search="onSearch"
+      @loadData="loadData"
+      @clickOperator="isShowBar = true"
+    >
+      <template slot="top">
+        <div
+          v-if="isShowBar"
+          class="tool-bar">
+          <van-button
+            class="btn-op"
+            type="info"
+            @click="changeCheckAll">
+            <span v-text="isCheckAll?'取消全选':'全选'" />
+          </van-button>
+          <van-button
+            class="btn-op"
+            type="info">清空宿舍</van-button>
+          <van-button
+            class="btn-op"
+            type="info">删除</van-button>
+          <van-button
+            class="btn-op"
+            type="warning"
+            @click="isShowBar = false">取消管理</van-button>
+        </div>
+        <form
+          v-if="isShowSearch"
+          action="/">
+          <van-search
+            v-model="searchForm.searchValue"
+            show-action
+            placeholder="请输入宿舍楼名称"
+            @search="onSearch"
+            @cancel="isShowSearch=false"
+          />
+        </form>
+        <div
+          v-else
+          class="search-bar">
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.isFull"
+              :options="isFullList" />
+          </van-dropdown-menu>
+          <van-icon
+            name="search"
+            @click="isShowSearch = true" />
+        </div>
+      </template>
+      <template
+        slot="item-content"
+        slot-scope="slotProps">
+        <div class="floor-item-content">
+          <div class="flex-between">
+            <img src="../../../../assets/images/timg.jpg" >
+            <div class="soa-list-item-content">
+              <div>{{ slotProps.item.floorName }}</div>
+              <div class="c-light">
+                <span>{{ slotProps.item.headName }}</span>
+                <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="list-item-total">
+            <div class="total-item">
+              <span class="lable">可容纳：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">可容纳：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">已容纳：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">宿舍数：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">可容纳学生：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">已容纳学生：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">学生：</span>
+              <span class="val">200间</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">可容纳老师：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">已容纳老师：</span>
+              <span class="val">200人</span>
+            </div>
+            <div class="total-item">
+              <span class="lable">老师：</span>
+              <span class="val">200间</span>
             </div>
           </div>
         </div>
-        <div class="list-item-total">
-          <div class="total-item">
-            <span class="lable">可容纳：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">可容纳：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">已容纳：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">宿舍数：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">可容纳学生：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">已容纳学生：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">学生：</span>
-            <span class="val">200间</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">可容纳老师：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">已容纳老师：</span>
-            <span class="val">200人</span>
-          </div>
-          <div class="total-item">
-            <span class="lable">老师：</span>
-            <span class="val">200间</span>
-          </div>
-        </div>
-      </div>
-    </template>
-  </list-layout>
+      </template>
+    </list-layout>
+    <van-popup
+      v-model="isShowEditPopup"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom">
+      <dorm-edit :id="rowId" />
+    </van-popup>
+  </div>
 </template>
 
 <script>
@@ -144,9 +152,12 @@ export default {
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
       moreOpList: [
+        { value: 'edit', label: '编辑' },
         { value: 'ts', label: '清空宿舍' },
         { value: 'del', label: '删除' }
-      ]
+      ],
+      isShowEditPopup: false, // 是否展示宿舍编辑弹框
+      rowId: null // 当前编辑的id
     }
   },
   computed: {
@@ -171,6 +182,11 @@ export default {
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
+        // 编辑
+        case 'edit':
+          this.rowId = item.id
+          this.isShowEditPopup = true
+          break
         case 'qc':
           break
       }

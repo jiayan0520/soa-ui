@@ -2,8 +2,7 @@
   <div class="soa-dorm">
     <van-tabs
       v-model="active"
-      title-active-color="#38A4F5"
-      @click="onNavClick">
+      title-active-color="#38A4F5">
       <van-tab
         title="床位列表"
         name="1">
@@ -40,18 +39,6 @@ export default {
     }
   },
   methods: {
-    onNavClick() {
-      console.log('navbar')
-    },
-    onSearch(searchValue) {
-      console.log(searchValue)
-    },
-    bindMoreClick() {
-      console.log('更多')
-    },
-    bindRoomClick() {
-      this.$router.push('/dormitory-room')
-    }
   }
 }
 </script>

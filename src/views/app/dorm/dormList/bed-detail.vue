@@ -175,7 +175,8 @@
           <div class="check-btn">
             <van-button
               type="info"
-              class="btn-op">新增检查</van-button>
+              class="btn-op"
+              @click="clickCheckBtn">新增检查</van-button>
           </div>
         </van-collapse-item>
       </van-collapse>
@@ -185,13 +186,19 @@
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
-      position="bottom" />
+      position="bottom">
+      <bed-check />
+    </van-popup>
   </div>
 </template>
 
 <script>
+import bedCheck from './bed-check'
 export default {
   name: 'BedDetail',
+  components: {
+    bedCheck
+  },
   data() {
     return {
       activeNames: [],
@@ -236,6 +243,10 @@ export default {
           break
       }
       this.showMoreIndex = -1
+    },
+    // 新增床位检查
+    clickCheckBtn() {
+      this.showCheckPopup = true
     }
   }
 }
