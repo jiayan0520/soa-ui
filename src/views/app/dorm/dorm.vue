@@ -1,8 +1,7 @@
 <template>
   <div class="soa-dorm">
     <van-tabs
-      v-model="active"
-      title-active-color="#38A4F5">
+      v-model="active">
       <van-tab
         title="床位列表"
         name="1">

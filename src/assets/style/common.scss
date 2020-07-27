@@ -106,9 +106,11 @@
 .van-tabs__line {
     background-color: $--color-info !important;
 }
-.van-button{
-    border-radius: 6px;
+.van-button--normal{
     height: 38px;
+ }
+ .van-button{
+    border-radius: 6px;
  }
 
 
