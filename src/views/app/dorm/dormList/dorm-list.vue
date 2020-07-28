@@ -1,11 +1,12 @@
 <template>
   <div>
     <list-layout
-      ref="listLayout"
+      ref="listLayoutDorm"
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍列表'"
+      detail-url="/dorm/dormDetail"
       op-label="管理"
       class="dorm-list"
       @search="onSearch"
@@ -212,11 +213,11 @@ export default {
           });
         }
         // 加载状态结束
-        this.$refs.listLayout.loading = false
+        this.$refs.listLayoutDorm.loading = false
         this.dataList = this.dataList.concat(dataList)
         // 数据全部加载完成
         if (this.dataList.length >= 20) {
-          this.$refs.listLayout.finished = true
+          this.$refs.listLayoutDorm.finished = true
         }
         // if (this.dataList.length < this.pageSize) {
         //     this.$refs.cardList.finished = true;

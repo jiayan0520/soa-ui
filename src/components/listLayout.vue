@@ -256,12 +256,6 @@ export default {
               justify-content: space-between;
               align-items: center;
               position: relative;
-              img {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                margin-right: 10px;
-              }
               .soa-list-item-content {
                 flex: 1;
                 // .item-row {

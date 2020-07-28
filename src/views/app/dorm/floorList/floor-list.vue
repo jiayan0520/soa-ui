@@ -1,15 +1,18 @@
 <template>
   <div class="floor-list">
     <list-layout
-      ref="listLayout"
+      ref="listLayoutFloor"
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
-      :title="isShowBar ? '':'宿舍楼列表'"
+      :title="isShowBar ? '':'宿舍列表'"
+      detail-url="/dorm/dormDetail"
       op-label="管理"
+      class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
+      @clickMoreBtn="clickMoreBtn"
     >
       <template slot="top">
         <div
@@ -61,7 +64,9 @@
         slot-scope="slotProps">
         <div class="floor-item-content">
           <div class="flex-between">
-            <img src="../../../../assets/images/timg.jpg" >
+            <img
+              class="soa-avatar"
+              src="../../../../assets/images/timg.jpg" >
             <div class="soa-list-item-content">
               <div>{{ slotProps.item.floorName }}</div>
               <div class="c-light">
@@ -120,17 +125,19 @@
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <dorm-edit :id="rowId" />
+      <floor-edit/>
     </van-popup>
   </div>
 </template>
 
 <script>
 import listLayout from '@/components/listLayout'
+import floorEdit from './floor-edit'
 export default {
   name: 'FloorList',
   components: {
-    listLayout
+    listLayout,
+    floorEdit
   },
   data() {
     return {
@@ -170,6 +177,7 @@ export default {
     }
   },
   created() {
+    this.loadData()
   },
   methods: {
     // 复选框选择所有
@@ -209,18 +217,18 @@ export default {
           dataList.push({
             isCheck: false,
             isShowMore: false,
-            id: this.dataList.length + 1,
+            id: dataList.length + 1,
             floorName: '福大生活一区103栋',
             headName: '李幸福',
             telephone: '18233422111'
           });
         }
         // 加载状态结束
-        this.$refs.listLayout.loading = false
+        this.$refs.listLayoutFloor.loading = false
         this.dataList = this.dataList.concat(dataList)
         // 数据全部加载完成
         if (this.dataList.length >= 20) {
-          this.$refs.listLayout.finished = true
+          this.$refs.listLayoutFloor.finished = true
         }
         // if (this.dataList.length < this.pageSize) {
         //     this.$refs.cardList.finished = true;

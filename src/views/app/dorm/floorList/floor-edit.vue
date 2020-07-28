@@ -44,7 +44,7 @@
         type="textarea"
         label="简介"/>
       <van-divider />
-      <div class="soa-task-add__submit">
+      <div class="soa-btn-box">
         <van-button
           block
           type="info"

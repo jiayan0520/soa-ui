@@ -23,8 +23,8 @@
 
 <script>
 import dormList from './dormList/dorm-list'
-import bedList from './dormList/bed-list'
-import floorList from './dormList/floor-list'
+import bedList from './bedList/bed-list'
+import floorList from './floorList/floor-list'
 export default {
   name: 'Dorm',
   components: {

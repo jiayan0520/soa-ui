@@ -1,30 +1,30 @@
 <template>
-  <div class="dorm-edit">
+  <div class="bed-check">
     <van-form
-      class="dorm-edit-form"
+      class="soa-custom-form"
       @submit="onSubmit">
-      <van-cell
-        title="楼栋名称"
-        value="福州生活1区1号楼-601" />
-      <van-cell
+      <custom-cell
+        value="福州生活1区1号楼-601"
+        title="楼栋名称" />
+      <custom-cell
         title="姓名"
         value="朱丽华" />
-      <van-cell
+      <custom-cell
         title="床号"
         value="1号" />
-      <van-cell
+      <custom-cell
         title="学号"
         value="1232424121" />
-      <van-cell
+      <custom-cell
         title="电话"
         value="18046057322" />
-      <van-cell
+      <custom-cell
         title="政治面貌"
         value="正式党员" />
-      <van-cell
+      <custom-cell
         title="班级信息"
         value="2019过控一班" />
-      <van-cell
+      <custom-cell
         title="检查人员"
         value="杨三峰 1804298179" />
       <van-field
@@ -76,7 +76,7 @@
         </template>
       </van-field>
       <van-divider />
-      <div class="soa-task-add__submit">
+      <div class="soa-btn-box ">
         <van-button
           block
           type="info"
@@ -87,12 +87,14 @@
 </template>
 
 <script>
+import customCell from '@/components/customCell'
 import DatePicker from 'vue2-datepicker'
 import dayjs from 'dayjs';
 export default {
   name: 'DormEdit',
   components: {
-    DatePicker
+    DatePicker,
+    customCell
   },
   props: {
     id: {
@@ -129,12 +131,4 @@ export default {
 </script>
 
 <style lang="scss">
-.dorm-edit {
-  padding: 10px;
-  .van-cell {
-    .van-cell__title {
-      max-width: 30%;
-    }
-  }
-}
 </style>

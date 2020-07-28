@@ -1,11 +1,11 @@
 <template>
   <div class="dorm-edit">
     <van-form
-      class="dorm-edit-form"
+      class="soa-custom-form"
       @submit="onSubmit">
-      <van-cell
-        title="楼栋名称"
-        value="福州生活1区1号楼" />
+      <custom-cell
+        value="福州生活1区1号楼"
+        title="楼栋名称" />
       <van-field
         v-model="formData.dormName"
         :rules="[{ required: true, message: '请输入宿舍名称' }]"
@@ -70,12 +70,13 @@
           <van-field
             v-model="formData.cost"
             :rules="[{ required: true, message: '请输入每人每年费用' }]"
-            style="padding:0" />
-          <span class="unit">(元)</span>
+            style="padding:0"
+          />
+          <span class="unit">(元/人/年)</span>
         </template>
       </van-field>
       <van-divider />
-      <div class="soa-task-add__submit">
+      <div class="soa-btn-box">
         <van-button
           block
           type="info"
@@ -86,8 +87,12 @@
 </template>
 
 <script>
+import customCell from '@/components/customCell'
 export default {
   name: 'DormEdit',
+  components: {
+    customCell
+  },
   props: {
     id: {
       type: String,
@@ -120,7 +125,4 @@ export default {
 </script>
 
 <style lang="scss">
-.dorm-edit{
-  padding: 10px;
-}
 </style>

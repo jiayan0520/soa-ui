@@ -99,7 +99,9 @@
     <template
       slot="item-content"
       slot-scope="slotProps">
-      <img src="../../../../assets/images/timg.jpg" >
+      <img
+        class="soa-avatar"
+        src="../../../../assets/images/timg.jpg" >
       <div class="soa-list-item-content">
         <div>
           <span class="c-info">{{ slotProps.item.userName }}</span>

@@ -1,4 +1,5 @@
 @import "./var.scss";
+@import "../mixins/mixins.scss";
 .c-mr10 {
     margin-right: 10px;
 }
@@ -96,27 +97,24 @@
     align-items: center;
     justify-content: space-between;
 }
-a{
-    margin-right: 10px
+a {
+    margin-right: 10px;
 }
 
 /* vant组件样式 
  -------------------------- */
-.van-tab--active{
+.van-tab--active {
     color: $--color-info !important;
 }
 .van-tabs__line {
     background-color: $--color-info !important;
 }
-.van-button--normal{
+.van-button--normal {
     height: 38px;
- }
- .van-button{
+}
+.van-button {
     border-radius: 6px;
- }
-
-
-
+}
 
 /* 业务样式 
  -------------------------- */
@@ -149,4 +147,72 @@ a{
         right: 40px;
         top: 45px;
     }
+}
+
+// 根据customCell设置 van-form van-field的样式
+.soa-custom-form {
+    padding: 10px;
+    .van-field {
+        .van-field__label {
+            text-align: right;
+            flex: unset;
+        }
+        .van-field__value {
+            width: 100%;
+            flex: unset;
+        }
+        &.van-cell--required {
+            &::before {
+                display: none;
+            }
+            .van-field__label {
+                margin-right: 14px;
+                position: relative;
+                width: 6em;
+                &::after {
+                    position: absolute;
+                    right: -8px;
+                    color: #ee0a24;
+                    font-size: 14px;
+                    content: "*";
+                }
+            }
+        }
+    }
+}
+
+// 有边框的项
+.soa-box-item {
+    @include base-between;
+    padding: 5px;
+    margin-bottom: 8px;
+    background: #f2f2f2;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    // 宿舍检查模块，床位检查
+    &.check-item {
+        .check-item-left {
+            flex: 1;
+            .time {
+                color: #000;
+            }
+        }
+        .check-item-grade {
+            width: 10%;
+        }
+    }
+}
+
+// 提交按钮,单个按钮居中，多个按钮弹性布局
+.soa-btn-box {
+    padding-top: 10px;
+    text-align: center;
+}
+
+// 头像
+.soa-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
