@@ -49,7 +49,7 @@
                 :index="index"
                 name="item-content" />
               <i
-                v-if="moreOpList"
+                v-if="moreOpList.length"
                 class="soa-icon soa-icon-gengduo"
                 @click.stop="bindMoreClick(index)"
               />
