@@ -1,48 +1,8 @@
 <template>
   <div class="soa-dorm-detail">
-    <custom-cell
-      :value="data.dormName"
-      title="宿舍名称" />
-    <custom-cell title="舍长">
-      <template slot="value">
-        <div
-          v-for="(item,index) in data.headList"
-          :key="index">
-          {{ item.userName }}
-          <span class="c-info c-ml10">{{ item.telephone }}</span>
-        </div>
-      </template>
-    </custom-cell>
-    <custom-cell title="容纳情况">
-      <template slot="value">
-        <div>
-          可容纳人数：
-          <span class="c-info c-ml10">6人</span>
-        </div>
-        <div>
-          已容纳人数：
-          <span class="c-info c-ml10">6人</span>
-        </div>
-        <div>
-          需激活人数：
-          <span class="c-info c-ml10">6人</span>
-        </div>
-        <div class="c-info">
-          已激活人数：
-          <span class="c-info c-ml10">6人</span>
-        </div>
-        <div class="c-danger">
-          请假人数：
-          <span class="c-info c-ml10">6人</span>
-        </div>
-      </template>
-    </custom-cell>
-    <custom-cell
-      value="学生宿舍"
-      title="宿舍类型" />
-    <custom-cell
-      :value="data.cost"
-      title="宿舍费用" />
+    <custom-panel
+      :data="data"
+      :field-list="fieldList" />
     <van-collapse v-model="activeNames">
       <van-collapse-item
         :value="`2/3人`"
@@ -62,8 +22,8 @@
             </div>
             <div>
               {{ item.bedName }}
-              <span class="c-ml10">{{ item.statusName }} </span>
-              <span class="c-ml10 c-info">{{ item.telephone }} </span>
+              <span class="c-ml10">{{ item.statusName }}</span>
+              <span class="c-ml10 c-info">{{ item.telephone }}</span>
             </div>
           </div>
           <i
@@ -124,11 +84,13 @@
 </template>
 
 <script>
+import customPanel from '@/components/customPanel'
 import customCell from '@/components/customCell'
 export default {
   name: 'BedDetail',
   components: {
-    customCell
+    customCell,
+    customPanel
   },
   data() {
     return {
@@ -138,6 +100,14 @@ export default {
       data: {
         dormName: '福大生活1区1号楼-601',
         headList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
+        containList: [
+          { name: '可容纳人数：', num: 1 },
+          { name: '已容纳人数：', num: 1 },
+          { name: '需激活人数：', num: 1 },
+          { name: '已激活人数：', num: 1, class: 'c-info' },
+          { name: '请假人数：', num: 1, class: 'c-danger' }
+        ],
+        dormType: '学生宿舍',
         cost: '900元/人/年',
         peopleInfos: [
           { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
@@ -150,6 +120,27 @@ export default {
           { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
         ]
       },
+      fieldList: [
+        { prop: 'dormName', label: '宿舍名称' },
+        {
+          prop: 'headList',
+          label: '舍长',
+          type: 'array',
+          childrenFields: [
+            { prop: 'userName' },
+            { prop: 'telephone', class: 'c-info' }]
+        },
+        {
+          prop: 'containList',
+          label: '容纳情况',
+          type: 'array',
+          childrenFields: [
+            { prop: 'name' },
+            { prop: 'num', class: 'c-info', unit: '人' }]
+        },
+        { prop: 'dormType', label: '宿舍类型' },
+        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
+      ],
       moreOpList: [
         { value: '1', label: '设为舍长' },
         { value: '2', label: '退舍' },

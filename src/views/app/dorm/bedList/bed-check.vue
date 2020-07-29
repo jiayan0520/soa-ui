@@ -3,30 +3,9 @@
     <van-form
       class="soa-custom-form"
       @submit="onSubmit">
-      <custom-cell
-        value="福州生活1区1号楼-601"
-        title="楼栋名称" />
-      <custom-cell
-        title="姓名"
-        value="朱丽华" />
-      <custom-cell
-        title="床号"
-        value="1号" />
-      <custom-cell
-        title="学号"
-        value="1232424121" />
-      <custom-cell
-        title="电话"
-        value="18046057322" />
-      <custom-cell
-        title="政治面貌"
-        value="正式党员" />
-      <custom-cell
-        title="班级信息"
-        value="2019过控一班" />
-      <custom-cell
-        title="检查人员"
-        value="杨三峰 1804298179" />
+      <custom-panel
+        :data="formData"
+        :field-list="fieldList" />
       <van-field
         center
         label="检查结果">
@@ -76,7 +55,7 @@
         </template>
       </van-field>
       <van-divider />
-      <div class="soa-btn-box ">
+      <div class="soa-btn-box">
         <van-button
           block
           type="info"
@@ -87,6 +66,7 @@
 </template>
 
 <script>
+import customPanel from '@/components/customPanel'
 import customCell from '@/components/customCell'
 import DatePicker from 'vue2-datepicker'
 import dayjs from 'dayjs';
@@ -94,7 +74,8 @@ export default {
   name: 'DormEdit',
   components: {
     DatePicker,
-    customCell
+    customCell,
+    customPanel
   },
   props: {
     id: {
@@ -105,11 +86,29 @@ export default {
   data() {
     return {
       formData: {
+        floorName: '福州生活1区1号楼-601',
+        userName: '朱丽华',
+        bedName: '1号',
+        sno: '12312312312',
+        telephone: '15874214741',
+        zzmm: '党员',
+        className: '2019过控一班',
+        checkUserName: '杨三峰 1804298179',
         checkResult: null, // 检查结果
         annexIds: [], // 附件
         remark: null,
         checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm')
       },
+      fieldList: [
+        { prop: 'floorName', label: '楼栋名称' },
+        { prop: 'userName', label: '姓名' },
+        { prop: 'bedName', label: '床位' },
+        { prop: 'sno', label: '学号' },
+        { prop: 'telephone', label: '电话' },
+        { prop: 'zzmm', label: '政治面貌' },
+        { prop: 'className', label: '班级信息' },
+        { prop: 'checkUserName', label: '检查人员' }
+      ],
       checkItemList: [
         { value: -10, label: '被子没叠(-10)' },
         { value: -5, label: '桌面混乱(-10)' },

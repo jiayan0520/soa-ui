@@ -63,6 +63,9 @@ export default {
   @include e(value) {
     width: 100%;
     color: $--color-light;
+    span:not(:first-child) {
+      margin-left: 10px;
+    }
   }
 }
 </style>

@@ -1,62 +1,8 @@
 <template>
   <div class="soa-dorm-detail soa-bed-detail">
-    <custom-cell
-      :value="data.dormName"
-      title="宿舍名称" />
-    <custom-cell
-      :value="data.userName"
-      title="姓名" />
-    <custom-cell
-      :value="data.bedName"
-      title="床位" />
-    <custom-cell
-      :value="data.statusName"
-      title="状态" />
-    <custom-cell
-      :value="data.sno"
-      title="学号" />
-    <custom-cell
-      :value="data.statusName"
-      title="电话" />
-    <custom-cell
-      :value="data.zzmm"
-      title="政治面貌" />
-    <custom-cell
-      :value="data.college"
-      title="学院专业" />
-    <custom-cell
-      :value="data.place"
-      title="籍贯" />
-    <custom-cell
-      :value="data.address"
-      title="家庭住址" />
-    <custom-cell
-      :value="data.college"
-      title="学院专业" />
-    <custom-cell title="辅导员">
-      <template slot="value">
-        <div
-          v-for="(item,index) in data.instructorList"
-          :key="index">
-          {{ item.userName }}
-          <span class="c-info c-ml10">{{ item.telephone }}</span>
-        </div>
-      </template>
-    </custom-cell>
-    <custom-cell title="家长信息">
-      <template slot="value">
-        <div
-          v-for="(item,index) in data.parentList"
-          :key="index">
-          {{ item.userName }}
-          <span class="c-ml10">{{ item.role }}</span>
-          <span class="c-info c-ml10">{{ item.telephone }}</span>
-        </div>
-      </template>
-    </custom-cell>
-    <custom-cell
-      :value="data.cost"
-      title="宿舍费用" />
+    <custom-panel
+      :data="data"
+      :field-list="fieldList" />
     <van-collapse v-model="activeNames">
       <van-collapse-item
         :value="`最后一次检查：${data.bedCheckInfos[0].time}`"
@@ -104,13 +50,13 @@
 </template>
 
 <script>
-import customCell from '@/components/customCell'
+import customPanel from '@/components/customPanel'
 import bedCheck from './bed-check'
 export default {
   name: 'BedDetail',
   components: {
     bedCheck,
-    customCell
+    customPanel
   },
   data() {
     return {
@@ -130,13 +76,44 @@ export default {
         address: '福建省福州市闽侯县科技路一号',
         instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
         parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
-        cost: '900元/人/年',
+        cost: '900',
         bedCheckInfos: [
           { checkResult: '桌面脏乱', grade: -10, time: '2020年6月28日 20:01' },
           { checkResult: '被子没叠', grade: -20, time: '2020年6月28日 20:01' },
           { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
         ]
       },
+      fieldList: [
+        { prop: 'dormName', label: '宿舍名称' },
+        { prop: 'userName', label: '姓名' },
+        { prop: 'bedName', label: '床位' },
+        { prop: 'statusName', label: '状态' },
+        { prop: 'sno', label: '学号' },
+        { prop: 'telephone', label: '电话' },
+        { prop: 'zzmm', label: '政治面貌' },
+        { prop: 'college', label: '学院专业' },
+        { prop: 'place', label: '籍贯' },
+        { prop: 'address', label: '家庭住址' },
+        { prop: 'place', label: '学院专业' },
+        {
+          prop: 'instructorList',
+          label: '辅导员',
+          type: 'array',
+          childrenFields: [
+            { prop: 'userName' },
+            { prop: 'telephone', class: 'c-info' }]
+        },
+        {
+          prop: 'parentList',
+          label: '家长信息',
+          type: 'array',
+          childrenFields: [
+            { prop: 'userName' },
+            { prop: 'grade' },
+            { prop: 'telephone', class: 'c-info' }]
+        },
+        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
+      ],
       moreOpList: [
         { value: 'edit', label: '编辑' },
         { value: 'del', label: '删除' }
