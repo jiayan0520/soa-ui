@@ -1,5 +1,5 @@
 <template>
-  <div class="bed-check">
+  <div class="dorm-check">
     <van-form
       class="soa-custom-form"
       @submit="onSubmit">
@@ -8,17 +8,35 @@
         :field-list="fieldList" />
       <van-field
         center
-        label="检查结果">
+        label="结果类型">
         <template #input>
           <van-radio-group
-            v-model="formData.checkResult"
-            direction="horizontal">
+            v-model="formData.checkResultType"
+            direction="horizontal"
+            @change="changeCheckResultType"
+          >
             <van-radio
-              v-for="(item,index) in checkItemList"
+              v-for="(item,index) in checkResultTypeList"
               :key="index"
               :name="item.value"
             >{{ item.label }}</van-radio>
           </van-radio-group>
+        </template>
+      </van-field>
+      <van-field
+        center
+        label="检查结果">
+        <template #input>
+          <van-checkbox-group
+            v-model="formData.checkResult"
+            direction="horizontal">
+            <van-checkbox
+              v-for="(item,index) in checkItemList.filter(c=>c.type===formData.checkResultType)"
+              :key="index"
+              :name="item.value"
+              shape="square"
+            >{{ item.label }}</van-checkbox>
+          </van-checkbox-group>
         </template>
       </van-field>
       <van-field
@@ -67,14 +85,12 @@
 
 <script>
 import customPanel from '@/components/customPanel'
-import customCell from '@/components/customCell'
 import DatePicker from 'vue2-datepicker'
 import dayjs from 'dayjs';
 export default {
   name: 'DormEdit',
   components: {
     DatePicker,
-    customCell,
     customPanel
   },
   props: {
@@ -86,27 +102,16 @@ export default {
   data() {
     return {
       formData: {
-        floorName: '福州生活1区1号楼-601',
-        userName: '朱丽华',
-        bedName: '1号',
-        sno: '12312312312',
-        telephone: '15874214741',
-        zzmm: '党员',
-        className: '2019过控一班',
+        dormName: '福州生活1区1号楼-601',
         checkUserList: [{ userName: '杨荣发', telephone: '14777777747' }],
-        checkResult: null, // 检查结果
+        checkResultType: '1',
+        checkResult: [], // 检查结果
         annexIds: [], // 附件
         remark: null,
         checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm')
       },
       fieldList: [
-        { prop: 'floorName', label: '楼栋名称' },
-        { prop: 'userName', label: '姓名' },
-        { prop: 'bedName', label: '床位' },
-        { prop: 'sno', label: '学号' },
-        { prop: 'telephone', label: '电话' },
-        { prop: 'zzmm', label: '政治面貌' },
-        { prop: 'className', label: '班级信息' },
+        { prop: 'dormName', label: '宿舍名称' },
         {
           prop: 'checkUserList',
           label: '检查人员',
@@ -117,10 +122,17 @@ export default {
           ]
         }
       ],
+      checkResultTypeList: [
+        { value: '1', label: '良好' },
+        { value: '2', label: '脏乱' }
+      ],
       checkItemList: [
-        { value: -10, label: '被子没叠(-10)' },
-        { value: -5, label: '桌面混乱(-10)' },
-        { value: -20, label: '衣柜混乱(-20)' }
+        { value: -10, label: '被子没叠(-10)', type: '2' },
+        { value: -5, label: '桌面混乱(-5)', type: '2' },
+        { value: -20, label: '衣柜混乱(-20)', type: '2' },
+        { value: 20, label: '地板干净(20)', type: '1' },
+        { value: 10, label: '物品有序(10)', type: '1' },
+        { value: 5, label: '阳台整洁(5)', type: '1' }
       ],
       minDate: ''
     }
@@ -132,6 +144,9 @@ export default {
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
       console.log('handleExecutorClick')
+    },
+    changeCheckResultType() {
+      this.formData.checkResult = []
     }
   }
 }

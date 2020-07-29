@@ -1,5 +1,6 @@
 <template>
   <div class="custom-panel">
+    <slot/>
     <custom-cell
       v-for="(field,index) in fieldList"
       :key="index"
@@ -21,11 +22,15 @@
             </span>
           </div>
         </div>
-        <span v-else>{{ data[field.prop] }}</span>
+        <span v-else>
+          <slot
+            :field="field"
+            name="item-span"
+        >{{ data[field.prop] }}</slot></span>
         <span
           v-if="field.unit"
           class="unit">{{ field.unit }}</span>
-      </template>
+      </spn></template>
     </custom-cell>
   </div>
 </template>

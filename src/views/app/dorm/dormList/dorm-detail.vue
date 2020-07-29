@@ -1,5 +1,5 @@
 <template>
-  <div class="soa-dorm-detail">
+  <div class="dorm-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -79,18 +79,20 @@
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
-      position="bottom" />
+      position="bottom">
+      <dorm-check />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import customPanel from '@/components/customPanel'
-import customCell from '@/components/customCell'
+import dormCheck from './dorm-check'
 export default {
-  name: 'BedDetail',
+  name: 'DormDetail',
   components: {
-    customCell,
-    customPanel
+    customPanel,
+    dormCheck
   },
   data() {
     return {
@@ -108,7 +110,7 @@ export default {
           { name: '请假人数：', num: 1, class: 'c-danger' }
         ],
         dormType: '学生宿舍',
-        cost: '900元/人/年',
+        cost: '900',
         peopleInfos: [
           { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
           { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
@@ -178,7 +180,7 @@ export default {
 </script>
 
 <style lang="scss">
-.soa-dorm-detail {
+.dorm-detail {
   width: 100%;
   overflow: auto;
   .van-collapse-item {

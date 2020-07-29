@@ -42,6 +42,7 @@
         :required="true"
         v-model="formData.remark"
         type="textarea"
+        placeholder="楼栋简介"
         label="简介"/>
       <van-divider />
       <div class="soa-btn-box">

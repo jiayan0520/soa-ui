@@ -1,5 +1,5 @@
 <template>
-  <div class="soa-dorm-detail soa-bed-detail">
+  <div class="bed-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -143,7 +143,7 @@ export default {
 </script>
 
 <style lang="scss">
-.soa-bed-detail {
+.bed-detail {
   width: 100%;
   overflow: auto;
   .van-collapse-item {
