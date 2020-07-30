@@ -4,54 +4,72 @@
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">发起人</van-col>
-          <van-col span="19"><div class="c-light">{{ params.promoter }}</div></van-col>
+          <van-col span="19">
+            <div class="c-light">{{ params.promoter }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务名称</van-col>
-          <van-col span="19"><div class="c-light">{{ params.task }}</div></van-col>
+          <van-col span="19">
+            <div class="c-light">{{ params.task }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务详情</van-col>
-          <van-col span="19"><div class="c-light">{{ params.detail }}</div></van-col>
+          <van-col span="19">
+            <div class="c-light">{{ params.detail }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">截止时间</van-col>
-          <van-col span="19"><div class="c-light">{{ params.deadline }}</div></van-col>
+          <van-col span="19">
+            <div class="c-light">{{ params.deadline }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5">任务状态</van-col>
-          <van-col span="19"><div class="c-success">{{ params.state }}</div></van-col>
+          <van-col span="19">
+            <div class="c-success">{{ params.state }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5 c-tr">备注</van-col>
-          <van-col span="19"><div class="c-danger">{{ params.remark }}</div></van-col>
+          <van-col span="19">
+            <div class="c-danger">{{ params.remark }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5 c-tr">质量分</van-col>
-          <van-col span="19"><div class="c-light">{{ params.quality }}</div></van-col>
+          <van-col span="19">
+            <div class="c-light">{{ params.quality }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
           <van-col span="5 c-tr">任务总结</van-col>
-          <van-col span="19"><div class="c-light">{{ params.summary }}</div></van-col>
+          <van-col span="19">
+            <div class="c-light">{{ params.summary }}</div>
+          </van-col>
         </van-row>
       </van-cell>
       <van-cell>
         <van-row gutter="10">
-          <van-col span="5"><div class="">附件信息</div></van-col>
+          <van-col span="5">
+            <div class>附件信息</div>
+          </van-col>
           <van-col span="19">
             <div class="soa-task-singledetail__file">
               <a>学生信息.xls</a>
@@ -67,7 +85,7 @@
 <script>
 export default {
   name: 'SingleDetail',
-  data() {
+  data () {
     return {
       params: {
         promoter: '李晓明',
@@ -85,12 +103,12 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '@/assets/mixins/mixins.scss';
-  @include b(task-single){
-    & > a{
-      text-decoration: underline;
-      color: #1989fa;
-      margin-right: 10px;
-    }
+@import "@/assets/mixins/mixins.scss";
+@include b(task-single) {
+  & > a {
+    text-decoration: underline;
+    color: #1989fa;
+    margin-right: 10px;
   }
+}
 </style>

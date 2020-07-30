@@ -1,6 +1,6 @@
 <template>
   <div class="soa-dorm-count">
-    <div class="soa-dorm-count__title">宿舍检测信息</div>
+    <h3 class="soa-dorm-count__title">宿舍检测信息</h3>
     <van-tabs
       v-model="active"
       title-active-color="#1989fa">
@@ -88,7 +88,9 @@
     </div>
     <div class="soa-dorm-count__circle">
       <div class="c-tc">占比统计</div>
-      <v-chart :data="data">
+      <v-chart
+        :data="data"
+        :width="chartWidth">
         <v-scale
           :options="yOptions"
           y />
@@ -103,9 +105,10 @@
       <div class="c-tc">次数统计</div>
       <v-chart
         ref="demo"
-        :data="barData">
+        :data="barData"
+        :width="chartWidth">
         <v-bar />
-        <v-tooltip :show-item-marker="false" />
+        <v-tooltip :show-item-marker="true" />
       </v-chart>
 
     </div>
@@ -167,12 +170,19 @@ export default {
         { year: '1952 年', sales: 52 },
         { year: '1956 年', sales: 61 },
         { year: '1957 年', sales: 145 },
-        { year: '1958 年', sales: 48 },
-        { year: '1959 年', sales: 38 },
-        { year: '1960 年', sales: 38 },
-        { year: '1962 年', sales: 38 }
-      ]
+        { year: '1958 年', sales: 48 }
+      ],
+      chartWidth: 0
     }
+  },
+  created() {
+    this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40;
+  },
+  mounted() {
+    var _this = this;
+    window.onresize = function() { // 定义窗口大小变更通知事件
+      _this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40; // 窗口宽度
+    };
   },
   methods: {
     onSubmit() {
@@ -189,7 +199,7 @@ export default {
 @import '@/assets/mixins/mixins.scss';
 @include b(dorm-count){
     @include e(title){
-        font-size: 24px;
+        font-size: 16px;
         margin: 10px 0;
     }
     @include e(search){
@@ -209,6 +219,9 @@ export default {
            vertical-align: middle;
          }
        }
+    }
+    @include e(bar) {
+      margin-bottom: 40px;
     }
 }
 </style>
