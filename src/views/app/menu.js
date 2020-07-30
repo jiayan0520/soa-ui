@@ -40,7 +40,7 @@ const menu = [
         icon: 'dorm'
       },
       {
-        to: './dorm-list',
+        to: './dorm/unallocated',
         label: '未分配人员',
         icon: 'kuaisufenpei'
       },
