@@ -160,6 +160,12 @@ a {
         .van-field__value {
             width: 100%;
             flex: unset;
+            .sao-input__select{
+                width: 100%;
+                border: none;
+                color: #0e7df3;
+                background-color: #ffffff;
+            }
         }
         &.van-cell--required {
             &::before {

@@ -70,7 +70,7 @@ export default {
     return {
       isMove: true, // 判断是否手动移动地图or点击地址项导致地图移动
       // 高德地图配置
-      amapKey: 'ce690184d1a7632aa2eaf4d051ca65bf',
+      amapKey: 'ed887f7742d62d49594788c8bb125720',
       amapApi: 'https://restapi.amap.com/',
       cityCode: null, // 所在城市编码
       map: null, // 地图对象

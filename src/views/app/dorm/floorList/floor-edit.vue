@@ -1,7 +1,7 @@
 <template>
   <div class="floor-edit">
     <van-form
-      class="floor-edit-form"
+      class="floor-edit-form soa-custom-form"
       @submit="onSubmit">
       <van-field
         v-model="formData.floorName"
@@ -39,10 +39,13 @@
           <input
             v-model="formData.address"
             :placeholder="'请选择'"
-            class="tdb-input-select"
+            class="sao-input__select"
             type="text"
             @focus="isShowAddressPopup=true"
           >
+          <van-icon
+            class="van-cell__right-icon"
+            name="arrow" />
         </template>
       </van-field>
       <van-field
