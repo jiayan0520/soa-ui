@@ -1,90 +1,52 @@
 <template>
   <div class="soa-task-single">
-    <van-cell-group>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">发起人</van-col>
-          <van-col span="19">
-            <div class="c-light">{{ params.promoter }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">任务名称</van-col>
-          <van-col span="19">
-            <div class="c-light">{{ params.task }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">任务详情</van-col>
-          <van-col span="19">
-            <div class="c-light">{{ params.detail }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">截止时间</van-col>
-          <van-col span="19">
-            <div class="c-light">{{ params.deadline }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">任务状态</van-col>
-          <van-col span="19">
-            <div class="c-success">{{ params.state }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5 c-tr">备注</van-col>
-          <van-col span="19">
-            <div class="c-danger">{{ params.remark }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5 c-tr">质量分</van-col>
-          <van-col span="19">
-            <div class="c-light">{{ params.quality }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5 c-tr">任务总结</van-col>
-          <van-col span="19">
-            <div class="c-light">{{ params.summary }}</div>
-          </van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">
-            <div class>附件信息</div>
-          </van-col>
-          <van-col span="19">
-            <div class="soa-task-singledetail__file">
-              <a>学生信息.xls</a>
-              <a>学生信息.xls</a>
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
-    </van-cell-group>
+    <custom-cell
+      :value="params.promoter"
+      title="发起人"/>
+    <custom-cell
+      :value="params.task"
+      title="任务名称"/>
+    <custom-cell
+      :value="params.detail"
+      title="任务详情"/>
+    <custom-cell
+      :value="params.deadline"
+      title="截止时间"/>
+    <custom-cell
+      :value="params.state"
+      title="任务状态">
+      <template slot="value">
+        <div :class="[stateMap[params.state]]">{{ params.state }}</div>
+      </template>
+    </custom-cell>
+    <custom-cell
+      :value="params.remark"
+      title="备注"/>
+    <custom-cell
+      :value="params.quality"
+      title="质量分"/>
+    <custom-cell
+      :value="params.summary"
+      title="任务总结"/>
+    <custom-cell title="附件信息">
+      <template slot="value">
+        <a
+          v-for="(item,index) in params.file"
+          :key="index"
+          :href="item.url"
+          download="w3logo">{{ item.fileName }}</a>
+      </template>
+    </custom-cell>
   </div>
 </template>
 
 <script>
+import customCell from '@/components/customCell'
 export default {
   name: 'SingleDetail',
+  components: {
+    customCell
+  },
   data () {
     return {
       params: {
@@ -96,6 +58,11 @@ export default {
         deadline: '2020年6月19日 18时00分',
         state: '已完成',
         summary: '任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核'
+      },
+      stateMap: {
+        '未完成': 'c-danger',
+        '审核不通过': 'c-warn',
+        '已完成': 'c-success'
       }
     }
   }
@@ -103,12 +70,4 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/mixins/mixins.scss";
-@include b(task-single) {
-  & > a {
-    text-decoration: underline;
-    color: #1989fa;
-    margin-right: 10px;
-  }
-}
 </style>

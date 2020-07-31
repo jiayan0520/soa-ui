@@ -71,31 +71,29 @@
       <div
         v-for="(item, index) in params.child"
         :key="index"
-        class="soa-task-detail__cell">
-        <van-row gutter="10">
-          <van-col span="12"><div class="c-ft12">{{ item.title }}</div></van-col>
-          <van-col span="4">
-            <div class="c-light c-ft12">{{ item.done }}/{{ item.total }}完成</div>
-          </van-col>
-          <van-col span="4">
-            <div
-              :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
-              class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-          </van-col>
-          <van-col span="4">
-            <div class="icon">
-              <van-icon
-                name="clear"
-                color="#f00"
-                @click="handleChildClear(index)"/>
-            </div>
-            <div class="icon c-mr10">
-              <van-icon
-                name="edit"
-                @click="handleChildEdit(index)"/>
-            </div>
-          </van-col>
-        </van-row>
+        class="soa-task-detail__child">
+        <div
+          class="content"
+          @click="bindChildDetailClick">
+          <div class="title">{{ item.title }}</div>
+          <div class="c-mr20">{{ item.done }}/{{ item.total }}完成</div>
+          <div
+            :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
+            class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
+        </div>
+        <div class="icon">
+          <div class="c-mr10">
+            <van-icon
+              name="clear"
+              color="#f00"
+              @click="handleChildClear(index)"/>
+          </div>
+          <div>
+            <van-icon
+              name="edit"
+              @click="handleChildEdit(index)"/>
+          </div>
+        </div>
       </div>
       <div class="c-tc">
         <van-button
@@ -214,6 +212,9 @@ export default {
     // 关闭modal
     closeChildModal(val) {
       this.showModal = !val
+    },
+    bindChildDetailClick() {
+      this.$router.push('/task-child-detail')
     }
   }
 }
@@ -221,6 +222,7 @@ export default {
 
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
+@import '@/assets/style/var.scss';
 @include b(task-detail){
   @include e(complateList){
     padding: 0 20px;
@@ -228,21 +230,23 @@ export default {
       margin-top: 8px;
     }
   }
-  @include e(file){
-    & > a{
-      text-decoration: underline;
-      color: #1989FA;
-      margin-right: 10px;
+  @include e(child){
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    & .content{
+      display: flex;
+      width: 92%;
+      & > .title{
+        font-size: $--font-size-extra-small;
+        width: 50%;
+      }
     }
-  }
-  @include e(cell){
-    background: #F8F8F8;
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 16px;
-    &  .icon{
-      cursor: pointer;
-      float: right;
+    & > .icon {
+      display: flex;
     }
   }
 }

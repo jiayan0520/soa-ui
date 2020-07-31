@@ -1,5 +1,5 @@
 <template>
-  <div class="soa-task-detail">
+  <div class="soa-task-chidDetail">
     <custom-cell
       :value="params.promoter"
       title="发起人"/>
@@ -17,39 +17,31 @@
         title="完成情况"
         value="3/5完成"
         name="1">
-        <div>
-          <van-row>
-            <van-col span="6">
-              <div class="c-danger">待审核</div>
-            </van-col>
-            <van-col span="6">
-              <div class="c-light">吴笑笑</div>
-            </van-col>
-            <van-col span="12">
-              <div class="c-tr">
-                <van-button
-                  type="info"
-                  size="mini">查看</van-button>
-              </div>
-            </van-col>
-          </van-row>
-          <van-row>
-            <van-col span="12">
-              <div class="c-light">任务反馈附件集合.zip</div>
-            </van-col>
-            <van-col span="12">
-              <div class="c-tr">
-                <van-button
-                  type="info"
-                  size="mini">下载</van-button>
-              </div>
-            </van-col>
-          </van-row>
-          <div class="c-tc c-mt10">
+        <div class="soa-task-chidDetail__complateList">
+          <div class="c-danger">待审核</div>
+          <div class="c-light">吴笑笑</div>
+          <div class="c-tr">
             <van-button
               type="info"
-              size="small">审核</van-button>
+              size="mini">查看</van-button>
           </div>
+        </div>
+        <van-row>
+          <van-col span="12">
+            <div class="c-light">任务反馈附件集合.zip</div>
+          </van-col>
+          <van-col span="12">
+            <div class="c-tr">
+              <van-button
+                type="info"
+                size="mini">下载</van-button>
+            </div>
+          </van-col>
+        </van-row>
+        <div class="c-tc c-mt10">
+          <van-button
+            type="info"
+            size="small">审核</van-button>
         </div>
       </van-collapse-item>
     </van-collapse>
@@ -62,45 +54,18 @@
           download="w3logo">{{ item.fileName }}</a>
       </template>
     </custom-cell>
-    <van-cell>
-      <div
-        v-for="(item, index) in params.child"
-        :key="index"
-        class="soa-task-detail__cell">
-        <van-row gutter="10">
-          <van-col span="12"><div class="c-ft12">{{ item.title }}</div></van-col>
-          <van-col span="4">
-            <div class="c-light c-ft12">{{ item.done }}/{{ item.total }}完成</div>
-          </van-col>
-          <van-col span="4">
-            <div
-              :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
-              class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-          </van-col>
-          <van-col span="4">
-            <div class="icon">
-              <van-icon
-                name="clear"
-                color="#f00"
-                @click="handleChildClear(index)"/>
-            </div>
-            <div class="icon c-mr10">
-              <van-icon
-                name="edit"
-                @click="handleChildEdit(index)"/>
-            </div>
-          </van-col>
-        </van-row>
-      </div>
-      <div class="c-tc">
-        <van-button
-          block
-          icon="add-o"
-          type="info"
-          @click="handleAddChildClick">
-          添加子任务
-        </van-button>
-      </div>
+    <van-cell
+      v-for="items in params.infos"
+      :key="items.index">
+      <van-row gutter="10">
+        <van-col span="6">【{{ items.name }}】</van-col>
+        <van-col span="10">
+          <div class="c-light">{{ items.content }}</div>
+        </van-col>
+        <van-col span="8">
+          <div class="c-light c-tr c-ft12">{{ items.time }}</div>
+        </van-col>
+      </van-row>
     </van-cell>
     <van-cell>
       <van-field
@@ -129,6 +94,7 @@ export default {
   },
   data() {
     return {
+      activeNames: [],
       params: {
         promoter: '李晓明',
         task: '收集党员信息',
@@ -143,12 +109,20 @@ export default {
           { name: '李荣文', content: '已查看该任务', time: '6月19日 15时00分' },
           { name: '韩雯雯', content: '已反馈该任务', time: '6月19日 11时30分' }
         ]
-      }
+      },
+      inputText: ''
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import '@/assets/mixins/mixins.scss';
+@include b(task-chidDetail){
+  @include e(complateList){
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+}
 </style>

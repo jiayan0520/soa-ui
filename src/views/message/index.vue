@@ -7,24 +7,23 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
-      class="soa-task-rank-lists"
       @load="onLoad"
     >
       <van-cell
         v-for="item in list"
         :key="item.id"
         :to="item.url"
-        class="soa-message-cell" >
+        class="soa-message__cell" >
         <img
           src="@/assets/images/logo-icon.png"
           width="45px"
           height="45px"
           alt >
-        <div class="soa-message-brief">
-          <div class="title">{{ item.title }}</div>
-          <div class="brief">{{ item.brief }}</div>
+        <div class="soa-message__brief">
+          <div class="c-fwb">{{ item.title }}</div>
+          <div class="c-light">{{ item.brief }}</div>
         </div>
-        <span class="soa-message-time">{{ item.time }}</span>
+        <span class="c-light">{{ item.time }}</span>
       </van-cell>
     </van-list>
   </div>
@@ -68,21 +67,19 @@ export default {
   }
 }
 </script>
-<style scoped>
-.soa-message-brief{
-  width: calc(100% - 105px)
-}
-.soa-message-brief .title{
-  font-weight: 600
-}
-.soa-message-brief .brief,.soa-message-time{
-  color:#aaa
-}
-.soa-message-cell .van-cell__value--alone{
-  display: flex;
-  justify-content: space-between;
-}
-.soa-message-cell img{
-  margin-right: 10px
+<style lang="scss">
+@import '@/assets/mixins/mixins.scss';
+@include b(message){
+  &>img{width: 100%;}
+  @include e(cell){
+    & img{ margin-right: 10px}
+    & .van-cell__value--alone{
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  @include e(brief){
+     width: calc(100% - 105px)
+  }
 }
 </style>

@@ -34,7 +34,9 @@
           <div class="c-light">{{ slotProps.item.start }}</div>
           <span class="c-info">{{ slotProps.item.charge }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
         </div>
-        <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
+        <div
+          :class="[stateMap[slotProps.item.state]]"
+          class="c-mr20">{{ slotProps.item.state }}</div>
       </div>
     </template>
   </list-layout>
