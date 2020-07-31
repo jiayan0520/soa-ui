@@ -30,7 +30,7 @@
         <span
           v-if="field.unit"
           class="unit">{{ field.unit }}</span>
-      </spn></template>
+      </template>
     </custom-cell>
   </div>
 </template>

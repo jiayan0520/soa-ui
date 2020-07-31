@@ -1,44 +1,4 @@
 <template>
-  <!-- <div class="soa-task-examine-list">
-    <van-search
-      v-model="searchValue"
-      show-action
-      label="任务内容"
-      placeholder="请输入搜索关键词"
-      @search="onSearch"
-    />
-    <van-tabs
-      v-model="active"
-      @click="onClick">
-      <van-tab title="已审核"/>
-      <van-tab title="未审核"/>
-    </van-tabs>
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <van-cell
-        v-for="(item,index) in list"
-        :key="index"
-        @click="handleClick(item)">
-        <van-row
-          align="center"
-          type="flex">
-          <van-col span="18">
-            <div class="c-ft16">{{ item.label }}</div>
-            <div class="c-light">{{ item.end }}</div>
-            <div class="c-light">{{ item.star }}</div>
-            <div :class="[item.info.indexOf('距截止')>=0? 'c-success': 'c-danger']">{{ item.info }}</div>
-          </van-col>
-          <van-col
-            span="6"
-            class="c-warm">{{ item.state }}</van-col>
-        </van-row>
-      </van-cell>
-    </van-list>
-  </div> -->
   <list-layout
     ref="listLayout"
     :data-list="dataList"
@@ -72,7 +32,7 @@
           <div class="c-ft16">{{ slotProps.item.label }}</div>
           <div class="c-light">{{ slotProps.item.end }}</div>
           <div class="c-light">{{ slotProps.item.start }}</div>
-          <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
+          <span class="c-info">{{ slotProps.item.charge }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
         </div>
         <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
       </div>
@@ -95,7 +55,8 @@ export default {
       tab: ['待审核', '已审核'],
       moreOpList: [],
       stateMap: {
-        '审核中': 'c-warm'
+        '审核中': 'c-warm',
+        '审核失败': 'c-danger'
       }
     }
   },
@@ -121,7 +82,7 @@ export default {
             label: '20200705收集班级学生旷课情况',
             star: '2020年06月20日 15时30分 截止',
             end: '2020年06月20日 15时30分 发布',
-            state: '审核中',
+            state: (i % 2 === 0) ? '审核中' : '审核失败',
             info: '距截止还剩3天1小时' });
         }
 
