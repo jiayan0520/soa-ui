@@ -1,7 +1,7 @@
 <template>
   <div class="floor-edit">
     <van-form
-      class="floor-edit-form"
+      class="floor-edit-form soa-custom-form"
       @submit="onSubmit">
       <van-field
         v-model="formData.floorName"
@@ -34,16 +34,27 @@
           <van-uploader v-model="formData.annexIds" />
         </template>
       </van-field>
-      <van-field
-        v-model="formData.address"
-        label="楼栋位置"
-      />
+      <van-field label="楼栋位置">
+        <template #input>
+          <input
+            v-model="formData.address"
+            :placeholder="'请选择'"
+            class="sao-input__select"
+            type="text"
+            @focus="isShowAddressPopup=true"
+          >
+          <van-icon
+            class="van-cell__right-icon"
+            name="arrow" />
+        </template>
+      </van-field>
       <van-field
         :required="true"
         v-model="formData.remark"
         type="textarea"
         placeholder="楼栋简介"
-        label="简介"/>
+        label="简介"
+      />
       <van-divider />
       <div class="soa-btn-box">
         <van-button
@@ -52,12 +63,22 @@
           native-type="submit">提交</van-button>
       </div>
     </van-form>
+    <van-popup
+      v-model="isShowAddressPopup"
+      position="bottom"
+      style="min-height: 20% ">
+      <address-select @close="isShowAddressPopup=false" />
+    </van-popup>
   </div>
 </template>
 
 <script>
+import addressSelect from '@/components/address-select'
 export default {
   name: 'FloorEdit',
+  components: {
+    addressSelect
+  },
   props: {
     id: {
       type: String,
@@ -72,7 +93,8 @@ export default {
         repair: null,
         address: null,
         remark: null
-      }
+      },
+      isShowAddressPopup: false
     }
   },
   methods: {

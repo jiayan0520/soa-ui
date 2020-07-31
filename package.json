@@ -16,9 +16,11 @@
   "dependencies": {
     "axios": "^0.19.2",
     "dayjs": "^1.8.30",
+    "lodash": "^4.17.19",
     "mockjs": "^1.1.0",
     "vant": "^2.8.7",
     "vue": "^2.6.11",
+    "vue-jsonp": "^0.1.8",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^3.6.0",
     "vuex": "^3.5.1",
