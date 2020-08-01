@@ -68,7 +68,7 @@ const menu = [
         type: 'success'
       },
       {
-        to: './dorm-rank',
+        to: './dorm/rank',
         label: '评分榜',
         icon: 'paihang',
         type: 'success'

@@ -55,8 +55,14 @@ export default [
   // 床位二维码卫生员权限
   {
     path: '/bed-qrcode/bed-auth-checkman',
-    name: 'bed-auth-self',
+    name: 'bed-auth-checkman',
     component: () => import('@/views/app/dorm/bed-qrcode/bed-auth-checkman')
+  },
+  // 评分榜
+  {
+    path: '/dorm/rank',
+    name: 'dormRank',
+    component: () => import('@/views/app/dorm/checkRank')
   },
   {
     path: '/dorm-count',
