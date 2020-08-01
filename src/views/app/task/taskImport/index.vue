@@ -1,11 +1,5 @@
 <template>
   <div>
-    <van-nav-bar
-      title="导入任务"
-      left-arrow
-      left-text="返回"
-      @click-left="onClickLeft"
-    />
     <van-form
       class="soa-task-add"
       @submit="onSubmit">
@@ -14,8 +8,7 @@
           <van-row gutter="10">
             <van-col span="5">示例</van-col>
             <van-col span="19"><a
-              href="/images/myw3schoolimage.jpg"
-              download="w3logo"
+              href="http://www.huazhongyi.top/moboximage/template/tasktemplate/template.xlsx"
               class="c-info">导入示例下载</a></van-col>
           </van-row>
         </van-cell>
@@ -54,9 +47,6 @@ export default {
     }
   },
   methods: {
-    onClickLeft() {
-      this.$router.go(-1)
-    },
     onSubmit() {
       console.log('提交文件')
     }

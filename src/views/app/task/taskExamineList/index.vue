@@ -4,7 +4,7 @@
     :data-list="dataList"
     :detail-url="detailUrl"
     :more-op-list="moreOpList"
-    class="soa-task-list"
+    class="soa-task-examine-list"
     @search="onSearch"
     @loadData="onLoad">
     <template slot="top">
@@ -34,9 +34,7 @@
           <div class="c-light">{{ slotProps.item.start }}</div>
           <span class="c-info">{{ slotProps.item.charge }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
         </div>
-        <div
-          :class="[stateMap[slotProps.item.state]]"
-          class="c-mr20">{{ slotProps.item.state }}</div>
+        <div :class="[stateMap[slotProps.item.state],'soa-task-examine-list__status']">{{ slotProps.item.state }}</div>
       </div>
     </template>
   </list-layout>
@@ -101,5 +99,13 @@ export default {
 </script>
 
 <style lang="scss">
-
+@import '@/assets/mixins/mixins.scss';
+@include b(task-examine-list){
+  & .content{
+     @include base-between
+  }
+  @include e(status){
+    padding-right: 30px
+  }
+}
 </style>
