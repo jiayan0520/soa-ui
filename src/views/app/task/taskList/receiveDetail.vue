@@ -1,103 +1,77 @@
 <template>
-  <div class="soa-task-receive">
+  <div class="soa-task-receiveDetail">
+    <custom-cell
+      :value="params.promoter"
+      title="发起人"/>
+    <custom-cell
+      :value="params.task"
+      title="任务名称"/>
+    <custom-cell
+      :value="params.detail"
+      title="任务详情"/>
+    <custom-cell
+      :value="params.deadline"
+      title="截止时间"/>
+    <van-collapse v-model="activeNames">
+      <van-collapse-item
+        title="完成情况"
+        value="3/5完成"
+        name="1">
+        <div
+          v-for="(item,index) in params.accomplish"
+          :key="index"
+          class="soa-task-receiveDetail__complateList">
+          <div :class="[stateMap[item.state]]">{{ item.state }}</div>
+          <div class="c-light c-ml20">{{ item.name }}</div>
+        </div>
+      </van-collapse-item>
+    </van-collapse>
+    <custom-cell
+      :value="params.remark"
+      title="备注"/>
+    <custom-cell
+      title="质量分">
+      <template slot="value">
+        <span class="c-danger">未评定</span>/{{ params.quality }}分
+      </template>
+    </custom-cell>
+    <custom-cell title="附件信息">
+      <template slot="value">
+        <a
+          v-for="(item,index) in params.file"
+          :key="index"
+          :href="item.url"
+          download="w3logo">{{ item.fileName }}</a>
+      </template>
+    </custom-cell>
     <van-cell-group>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">发起人</van-col>
-          <van-col span="19"><div class="c-light">{{ params.promoter }}</div></van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">任务名称</van-col>
-          <van-col span="19"><div class="c-light">{{ params.task }}</div></van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">任务详情</van-col>
-          <van-col span="19"><div class="c-light">{{ params.detail }}</div></van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">备注</van-col>
-          <van-col span="19">{{ params.remark }}<div class="c-danger"/></van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">质量分</van-col>
-          <van-col span="19"><div class="c-light"><span class="c-danger">未评定</span>/{{ params.quality }}分</div></van-col>
-        </van-row>
-      </van-cell>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5">截止时间</van-col>
-          <van-col span="19"><div class="c-light">{{ params.deadline }}</div></van-col>
-        </van-row>
-      </van-cell>
-      <van-collapse v-model="activeNames">
-        <van-collapse-item
-          title="完成情况"
-          value="3/5完成"
-          name="1">
-          <div class="soa-task-receive__complateList">
-            <van-row>
-              <van-col span="6">
-                <div class="c-danger">待审核</div>
-              </van-col>
-              <van-col span="6">
-                <div class="c-light">吴笑笑</div>
-              </van-col>
-            </van-row>
-          </div>
-        </van-collapse-item>
-      </van-collapse>
-      <van-cell>
-        <van-row gutter="10">
-          <van-col span="5"><div class="">附件信息</div></van-col>
-          <van-col span="19">
-            <div class="soa-task-receive__file">
-              <a
-                href="/images/myw3schoolimage.jpg"
-                download="w3logo" >学生信息.xls</a>
-              <a
-                href="/images/myw3schoolimage.jpg"
-                download="w3logo">学生信息.xls</a>
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
       <van-cell>
         <div
           v-for="(item, index) in params.child"
           :key="index"
-          class="soa-task-receive__cell">
-          <van-row gutter="10">
-            <van-col span="12"><div class="c-ft12">{{ item.title }}</div></van-col>
-            <van-col span="4">
-              <div class="c-light c-ft12">{{ item.done }}/{{ item.total }}完成</div>
-            </van-col>
-            <van-col span="4">
-              <div
-                :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
-                class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-            </van-col>
-            <van-col span="4">
-              <div class="icon">
-                <van-icon
-                  name="clear"
-                  color="#f00"
-                  @click="handleChildClear(index)"/>
-              </div>
-              <div class="icon c-mr10">
-                <van-icon
-                  name="edit"
-                  @click="handleChildEdit(index)"/>
-              </div>
-            </van-col>
-          </van-row>
+          class="soa-task-receiveDetail__child">
+          <div
+            class="content"
+            @click="bindChildDetailClick">
+            <div class="title">{{ item.title }}</div>
+            <div class="c-mr20">{{ item.done }}/{{ item.total }}完成</div>
+            <div
+              :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
+              class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
+          </div>
+          <div class="icon">
+            <div class="c-mr10">
+              <van-icon
+                name="clear"
+                color="#f00"
+                @click="handleChildClear(index)"/>
+            </div>
+            <div>
+              <van-icon
+                name="edit"
+                @click="handleChildEdit(index)"/>
+            </div>
+          </div>
         </div>
         <div class="c-tc">
           <van-button
@@ -112,15 +86,11 @@
       <van-cell
         v-for="items in params.infos"
         :key="items.index">
-        <van-row gutter="10">
-          <van-col span="6">【{{ items.name }}】</van-col>
-          <van-col span="10">
-            <div class="c-light">{{ items.content }}</div>
-          </van-col>
-          <van-col span="8">
-            <div class="c-light c-tr c-ft12">{{ items.time }}</div>
-          </van-col>
-        </van-row>
+        <div class="soa-task-receiveDetail__commentList">
+          <div class="name">【{{ items.name }}】</div>
+          <div class="content">{{ items.content }}</div>
+          <div class="time">{{ items.time }}</div>
+        </div>
       </van-cell>
       <van-cell>
         <van-field
@@ -150,10 +120,12 @@
 
 <script>
 import AddChild from '../taskChild'
+import customCell from '@/components/customCell'
 export default {
   name: 'ReceiveDetail',
   components: {
-    AddChild
+    AddChild,
+    customCell
   },
   data() {
     return {
@@ -173,7 +145,17 @@ export default {
           { name: '黄德彬', content: '这个任务很简单，大家尽快执行完后反馈该任务信息', time: '6月19日 18时00分' },
           { name: '李荣文', content: '已查看该任务', time: '6月19日 15时00分' },
           { name: '韩雯雯', content: '已反馈该任务', time: '6月19日 11时30分' }
+        ],
+        file: [{ url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }, { url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }],
+        accomplish: [
+          { name: '吴笑笑', state: '待审核' },
+          { name: '林小菲', state: '未完成' }
         ]
+      },
+      stateMap: {
+        '未完成': 'c-danger',
+        '待审核': 'c-warm',
+        '已完成': 'c-success'
       }
     }
   },
@@ -210,34 +192,50 @@ export default {
     // 关闭modal
     closeChildModal(val) {
       this.showModal = !val
+    },
+    bindChildDetailClick() {
+      this.$router.push('/task-child-detail')
     }
   }
 }
 </script>
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
-@include b(task-receive){
-  @include e(complateList){
-    padding: 0 20px;
-    & > div {
-      margin-top: 8px;
-    }
+@import '@/assets/style/var.scss';
+@include b(task-receiveDetail){
+   @include e(complateList){
+    display:flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
   }
-  @include e(file){
-    & > a{
-      text-decoration: underline;
-      color: #1989fa;
-      margin-right: 10px;
-    }
+  @include e(commentList){
+     display:flex;
+     justify-content: space-between;
+      align-items:center;
+     & > .name{color: $--color-light;}
+     & > .time{
+       font-size: $--font-size-extra-small;
+       color: $--color-light;
+     }
+     & > .content{width: 45%;}
   }
-  @include e(cell){
-    background: #F8F8F8;
-    border-radius: 8px;
-    padding: 8px;
-    margin-bottom: 16px;
-    &  .icon {
-      float: right;
-     cursor: pointer;
+  @include e(child){
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    & .content{
+      display: flex;
+      width: 92%;
+      & > .title{
+        font-size: $--font-size-extra-small;
+        width: 50%;
+      }
+    }
+    & > .icon {
+      display: flex;
     }
   }
 }

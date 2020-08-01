@@ -108,37 +108,33 @@
         </template>
       </van-field>
       <van-divider />
-      <div class="soa-task-add__child">
+      <van-cell>
         <div
           v-for="(item, index) in query.child"
           :key="index"
-          class="soa-task-add__child--list">
-          <van-row gutter="10">
-            <van-col span="12"><div class="c-ft12">{{ item.title }}</div></van-col>
-            <van-col span="4">
-              <div class="c-light c-ft12">{{ item.done }}/{{ item.total }}完成</div>
-            </van-col>
-            <van-col span="4">
-              <div
-                :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
-                class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-            </van-col>
-            <van-col span="4">
-              <div class="icon">
-                <van-icon
-                  name="clear"
-                  color="#f00"
-                  @click="handleChildClear(index)"/>
-              </div>
-              <div class="icon c-ml10">
-                <van-icon
-                  name="edit"
-                  @click="handleChildEdit(index)"/>
-              </div>
-            </van-col>
-          </van-row>
+          class="soa-task-add__child">
+          <div class="content">
+            <div class="title">{{ item.title }}</div>
+            <div class="c-mr20">{{ item.done }}/{{ item.total }}完成</div>
+            <div
+              :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
+              class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
+          </div>
+          <div class="icon">
+            <div class="c-mr10">
+              <van-icon
+                name="clear"
+                color="#f00"
+                @click="handleChildClear(index)"/>
+            </div>
+            <div>
+              <van-icon
+                name="edit"
+                @click="handleChildEdit(index)"/>
+            </div>
+          </div>
         </div>
-        <div class="soa-task-add__btn">
+        <div class="c-tc">
           <van-button
             block
             icon="add-o"
@@ -147,7 +143,8 @@
             添加子任务
           </van-button>
         </div>
-      </div>
+      </van-cell>
+
       <van-divider />
       <div class="soa-task-add__submit">
         <van-button
@@ -257,23 +254,28 @@ export default {
 
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
-
+@import '@/assets/style/var.scss';
 @include b(task-add){
   @include e(submit){
     margin: 16px 16px 55px
   }
-  @include e(child){
-    margin: 16px 16px 0;
-    @include m(list){
-      background: #F8F8F8;
-      border-radius: 8px;
-      padding: 8px;
-      margin-bottom: 16px;
-      & .icon{
-        cursor: pointer;
-        font-size: 12px;
-        float: left;
+ @include e(child){
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    & .content{
+      display: flex;
+      width: 92%;
+      & > .title{
+        font-size: $--font-size-extra-small;
+        width: 50%;
       }
+    }
+    & > .icon {
+      display: flex;
     }
   }
 }

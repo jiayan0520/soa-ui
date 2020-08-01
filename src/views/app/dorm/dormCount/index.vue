@@ -1,91 +1,94 @@
 <template>
   <div class="soa-dorm-count">
-    <h3 class="soa-dorm-count__title">宿舍检测信息</h3>
-    <van-tabs
-      v-model="active"
-      title-active-color="#1989fa">
-      <van-tab
-        title="学生"
-        name="1"/>
-      <van-tab
-        title="宿舍"
-        name="2"/>
-    </van-tabs>
-    <div class="soa-dorm-count__search">
-      <div
-        class="title"
-        @click="bindSearchClick">搜索条件<span/></div>
-      <div
-        v-if="showSearch"
-        class="content">
-        <van-form @submit="onSubmit">
-          <van-field
-            v-model="query.name"
-            name="楼栋名称"
-            label="楼栋名称"
-            placeholder="楼栋名称"
-          />
-          <van-field
-            v-model="query.dormNum"
-            name="宿舍号"
-            label="宿舍号"
-            placeholder="宿舍号"
-          />
-          <van-field
-            center
-            label="检查时间起"
-          >
-            <template #input>
-              <date-picker
-                v-model="query.deadline"
-                :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
-                :editable="false"
-                :not-before="minDate"
-                :clearable="false"
-                type="datetime"
-                value-type="format"
-                format="YYYY-MM-DD HH:mm"
-                placeholder="请选择检查时间"
-                append-to-body/>
-            </template>
-          </van-field>
-          <van-field
-            center
-            label="检查时间结"
-          >
-            <template #input>
-              <date-picker
-                v-model="query.deadline"
-                :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
-                :editable="false"
-                :not-before="minDate"
-                :clearable="false"
-                type="datetime"
-                value-type="format"
-                format="YYYY-MM-DD HH:mm"
-                placeholder="请选择检查时间"
-                append-to-body/>
-            </template>
-          </van-field>
-          <div style="margin: 16px;">
-            <van-row gutter="10">
-              <van-col span="12">
-                <van-button
-                  block
-                  type="default"
-                  native-type="submit">重置</van-button>
-              </van-col>
-              <van-col span="12">
-                <van-button
-                  type="info"
-                  block
-                  native-type="submit">提交</van-button>
-              </van-col>
-            </van-row>
-          </div>
-        </van-form>
+    <div class="soa-dorm-count__head">
+      <h3 class="soa-dorm-count__title">宿舍检测信息</h3>
+      <van-tabs
+        v-model="active"
+        title-active-color="#1989fa">
+        <van-tab
+          title="学生"
+          name="1"/>
+        <van-tab
+          title="宿舍"
+          name="2"/>
+      </van-tabs>
+      <div class="soa-dorm-count__search">
+        <div
+          class="title"
+          @click="bindSearchClick">搜索条件<span/></div>
+        <div
+          v-if="showSearch"
+          class="content">
+          <van-form @submit="onSubmit">
+            <van-field
+              v-model="query.name"
+              name="楼栋名称"
+              label="楼栋名称"
+              placeholder="楼栋名称"
+            />
+            <van-field
+              v-model="query.dormNum"
+              name="宿舍号"
+              label="宿舍号"
+              placeholder="宿舍号"
+            />
+            <van-field
+              center
+              label="检查时间起"
+            >
+              <template #input>
+                <date-picker
+                  v-model="query.deadline"
+                  :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
+                  :editable="false"
+                  :not-before="minDate"
+                  :clearable="false"
+                  type="datetime"
+                  value-type="format"
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="请选择检查时间"
+                  append-to-body/>
+              </template>
+            </van-field>
+            <van-field
+              center
+              label="检查时间结"
+            >
+              <template #input>
+                <date-picker
+                  v-model="query.deadline"
+                  :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
+                  :editable="false"
+                  :not-before="minDate"
+                  :clearable="false"
+                  type="datetime"
+                  value-type="format"
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="请选择检查时间"
+                  append-to-body/>
+              </template>
+            </van-field>
+            <div style="margin: 16px;">
+              <van-row gutter="10">
+                <van-col span="12">
+                  <van-button
+                    block
+                    type="default"
+                    native-type="submit">重置</van-button>
+                </van-col>
+                <van-col span="12">
+                  <van-button
+                    type="info"
+                    block
+                    native-type="submit">提交</van-button>
+                </van-col>
+              </van-row>
+            </div>
+          </van-form>
+        </div>
       </div>
     </div>
+
     <div class="soa-dorm-count__circle">
       <div class="c-tc">占比统计</div>
       <v-chart
@@ -197,31 +200,43 @@ export default {
 
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
+@import '@/assets/style/var.scss';
 @include b(dorm-count){
     @include e(title){
-        font-size: 16px;
         margin: 10px 0;
+        padding: 0 10px;
     }
     @include e(search){
-        margin: 10px;
+        margin-top: 10px;
        & .title {
          text-align: center;
          padding: 10px;
-         border-top: 1px solid #F5F6F8;
          border-bottom: 1px solid #F5F6F8;
+         box-shadow:0 8px 6px rgba(0, 0, 0, 0.08);
          & > span{
            display: inline-block;
            width: 0;
            height: 0;
            border-width: 8px;
            border-style: solid;
-           border-color: #909399 transparent transparent transparent;
+           border-color: $--color-light transparent transparent transparent;
            vertical-align: middle;
          }
        }
     }
     @include e(bar) {
       margin-bottom: 40px;
+    }
+    @include e(head) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      z-index: 101;
+    }
+    @include e(circle){
+      padding-top: 146px;
     }
 }
 </style>

@@ -1,18 +1,22 @@
 <template>
   <div>
+    <van-nav-bar
+      title="导入任务"
+      left-arrow
+      left-text="返回"
+      @click-left="onClickLeft"
+    />
     <van-form
       class="soa-task-add"
       @submit="onSubmit">
-      <van-cell-group>
-        <van-cell>
-          <van-row gutter="10">
-            <van-col span="5">示例</van-col>
-            <van-col span="19"><a
-              href="http://www.huazhongyi.top/moboximage/template/tasktemplate/template.xlsx"
-              class="c-info">导入示例下载</a></van-col>
-          </van-row>
-        </van-cell>
-      </van-cell-group>
+      <van-field
+        :readonly="true"
+        label="示例">
+        <template slot="input">
+          <a
+            href="/images/myw3schoolimage.jpg"
+            download="w3logo"
+            class="c-info">导入示例下载</a></template></van-field>
       <van-field
         v-model="files"
         :readonly="true"
@@ -47,6 +51,9 @@ export default {
     }
   },
   methods: {
+    onClickLeft() {
+      this.$router.go(-1)
+    },
     onSubmit() {
       console.log('提交文件')
     }

@@ -131,10 +131,10 @@ export default {
       }, 1000);
     },
     // 下拉点击事件
-    clickMoreBtn(item) {
-      console.log('clickMoreBtn', item)
+    clickMoreBtn(value) {
+      console.log('clickMoreBtn', value)
 
-      if (item === '已提交') {
+      if (value === 'submit') {
         this.$router.push('/task-list-feekback')
       } else {
         this.$router.push('/task-receive-detail')

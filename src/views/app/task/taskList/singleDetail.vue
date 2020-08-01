@@ -13,7 +13,6 @@
       :value="params.deadline"
       title="截止时间"/>
     <custom-cell
-      :value="params.state"
       title="任务状态">
       <template slot="value">
         <div :class="[stateMap[params.state]]">{{ params.state }}</div>
@@ -57,11 +56,12 @@ export default {
         remark: '审核不通过原因：没有附件',
         deadline: '2020年6月19日 18时00分',
         state: '已完成',
+        file: [{ url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }, { url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }],
         summary: '任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核任务已完成，请审核'
       },
       stateMap: {
         '未完成': 'c-danger',
-        '审核不通过': 'c-warn',
+        '审核不通过': 'c-warm',
         '已完成': 'c-success'
       }
     }

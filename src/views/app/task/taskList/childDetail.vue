@@ -17,27 +17,27 @@
         title="完成情况"
         value="3/5完成"
         name="1">
-        <div class="soa-task-chidDetail__complateList">
-          <div class="c-danger">待审核</div>
-          <div class="c-light">吴笑笑</div>
+        <div
+          v-for="(item,index) in params.accomplish"
+          :key="index"
+          class="soa-task-childDetail__complateList">
+          <div :class="[stateMap[item.state]]">{{ item.state }}</div>
+          <div class="c-light">{{ item.name }}</div>
           <div class="c-tr">
             <van-button
               type="info"
-              size="mini">查看</van-button>
+              size="mini"
+              @click="bindDetail">{{ item.state === '未完成'?'提醒':'查看' }}</van-button>
           </div>
         </div>
-        <van-row>
-          <van-col span="12">
-            <div class="c-light">任务反馈附件集合.zip</div>
-          </van-col>
-          <van-col span="12">
-            <div class="c-tr">
-              <van-button
-                type="info"
-                size="mini">下载</van-button>
-            </div>
-          </van-col>
-        </van-row>
+        <div class="soa-task-childDetail__complateList">
+          <div class="c-light">任务反馈附件集合.zip</div>
+          <div class="c-tr">
+            <van-button
+              type="info"
+              size="mini">下载</van-button>
+          </div>
+        </div>
         <div class="c-tc c-mt10">
           <van-button
             type="info"
@@ -57,15 +57,11 @@
     <van-cell
       v-for="items in params.infos"
       :key="items.index">
-      <van-row gutter="10">
-        <van-col span="6">【{{ items.name }}】</van-col>
-        <van-col span="10">
-          <div class="c-light">{{ items.content }}</div>
-        </van-col>
-        <van-col span="8">
-          <div class="c-light c-tr c-ft12">{{ items.time }}</div>
-        </van-col>
-      </van-row>
+      <div class="soa-task-childDetail__commentList">
+        <div class="name">【{{ items.name }}】</div>
+        <div class="content">{{ items.content }}</div>
+        <div class="time">{{ items.time }}</div>
+      </div>
     </van-cell>
     <van-cell>
       <van-field
@@ -108,9 +104,25 @@ export default {
           { name: '黄德彬', content: '这个任务很简单，大家尽快执行完后反馈该任务信息', time: '6月19日 18时00分' },
           { name: '李荣文', content: '已查看该任务', time: '6月19日 15时00分' },
           { name: '韩雯雯', content: '已反馈该任务', time: '6月19日 11时30分' }
+        ],
+        accomplish: [
+          { name: '吴笑笑', state: '待审核' },
+          { name: '林小菲', state: '未完成' }
         ]
       },
-      inputText: ''
+      inputText: '',
+      stateMap: {
+        '未完成': 'c-danger',
+        '待审核': 'c-warm',
+        '已完成': 'c-success'
+      }
+
+    }
+  },
+  methods: {
+    //* *** 查看单个执行人详情***//
+    bindDetail() {
+      this.$router.push('/task-single-detail')
     }
   }
 }
@@ -118,11 +130,23 @@ export default {
 
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
-@include b(task-chidDetail){
+@import '@/assets/style/var.scss';
+@include b(task-childDetail){
   @include e(complateList){
     display:flex;
     justify-content: space-between;
     margin-bottom: 10px;
+  }
+  @include e(commentList){
+     display:flex;
+     justify-content: space-between;
+      align-items:center;
+     & > .name{color: $--color-light;}
+     & > .time{
+       font-size: $--font-size-extra-small;
+       color: $--color-light;
+     }
+     & > .content{width: 45%;}
   }
 }
 </style>
