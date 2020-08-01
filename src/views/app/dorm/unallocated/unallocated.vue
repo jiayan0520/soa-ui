@@ -31,7 +31,7 @@
           </div>
         </div>
         <van-button
-          class="dorm-allocat-btn"
+          class="soa-list-right-btn"
           type="info">分配</van-button>
       </template>
     </list-layout>

@@ -93,6 +93,7 @@
 }
 
 .flex-between {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -112,9 +113,20 @@ a {
 .van-button--normal {
     height: 38px;
 }
+.soa-list-right-btn {
+    height: 30px;
+    min-width: 60px;
+}
 .van-button {
     border-radius: 6px;
 }
+// 折叠框 右侧放不下
+.van-collapse-item {
+    .van-cell__title {
+      flex: unset;
+      width: 100px;
+    }
+  }
 
 /* 业务样式 
  -------------------------- */
@@ -160,7 +172,7 @@ a {
         .van-field__value {
             width: 100%;
             flex: unset;
-            .sao-input__select{
+            .sao-input__select {
                 width: 100%;
                 border: none;
                 color: #0e7df3;
@@ -190,28 +202,19 @@ a {
 // 有边框的项
 .soa-box-item {
     @include base-between;
-    padding: 5px;
+    padding: 5px 10px;
     margin-bottom: 8px;
     background: #f2f2f2;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     // 宿舍检查模块，床位检查
     &.check-item {
-        .check-item-left {
-            flex: 1;
-            .time {
-                color: #000;
-            }
-        }
-        .check-item-grade {
-            width: 10%;
-        }
     }
 }
 
 // 提交按钮,单个按钮居中，多个按钮弹性布局
 .soa-btn-box {
-    padding-top: 10px;
+    padding: 10px 0;
     text-align: center;
 }
 

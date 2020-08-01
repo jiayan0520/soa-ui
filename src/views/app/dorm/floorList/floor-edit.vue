@@ -34,20 +34,14 @@
           <van-uploader v-model="formData.annexIds" />
         </template>
       </van-field>
-      <van-field label="楼栋位置">
-        <template #input>
-          <input
-            v-model="formData.address"
-            :placeholder="'请选择'"
-            class="sao-input__select"
-            type="text"
-            @focus="isShowAddressPopup=true"
-          >
-          <van-icon
-            class="van-cell__right-icon"
-            name="arrow" />
-        </template>
-      </van-field>
+      <van-field
+        v-model="formData.address"
+        :readonly="true"
+        label="楼栋位置"
+        right-icon="arrow"
+        placeholder="请选择"
+        @click="isShowAddressPopup=true"
+      />
       <van-field
         :required="true"
         v-model="formData.remark"

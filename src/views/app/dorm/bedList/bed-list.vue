@@ -1,127 +1,150 @@
 <template>
-  <list-layout
-    ref="listLayout"
-    :more-op-list="moreOpList"
-    :data-list="dataList"
-    :is-show-bar="isShowBar"
-    :title="isShowBar ? '':'宿舍床位列表'"
-    detail-url="/dorm/bedDetail"
-    class="bed-list"
-    op-label="管理"
-    @search="onSearch"
-    @loadData="loadData"
-    @clickOperator="isShowBar = true"
-  >
-    <template slot="top">
-      <div
-        v-if="isShowBar"
-        class="tool-bar">
-        <van-button
-          class="btn-op"
-          type="info"
-          @click="changeCheckAll">
-          <span v-text="isCheckAll?'取消全选':'全选'" />
-        </van-button>
-        <van-button
-          class="btn-op"
-          type="info">新增</van-button>
-        <van-button
-          class="btn-op"
-          type="info">提醒</van-button>
-        <van-button
-          class="btn-op"
-          type="info"
-          @click="showMore = !showMore">更多</van-button>
-        <ul
-          v-if="showMore"
-          class="soa-op__dropdown op-more">
-          <li
-            v-for="item in moreOpList"
-            :key="item.index"
-            @click.stop="clickMoreBtn(item.value)"
-          >{{ item.label }}</li>
-        </ul>
-        <van-button
-          class="btn-op"
-          type="warning"
-          @click="isShowBar = false">取消管理</van-button>
-      </div>
-      <form
-        v-if="isShowSearch"
-        action="/">
-        <van-search
-          v-model="searchForm.searchValue"
-          show-action
-          placeholder="姓名/班级/宿舍号/宿舍楼"
-          @search="onSearch"
-          @cancel="isShowSearch=false"
-        />
-      </form>
-      <div
-        v-else
-        class="search-bar">
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.status"
-            :options="statusList" />
-        </van-dropdown-menu>
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.isHead"
-            :options="isHeadList" />
-        </van-dropdown-menu>
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.isDivide"
-            :options="isDivideList" />
-        </van-dropdown-menu>
-        <van-dropdown-menu :overlay="false">
-          <van-dropdown-item
-            v-model="searchForm.dormType"
-            :options="dormTypeList" />
-        </van-dropdown-menu>
-        <van-icon
-          name="search"
-          @click="isShowSearch = true" />
-      </div>
-    </template>
-    <template slot="refresh-top">
-      <div class="soa-list-total">
+  <div class="bed-list">
+    <list-layout
+      ref="listLayout"
+      :more-op-list="moreOpList"
+      :data-list="dataList"
+      :is-show-bar="isShowBar"
+      :title="isShowBar ? '':'宿舍床位列表'"
+      detail-url="/dorm/bedDetail"
+      op-label="管理"
+      @search="onSearch"
+      @loadData="loadData"
+      @clickOperator="isShowBar = true"
+      @clickMoreBtn="clickMoreBtn"
+    >
+      <template slot="top">
         <div
-          v-for="(item,index) in totalList"
-          :key="index"
-          class="total-item">
-          <span class="lable">{{ item.lable }}：</span>
-          <span class="val">{{ item.value }}人</span>
+          v-if="isShowBar"
+          class="tool-bar">
+          <van-button
+            class="btn-op"
+            type="info"
+            @click="changeCheckAll">
+            <span v-text="isCheckAll?'取消全选':'全选'" />
+          </van-button>
+          <van-button
+            class="btn-op"
+            type="info">新增</van-button>
+          <van-button
+            class="btn-op"
+            type="info">提醒</van-button>
+          <van-button
+            class="btn-op"
+            type="info"
+            @click="showMore = !showMore">更多</van-button>
+          <ul
+            v-if="showMore"
+            class="soa-op__dropdown op-more">
+            <li
+              v-for="item in moreOpList"
+              :key="item.index"
+              @click.stop="clickMoreBtn(item.value)"
+            >{{ item.label }}</li>
+          </ul>
+          <van-button
+            class="btn-op"
+            type="warning"
+            @click="isShowBar = false">取消管理</van-button>
+        </div>
+        <form
+          v-if="isShowSearch"
+          action="/">
+          <van-search
+            v-model="searchForm.searchValue"
+            show-action
+            placeholder="姓名/班级/宿舍号/宿舍楼"
+            @search="onSearch"
+            @cancel="isShowSearch=false"
+          />
+        </form>
+        <div
+          v-else
+          class="search-bar">
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.status"
+              :options="statusList" />
+          </van-dropdown-menu>
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.isHead"
+              :options="isHeadList" />
+          </van-dropdown-menu>
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.isDivide"
+              :options="isDivideList" />
+          </van-dropdown-menu>
+          <van-dropdown-menu :overlay="false">
+            <van-dropdown-item
+              v-model="searchForm.dormType"
+              :options="dormTypeList" />
+          </van-dropdown-menu>
+          <van-icon
+            name="search"
+            @click="isShowSearch = true" />
+        </div>
+      </template>
+      <template slot="refresh-top">
+        <div class="soa-list-total">
+          <div
+            v-for="(item,index) in totalList"
+            :key="index"
+            class="total-item">
+            <span class="lable">{{ item.lable }}：</span>
+            <span class="val">{{ item.value }}人</span>
+          </div>
+        </div>
+      </template>
+      <template
+        slot="item-content"
+        slot-scope="slotProps">
+        <img
+          class="soa-avatar"
+          src="../../../../assets/images/timg.jpg" >
+        <div class="soa-list-item-content">
+          <div>
+            <span class="c-info">{{ slotProps.item.userName }}</span>
+            <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
+            <span>{{ slotProps.item.banji }}</span>
+          </div>
+          <div class="c-light">
+            {{ slotProps.item.dormInfo }}
+            <span class="c-ml10">舍长</span>
+          </div>
+          <div class="flex-between">
+            <span>学生宿舍</span>
+            <span class="c-warm c-ml10">未激活</span>
+          </div>
+        </div>
+      </template>
+    </list-layout>
+    <van-popup
+      v-model="showQcDialog"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom">
+      <div class="qrcode-popup">
+        <div
+          id="qrcode"
+          ref="qrcode"
+          class="qrcode" />
+        <div class="soa-btn-box">
+          <van-button
+            type="info"
+            native-type="submit">保存</van-button>
+          <van-button
+            type="info"
+            native-type="submit">重新生成</van-button>
         </div>
       </div>
-    </template>
-    <template
-      slot="item-content"
-      slot-scope="slotProps">
-      <img
-        class="soa-avatar"
-        src="../../../../assets/images/timg.jpg" >
-      <div class="soa-list-item-content">
-        <div>
-          <span class="c-info">{{ slotProps.item.userName }}</span>
-          <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
-          <span>{{ slotProps.item.banji }}</span>
-        </div>
-        <div class="c-light">
-          {{ slotProps.item.dormInfo }}
-          <span class="c-ml10">舍长</span>
-        </div>
-        <div class="flex-between">
-          <span>学生宿舍</span>
-          <span class="c-warm c-ml10">未激活</span>
-        </div>
-      </div>
-    </template>
-  </list-layout>
+    </van-popup>
+  </div>
 </template>
 
 <script>
+import QRCode from 'qrcodejs2'
 import listLayout from '@/components/listLayout'
 export default {
   name: 'BedList',
@@ -182,7 +205,8 @@ export default {
         { value: 'exp', label: '导出数据' },
         { value: 'ts', label: '退舍' },
         { value: 'del', label: '删除' }
-      ]
+      ],
+      showQcDialog: false
     }
   },
   computed: {
@@ -207,9 +231,24 @@ export default {
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
-        case 'qc':
+        case 'qc': {
+          this.showQcDialog = true
+          this.$nextTick(() => {
+            const qrcode = new QRCode(this.$refs.qrcode, {
+              width: 150,
+              height: 150
+            })
+            const link = location.origin + '/bed-qrcode?id=' + item.id
+            qrcode.makeCode(link)
+          })
+          break
+        }
+        case '1':
+          break
+        default:
           break
       }
+
       this.showMore = false
     },
     onSearch() {
@@ -259,5 +298,17 @@ export default {
   //     width: 50%;
   //   }
   // }
+}
+.qrcode-popup {
+  width: 100%;
+  height: 100%;
+  .qrcode {
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

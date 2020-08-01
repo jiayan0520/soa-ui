@@ -154,10 +154,6 @@ export default {
     },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
-      switch (val) {
-        case 'qc':
-          break
-      }
       this.$emit('clickMoreBtn', val, item)
       this.showMoreIndex = -1
     },

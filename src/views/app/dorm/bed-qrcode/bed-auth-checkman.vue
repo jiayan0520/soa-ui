@@ -1,5 +1,5 @@
 <template>
-  <div class="dorm-detail">
+  <div class="bed-auth-checkman">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -9,35 +9,22 @@
         title="人员信息"
         name="1">
         <div
-          v-for="(item,index) in data.peopleInfos"
+          v-for="(item,index) in data.bedList"
           :key="index"
-          class="soa-box-item people-item">
+          class="soa-box-item">
           <div>
-            <div class="flex-between">
-              <img
-                class="soa-avatar"
-                src="../../../../assets/images/timg.jpg" >
-              <span>{{ item.userName }}</span>
-              <span class="c-ml10">({{ item.className }})</span>
-            </div>
+            <div style="color: #323233;">{{ item.bedName }}</div>
             <div>
-              {{ item.bedName }}
-              <span class="c-ml10">{{ item.statusName }}</span>
-              <span class="c-ml10 c-info">{{ item.telephone }}</span>
+              <span>状态：{{ item.statusName }}</span>
+              <span class="c-light">最后一次检查：{{ item.endTime }}</span>
             </div>
           </div>
-          <i
-            class="soa-icon soa-icon-gengduo"
-            @click.stop="bindMoreClick(index)" />
-          <ul
-            v-if="showMoreIndex === index"
-            class="soa-op__dropdown">
-            <li
-              v-for="btn in moreOpList"
-              :key="btn.index"
-              @click.stop="clickMoreBtn(btn.value)"
-            >{{ btn.label }}</li>
-          </ul>
+          <van-button
+            v-if="item.statusName!=='未分配'"
+            class="soa-list-right-btn"
+            type="info"
+            @click="clickCheckDed(item)"
+          >检查</van-button>
         </div>
       </van-collapse-item>
       <van-collapse-item
@@ -48,11 +35,13 @@
           v-for="(item,index) in data.checkInfos"
           :key="index"
           class="check-item soa-box-item">
-          <div class="check-item-left">
-            <div class="time">{{ item.time }}</div>
-            <div class="c-info">结果：{{ item.checkResult }}</div>
+          <div class="flex-between">
+            <div>
+              <div class="time">{{ item.time }}</div>
+              <div class="c-info">结果：{{ item.checkResult }}</div>
+            </div>
+            <div>{{ item.grade }}</div>
           </div>
-          <div class="check-item-grade">{{ item.grade }}</div>
           <i
             class="soa-icon soa-icon-gengduo"
             @click.stop="bindMoreClick(index)" />
@@ -74,33 +63,43 @@
         class="btn-op"
         @click="clickCheckBtn">新增检查</van-button>
     </div>
-    <!--新建检查项-->
+    <!--新建宿舍检查项-->
     <van-popup
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <dorm-check
-        :data="data"
-        type="dorm" />
+      <check-common
+        :type="'dorm'"
+        :data="data" />
+    </van-popup>
+    <!--新建床位检查项-->
+    <van-popup
+      v-model="showCheckBedPopup"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom">
+      <check-common :data="currentBed" />
     </van-popup>
   </div>
 </template>
 
 <script>
 import customPanel from '@/components/customPanel'
-import dormCheck from '../components/check-common'
+import checkCommon from '../components/check-common'
 export default {
-  name: 'DormDetail',
+  name: 'BeaAuthSelf',
   components: {
     customPanel,
-    dormCheck
+    checkCommon
   },
   data() {
     return {
       activeNames: [],
       showMoreIndex: -1, // 显示更多的行index
-      showCheckPopup: false,
+      showCheckPopup: false, // 宿舍检查
+      showCheckBedPopup: false, // 床位检查
+      currentBed: {}, // 选中床位
       data: {
         dormName: '福大生活1区1号楼-601',
         headList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
@@ -111,12 +110,11 @@ export default {
           { name: '已激活人数：', num: 1, class: 'c-info' },
           { name: '请假人数：', num: 1, class: 'c-danger' }
         ],
-        dormType: '学生宿舍',
         cost: '900',
-        peopleInfos: [
-          { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
-          { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
-          { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' }
+        bedList: [
+          { dormName: '福大生活1区1号楼-601', bedName: 'A床', statusName: '正常', endTime: '2020年6月28日 20:01' },
+          { dormName: '福大生活1区1号楼-601', bedName: 'B床', statusName: '正常', endTime: '2020年6月28日 20:01' },
+          { dormName: '福大生活1区1号楼-601', bedName: 'C床', statusName: '未分配', endTime: '2020年6月28日 20:01' }
         ],
         checkInfos: [
           { checkResult: '阳台混乱', grade: -10, time: '2020年6月28日 20:01' },
@@ -142,20 +140,7 @@ export default {
             { prop: 'name' },
             { prop: 'num', class: 'c-info', unit: '人' }]
         },
-        { prop: 'dormType', label: '宿舍类型' },
         { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
-      ],
-      moreOpList: [
-        { value: '1', label: '设为舍长' },
-        { value: '2', label: '退舍' },
-        { value: '3', label: '提醒' },
-        { value: '4', label: '分配' },
-        { value: '5', label: '生成二维码' },
-        { value: 'del', label: '删除' }
-      ],
-      moreOpCheckList: [
-        { value: 'edit', label: '编辑' },
-        { value: 'del', label: '删除' }
       ]
     }
   },
@@ -176,26 +161,19 @@ export default {
     // 新增床位检查
     clickCheckBtn() {
       this.showCheckPopup = true
+    },
+    // 新增宿舍检查
+    clickCheckDed(item) {
+      this.currentBed = item
+      this.showCheckBedPopup = true
     }
   }
 }
 </script>
 
 <style lang="scss">
-.dorm-detail {
+.bed-auth-checkman {
   width: 100%;
   overflow: auto;
-  .van-collapse-item {
-    .van-cell__title {
-      flex: unset;
-      width: 100px;
-    }
-  }
-  .people-item {
-    .soa-avatar {
-      width: 32px;
-      height: 32px;
-    }
-  }
 }
 </style>

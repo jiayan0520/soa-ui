@@ -50,7 +50,7 @@ const menu = [
         icon: 'daoru'
       },
       {
-        to: './dorm-rank',
+        to: './dorm/exchange',
         label: '调换审核',
         icon: 'shenhe',
         type: 'warming'

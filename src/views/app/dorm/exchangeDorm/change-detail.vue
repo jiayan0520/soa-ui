@@ -1,5 +1,5 @@
 <template>
-  <div class="bed-detail">
+  <div class="change-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -13,60 +13,60 @@
           :key="index"
           class="check-item soa-box-item"
         >
-          <div class="flex-between">
-            <div>
-              <div class="time">{{ item.time }}</div>
-              <div class="c-info">结果：{{ item.checkResult }}</div>
-            </div>
-            <div >{{ item.grade }}</div>
+          <div class="check-item-left">
+            <div class="time">{{ item.time }}</div>
+            <div class="c-info">结果：{{ item.checkResult }}</div>
           </div>
-          <i
-            class="soa-icon soa-icon-gengduo"
-            @click.stop="bindMoreClick(index)" />
-          <ul
-            v-if="showMoreIndex === index"
-            class="soa-op__dropdown">
-            <li
-              v-for="btn in moreOpList"
-              :key="btn.index"
-              @click.stop="clickMoreBtn(btn.value)"
-            >{{ btn.label }}</li>
-          </ul>
+          <div class="check-item-grade">{{ item.grade }}</div>
         </div>
       </van-collapse-item>
     </van-collapse>
+    <custom-cell
+      :value="data.reason"
+      title="申请原因" />
+    <van-field
+      v-model="formData.dormId"
+      :readonly="true"
+      label="分配宿舍"
+      right-icon="arrow"
+      placeholder="请选择"
+    />
+    <van-field
+      v-model="formData.ccPerson"
+      :readonly="true"
+      label="抄送人"
+      right-icon="add"
+      placeholder
+    />
     <div class="soa-btn-box">
       <van-button
         type="info"
-        @click="clickCheckBtn">新增检查</van-button>
+        icon="checked">审核通过</van-button>
+      <van-button
+        type="warning"
+        class="c-ml10"
+        icon="clear">审核不通过</van-button>
     </div>
-    <!--新建检查项-->
-    <van-popup
-      v-model="showCheckPopup"
-      :style="{ height: '100%' }"
-      closeable
-      position="bottom">
-      <bed-check
-        :data="data" />
-    </van-popup>
   </div>
 </template>
 
 <script>
 import customPanel from '@/components/customPanel'
-import bedCheck from '../components/check-common'
+import customCell from '@/components/customCell'
 export default {
-  name: 'BedDetail',
+  name: 'ChangeDetail',
   components: {
-    bedCheck,
-    customPanel
+    customPanel,
+    customCell
   },
   data() {
     return {
       activeNames: [],
-      showMoreIndex: -1, // 显示更多的行index
       showCheckPopup: false,
-      showCheckDetailPopup: false, // 检查项详情，可编辑保存
+      formData: {
+        dormId: null,
+        ccPerson: null // 抄送人
+      },
       data: {
         dormName: '福大生活1区1号楼-601',
         userName: '李荣浩',
@@ -85,20 +85,17 @@ export default {
           { checkResult: '桌面脏乱', grade: -10, time: '2020年6月28日 20:01' },
           { checkResult: '被子没叠', grade: -20, time: '2020年6月28日 20:01' },
           { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-        ]
+        ],
+        reason: '换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍'
       },
       fieldList: [
-        { prop: 'dormName', label: '宿舍名称' },
         { prop: 'userName', label: '姓名' },
-        { prop: 'bedName', label: '床位' },
-        { prop: 'statusName', label: '状态' },
         { prop: 'sno', label: '学号' },
         { prop: 'telephone', label: '电话' },
         { prop: 'zzmm', label: '政治面貌' },
         { prop: 'college', label: '学院专业' },
         { prop: 'place', label: '籍贯' },
         { prop: 'address', label: '家庭住址' },
-        { prop: 'place', label: '学院专业' },
         {
           prop: 'instructorList',
           label: '辅导员',
@@ -107,16 +104,9 @@ export default {
             { prop: 'userName' },
             { prop: 'telephone', class: 'c-info' }]
         },
-        {
-          prop: 'parentList',
-          label: '家长信息',
-          type: 'array',
-          childrenFields: [
-            { prop: 'userName' },
-            { prop: 'grade' },
-            { prop: 'telephone', class: 'c-info' }]
-        },
-        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
+        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' },
+        { prop: 'dormName', label: '宿舍名称' },
+        { prop: 'bedName', label: '床位' }
       ],
       moreOpList: [
         { value: 'edit', label: '编辑' },
@@ -125,30 +115,19 @@ export default {
     }
   },
   methods: {
-    // 更多操作
-    bindMoreClick(index) {
-      this.showMoreIndex = this.showMoreIndex === index ? -1 : index
-      console.log(this.showMoreIndex)
-    },
-    // 点击更多操作按钮了
-    clickMoreBtn(val, item) {
-      switch (val) {
-        case 'qc':
-          break
-      }
-      this.showMoreIndex = -1
-    },
-    // 新增床位检查
-    clickCheckBtn() {
-      this.showCheckPopup = true
-    }
   }
 }
 </script>
 
 <style lang="scss">
-.bed-detail {
+.change-detail {
   width: 100%;
   overflow: auto;
+  .van-collapse-item {
+    .van-cell__title {
+      flex: unset;
+      width: 100px;
+    }
+  }
 }
 </style>
