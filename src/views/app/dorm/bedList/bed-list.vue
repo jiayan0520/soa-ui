@@ -18,7 +18,7 @@
           v-if="isShowBar"
           class="tool-bar">
           <van-button
-            class="btn-op"
+            class="btn-op btn-check-all"
             type="info"
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />
@@ -120,31 +120,10 @@
         </div>
       </template>
     </list-layout>
-    <van-popup
-      v-model="showQcDialog"
-      :style="{ height: '100%' }"
-      closeable
-      position="bottom">
-      <div class="qrcode-popup">
-        <div
-          id="qrcode"
-          ref="qrcode"
-          class="qrcode" />
-        <div class="soa-btn-box">
-          <van-button
-            type="info"
-            native-type="submit">保存</van-button>
-          <van-button
-            type="info"
-            native-type="submit">重新生成</van-button>
-        </div>
-      </div>
-    </van-popup>
   </div>
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
 import listLayout from '@/components/listLayout'
 export default {
   name: 'BedList',
@@ -201,12 +180,11 @@ export default {
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
       moreOpList: [
-        { value: 'qc', label: '生成二维码' },
+        { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
         { value: 'ts', label: '退舍' },
         { value: 'del', label: '删除' }
-      ],
-      showQcDialog: false
+      ]
     }
   },
   computed: {
@@ -232,15 +210,6 @@ export default {
     clickMoreBtn(val, item) {
       switch (val) {
         case 'qc': {
-          this.showQcDialog = true
-          this.$nextTick(() => {
-            const qrcode = new QRCode(this.$refs.qrcode, {
-              width: 150,
-              height: 150
-            })
-            const link = location.origin + '/bed-qrcode?id=' + item.id
-            qrcode.makeCode(link)
-          })
           break
         }
         case '1':
@@ -248,7 +217,6 @@ export default {
         default:
           break
       }
-
       this.showMore = false
     },
     onSearch() {
@@ -259,14 +227,13 @@ export default {
     },
     loadData() {
       this.pageIndex++;
-      console.log(this.params)
       const dataList = []
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
           dataList.push({
-            isCheck: false,
+            isCheck: this.isCheckAll,
             isShowMore: false,
             id: this.dataList.length + 1,
             userName: '张三峰',
@@ -293,22 +260,6 @@ export default {
 
 <style lang="scss">
 .bed-list {
-  // .dorm-total {
-  //   .total-item {
-  //     width: 50%;
-  //   }
-  // }
-}
-.qrcode-popup {
-  width: 100%;
   height: 100%;
-  .qrcode {
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: center;
-  }
 }
 </style>

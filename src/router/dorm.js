@@ -58,6 +58,12 @@ export default [
     name: 'bed-auth-checkman',
     component: () => import('@/views/app/dorm/bed-qrcode/bed-auth-checkman')
   },
+  // 宿舍导入
+  {
+    path: '/dorm/import',
+    name: 'dormImport',
+    component: () => import('@/views/app/dorm/dormImport')
+  },
   // 评分榜
   {
     path: '/dorm/rank',

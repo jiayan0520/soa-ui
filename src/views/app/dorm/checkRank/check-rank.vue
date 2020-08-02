@@ -34,7 +34,9 @@
         <div
           v-if="showSearch"
           class="content">
-          <van-form @submit="onSearch">
+          <van-form
+            class="soa-custom-form soa-search-form"
+            @submit="onSearch">
             <van-field
               v-model="searchForm.floorName"
               name="楼栋名称"
@@ -115,7 +117,7 @@
       </van-tabs>
       <div class="soa-list-rank__row rank-title">
         <div class="index-column">排名</div>
-        <div>姓名</div>
+        <div >{{ `${active===0?'姓名':'宿舍名'}` }}</div>
         <div>扣分</div>
       </div>
     </template>

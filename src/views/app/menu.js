@@ -45,7 +45,7 @@ const menu = [
         icon: 'kuaisufenpei'
       },
       {
-        to: './dorm-examine-list',
+        to: './dorm/import',
         label: '导入宿舍',
         icon: 'daoru'
       },

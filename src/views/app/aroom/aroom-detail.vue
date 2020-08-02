@@ -57,7 +57,8 @@
             name="申请原因"
             label="申请原因"
             type="textarea"
-            placeholder="申请原因" />
+            placeholder="申请原因"
+          />
           <div class="soa-btn-box">
             <van-button
               type="default"
@@ -132,5 +133,8 @@ export default {
 .aroom-detail {
   width: 100%;
   overflow: auto;
+  .soa-custom-cell__title {
+    width: 7.2em;
+  }
 }
 </style>

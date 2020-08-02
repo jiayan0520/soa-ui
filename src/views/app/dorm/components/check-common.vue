@@ -7,20 +7,13 @@
         :data="data"
         :field-list="fieldList2" />
       <van-field
+        :readonly="true"
+        v-model="formData.checkResultText"
         center
-        label="检查结果">
-        <template #input>
-          <van-radio-group
-            v-model="formData.checkResult"
-            direction="horizontal">
-            <van-radio
-              v-for="(item,index) in checkItemList"
-              :key="index"
-              :name="item.value"
-            >{{ item.label }}</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
+        label="检查结果"
+        right-icon="arrow"
+        placeholder="请选择"
+        @click="isShowSelect=true"/>
       <van-field
         name="uploader"
         label="现场照片">
@@ -61,6 +54,17 @@
           native-type="submit">保存</van-button>
       </div>
     </van-form>
+    <van-popup
+      v-model="isShowSelect"
+      position="bottom"
+      style="min-height: 20% ">
+      <van-picker
+        :columns="checkItemList"
+        show-toolbar
+        @confirm="onConfirm"
+        @cancel="isShowSelect = false"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -99,16 +103,18 @@ export default {
     return {
       formData: {
         checkResult: null, // 检查结果
+        checkResultText: null,
         annexIds: [], // 附件
         remark: null,
         checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm')
       },
       checkItemList: [
-        { value: -10, label: '被子没叠(-10)' },
-        { value: -5, label: '桌面混乱(-10)' },
-        { value: -20, label: '衣柜混乱(-20)' }
+        { value: -10, text: '被子没叠(-10)' },
+        { value: -5, text: '桌面混乱(-10)' },
+        { value: -20, text: '衣柜混乱(-20)' }
       ],
-      minDate: ''
+      minDate: '',
+      isShowSelect: false
     }
   },
   computed: {
@@ -135,6 +141,12 @@ export default {
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
       console.log('handleExecutorClick')
+    },
+    // 选择检查内容
+    onConfirm(obj) {
+      this.formData.checkResult = obj.value
+      this.formData.checkResultText = obj.text
+      this.isShowSelect = false;
     }
   }
 }

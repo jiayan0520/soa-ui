@@ -19,7 +19,7 @@
           v-if="isShowBar"
           class="tool-bar">
           <van-button
-            class="btn-op"
+            class="btn-op btn-check-all"
             type="info"
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />
@@ -241,11 +241,7 @@ export default {
 
 <style lang="scss">
 .floor-list {
-  // .dorm-total {
-  //   .total-item {
-  //     width: 50%;
-  //   }
-  // }
+   height: 100%;
   .floor-item-content {
     flex-direction: column;
     .list-item-total {

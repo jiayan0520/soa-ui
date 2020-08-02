@@ -123,11 +123,14 @@ a {
 // 折叠框 右侧放不下
 .van-collapse-item {
     .van-cell__title {
-      flex: unset;
-      width: 100px;
+        flex: unset;
+        width: 100px;
     }
-  }
-
+}
+// 时间选择控件，因为弹框中也会使用，将z-index设置超大，防止被遮挡
+.mx-datepicker-popup {
+    z-index: 1000000000000 !important;
+}
 /* 业务样式 
  -------------------------- */
 
@@ -197,6 +200,9 @@ a {
             }
         }
     }
+    &.soa-search-form{
+    padding: 0;
+    }
 }
 
 // 有边框的项
@@ -229,17 +235,17 @@ a {
 // 列表搜索表单
 .soa-list__search {
     .title {
-      text-align: center;
-      border-bottom: 1px solid #f5f6f8;
-      box-shadow: 0 8px 6px rgba(0, 0, 0, 0.08);
-      .arrow-down {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 8px solid $--color-light;
-        vertical-align: middle;
-      }
+        text-align: center;
+        border-bottom: 1px solid #f5f6f8;
+        box-shadow: 0 8px 6px rgba(0, 0, 0, 0.08);
+        .arrow-down {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid $--color-light;
+            vertical-align: middle;
+        }
     }
-  }
+}

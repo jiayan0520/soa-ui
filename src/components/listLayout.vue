@@ -34,7 +34,6 @@
             v-for="(item,index) in dataList"
             :key="index"
             class="soa-list-item"
-            @click="handleClick(item)"
           >
             <div
               v-show="isShowBar"
@@ -42,9 +41,11 @@
               <van-checkbox
                 v-model="item.isCheck"
                 shape="square"
-                @click="changeItemCheck(item)" />
+                @click.native="changeRowCheckbox(item)" />
             </div>
-            <div class="soa-list-item-main">
+            <div
+              class="soa-list-item-main"
+              @click.stop="handleClick(item)">
               <slot
                 :item="item"
                 :index="index"
@@ -145,8 +146,9 @@ export default {
       this.$emit('loadData')
     },
     // 行复选框点击
-    changeItemCheck(item) {
+    changeRowCheckbox(item) {
       item.isCheck = !item.isCheck
+      this.$forceUpdate()
     },
     // 更多操作
     bindMoreClick(index) {
@@ -189,6 +191,7 @@ export default {
     // position: absolute;
     // top: 0;
     line-height: 50px;
+    height: 50px;
     width: 100%;
     z-index: 10;
     display: flex;
@@ -198,6 +201,13 @@ export default {
     h3{
       margin: 0;
     }
+    .btn-check-all{
+      width: 60px;
+      padding: 0;
+    }
+    // .btn-op{
+    //   padding: 0 8px;
+    // }
     // border-bottom: 1px solid #f5f5f5;
   }
   .search-bar {

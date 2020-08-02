@@ -23,7 +23,9 @@
           <div
             v-if="showSearch"
             class="content">
-            <van-form @submit="onSearch">
+            <van-form
+              class="soa-custom-form soa-search-form"
+              @submit="onSearch">
               <van-field
                 v-model="searchForm.floorName"
                 name="楼栋名称"

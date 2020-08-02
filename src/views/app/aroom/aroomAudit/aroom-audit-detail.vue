@@ -46,6 +46,7 @@ export default {
         college: '石油化工学院-2019级过控一班',
         startTime: '2020年7月15日 12:00',
         endTime: '2020年7月20日 12:00',
+        useTime: '2020年7月15日 12:00 - 2020年7月20日 12:00',
         reason: '换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍'
       },
       fieldList: [
@@ -54,6 +55,7 @@ export default {
         { prop: 'sno', label: '学号' },
         { prop: 'telephone', label: '电话' },
         { prop: 'college', label: '班级信息' },
+        { prop: 'useTime', label: '使用时间' },
         { prop: 'reason', label: '申请原因' }
       ]
     }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dorm-list">
     <list-layout
       ref="listLayoutDorm"
       :more-op-list="moreOpList"
@@ -8,7 +8,6 @@
       :title="isShowBar ? '':'宿舍列表'"
       detail-url="/dorm/dormDetail"
       op-label="管理"
-      class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
@@ -19,7 +18,7 @@
           v-if="isShowBar"
           class="tool-bar">
           <van-button
-            class="btn-op"
+            class="btn-op btn-check-all"
             type="info"
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />
@@ -201,7 +200,7 @@ export default {
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
           dataList.push({
-            isCheck: false,
+            isCheck: this.isCheckAll,
             isShowMore: false,
             id: this.dataList.length + 1,
             dormInfo: '福大生活一区103栋108宿舍-A床',
@@ -230,10 +229,6 @@ export default {
 
 <style lang="scss">
 .dorm-list {
-  // .soa-list-total {
-  //   .total-item {
-  //     width: 50%;
-  //   }
-  // }
+ height: 100%;
 }
 </style>
