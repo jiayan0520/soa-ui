@@ -1,19 +1,20 @@
 const user = {
   state: {
-    userInfo: {
-      userIdentity: 0
-    }
+    userAccount: ''
   },
   mutations: {
-    SET_USER_INFO: (state, userInfo) => {
-      state.userInfo = userInfo
+    SET_USER_ACCOUNT: (state, userAccount) => {
+      state.userAccount = userAccount
     }
   },
 
   actions: {
+    UpdateUserAccount({ commit }, userAccount) {
+      commit('SET_USER_ACCOUNT', userAccount)
+    }
   },
   getters: {
-    userInfo: state => state.userInfo
+    userAccount: state => state.userAccount
   }
 }
 

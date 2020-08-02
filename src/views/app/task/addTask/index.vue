@@ -18,14 +18,9 @@
         name="请输入任务内容"
         placeholder="请输入任务内容"
       />
-      <van-field
+      <people-picker
         v-model="query.executor"
-        :readonly="true"
-        label="执行人"
-        right-icon="add"
-        placeholder=""
-        @click="handleExecutorClick"
-      />
+        title="执行人"/>
       <van-cell
         center
         title="是否提醒">
@@ -167,12 +162,14 @@
 <script>
 import DatePicker from 'vue2-datepicker'
 import AddChild from '../taskChild'
+import peoplePicker from '@/components/peoplePicker'
 // import formatData from '@/utils/index.js'
 export default {
   name: 'AddTask',
   components: {
     DatePicker,
-    AddChild
+    AddChild,
+    peoplePicker
   },
   data() {
     return {

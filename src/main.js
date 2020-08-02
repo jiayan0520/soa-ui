@@ -8,9 +8,13 @@ import './assets/index.scss'
 import 'vue2-datepicker/index.css';
 import '@/assist/permission'; // 权限控制
 import Vant from 'vant'
+import * as dd from 'dingtalk-jsapi'; // 此方式为整体加载，也可按需进行加载
+import store from '@/store'
 
 Vue.config.productionTip = false
 Vue.use(Vant)
+Vue.prototype.$dd = dd;
+Vue.prototype.$store = store;
 // 是否开启mock
 if (process.env.NODE_ENV !== 'production') {
   require('@/mock');

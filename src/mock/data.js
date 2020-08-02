@@ -62,12 +62,37 @@ export default {
       status: 'SUCCESS'
     };
   },
-  create: config => {
-    const data = JSON.parse(config.body);
-    console.log(data);
+  getUserId: config => {
     const result = {
-      data: 'success',
-      code: 0,
+      content: {
+        userId: 163447243721147282
+      },
+      code: 1,
+      msg: 'create is success'
+    };
+    return result;
+  },
+  getUserInfo: config => {
+    const result = {
+      content: {
+        userId: 163447243721147282
+      },
+      code: 1,
+      msg: 'create is success'
+    };
+    return result;
+  },
+  sign: config => {
+    const result = {
+      content: {
+        AccessToken: '68d5ed415bf13a0c85c18342fee7b1dd',
+        corpId: 'ding424c9303b402c60835c2f4657eb6378f',
+        TOKEN: 'token',
+        agentId: 270738754,
+        nonceStr: 'eb6378f',
+        signature: 'eb6378f'
+      },
+      code: 1,
       msg: 'create is success'
     };
     return result;
