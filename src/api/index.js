@@ -1,6 +1,6 @@
 const TASK = `/task`
 
-const AUTHOR = `/author`
+const AUTHOR = `/dingding`
 
 export {
   TASK,

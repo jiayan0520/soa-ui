@@ -2,8 +2,9 @@
 
 <script>
 // import cookie from 'vux/src/tools/cookie'
+import { Toast } from 'vant'
 import { mapGetters } from 'vuex';
-import { sign, getUserId, getUserInfo } from '@/api/author'
+import { getAppInfo, getUserId, getUserInfo } from '@/api/author'
 export default {
   data() {
     return {
@@ -49,7 +50,7 @@ export default {
             if (this.$dd.ios || this.$dd.android) {
               this.$dd.device.notification.hidePreloader({});
             } else {
-              // this.$vux.loading.hide();
+              Toast.clear()
             }
             alert('requestAuthCode fail: ' + JSON.stringify(err));
           }
@@ -62,17 +63,13 @@ export default {
     // 通过免登授权码换取用户账号
     loginByDDCode(code) {
       getUserId({ code: code }).then(res => {
-        const data = res.data
+        const data = res.data.data
         this.hideLoading();
-        if (data.code === 1) {
-          this.$store.dispatch('UpdateUserAccount', data.content.userId);
+        if (res.data.code === 200) {
+          this.$store.dispatch('UpdateUserAccount', data.userId);
           this.init();
         } else {
-          // this.$vux.toast.show({
-          //   text: data.message,
-          //   position: 'middle',
-          //   type: 'cancel'
-          // });
+          Toast(res.data.msg);
         }
       }).catch(e => {
         throw e
@@ -83,41 +80,33 @@ export default {
       // 获取用户信息
       getUserInfo({ userId: this.userAccount }).then(res => {
         console.log('获取用户信息');
-        if (res.data.code === 1) {
+        if (res.data.code === 200) {
           if (this.toRoute) {
             this.$router.replace(this.toRoute);
           } else {
             this.$router.replace('/');
           }
         } else {
-          // this.$vux.toast.show({
-          //   text: res.data.message,
-          //   type: 'cancel'
-          // });
+          Toast(res.data.msg);
         }
       }).catch(err => {
-        // this.$vux.loading.hide();
-        // this.$vux.toast.show({
-        //   text: '网络不稳定，请稍后再试',
-        //   type: 'text'
-        // });
+        Toast('网络不稳定，请稍后再试');
         console.log(err);
       });
     },
     // 获取签名信息并进行JSAPI鉴权
     getSignConfig() {
-      var url = 'http://www.huazhongyi.top/StudentWork/web/index.html';
-      if (window.location.href.indexOf('pc_slide') > -1) {
-        url =
-          'http://www.huazhongyi.top/StudentWork/web/index.html?pc_slide=true';
-      }
-      console.warn('signCall', url);
+      // var url = 'http://www.huazhongyi.top/StudentWork/web/index.html';
+      // if (window.location.href.indexOf('pc_slide') > -1) {
+      //   url =
+      //     'http://www.huazhongyi.top/StudentWork/web/index.html?pc_slide=true';
+      // }
+      // console.warn('signCall', url);
 
-      sign(url).then(res => {
+      getAppInfo().then(res => {
         console.log(res);
-        if (res.data.code === 1) {
-          console.log('2.sign获取成功 配置dd.config', res);
-          const { agentId, corpId, timeStamp, nonceStr, signature } = res.data.content
+        if (res.data.code === 200) {
+          const { agentId, corpId, timeStamp, nonceStr, signature } = res.data.data
           this.$dd.config({
             agentId: agentId, // 必填，微应用ID
             corpId: corpId, // 必填，企业ID
@@ -140,11 +129,7 @@ export default {
             ] // 必填，需要使用的jsapi列表，注意：不要带dd。
           });
         } else {
-          // this.$vux.toast.show({
-          //   text: 'sign获取失败',
-          //   position: 'middle',
-          //   type: 'cancel'
-          // });
+          Toast('sign获取失败');
         }
       }).catch(err => {
         console.log(err);
@@ -160,16 +145,18 @@ export default {
         });
       } else {
         // 钉钉PC端
-        // this.$vux.loading.show({
-        //   text: '正在验证身份中，请稍后..'
-        // });
+        Toast.loading({
+          duration: 0, // 持续展示 toast
+          forbidClick: true,
+          message: '正在验证身份中，请稍后..'
+        })
       }
     },
     hideLoading() {
       if (this.$dd.ios || this.$dd.android) {
         this.$dd.device.notification.hidePreloader({});
       } else {
-        // this.$vux.loading.hide();
+        Toast.clear()
       }
     }
   }

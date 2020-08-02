@@ -80,20 +80,14 @@
         v-model="showWeightAction"
         :actions="weightActions"
         @select="onWeightSelect" />
-      <van-field
+      <people-picker
         v-model="query.searcher"
-        :readonly="true"
-        label="可公开查阅人"
-        right-icon="add"
-        placeholder=""
-        @click="handleExecutorClick"
-      />
+        title="可公开查阅人"/>
       <van-field
         v-model="query.files"
         :readonly="true"
         label="附件"
         placeholder=""
-        @click="handleExecutorClick"
       >
         <template #input>
           <van-uploader
