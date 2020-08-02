@@ -3,16 +3,12 @@
     ref="listLayout"
     :data-list="dataList"
     :detail-url="detailUrl"
-    title="调换审核"
-    class="exchange-list"
+    title="活动室审核"
+    class="aroom-audit-list"
     @search="onSearch"
     @loadData="onLoad"
   >
     <template slot="top">
-      <van-search
-        v-model="searchValue"
-        placeholder="姓名/学院名称/专业班级"
-        @search="onSearch" />
       <van-tabs
         v-model="active"
         @click="onSearch">
@@ -30,12 +26,13 @@
           <span>{{ slotProps.item.userName }}</span>
           <span>（{{ slotProps.item.banji }}）</span>
         </div>
+        <div>{{ slotProps.item.aroomName }}</div>
         <div class="c-light">{{ slotProps.item.applyTm }} 申请</div>
       </div>
       <van-button
         v-if="active!==1"
         class="soa-list-right-btn"
-        type="info">分配</van-button>
+        type="info">审核</van-button>
     </template>
   </list-layout>
 </template>
@@ -43,7 +40,7 @@
 <script>
 import listLayout from '@/components/listLayout'
 export default {
-  name: 'ExchangeList',
+  name: 'AroomAuditList',
   components: {
     listLayout
   },
@@ -52,7 +49,7 @@ export default {
       active: 0,
       searchValue: '',
       dataList: [],
-      detailUrl: '/dorm/exchange/detail',
+      detailUrl: '/aroom/audit/detail',
       tab: ['未完成', '已完成', '未通过']
     }
   },
@@ -73,10 +70,10 @@ export default {
             id: this.dataList.length + 1,
             userName: '张三峰',
             banji: '石油化工学院-2019级化工一班',
+            aroomName: '福大生活区1号楼1层活动室',
             applyTm: '2020年06月20日 15时30分'
           });
         }
-
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成

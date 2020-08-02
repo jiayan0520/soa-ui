@@ -252,13 +252,13 @@ export default {
       this.showMore = false
     },
     onSearch() {
-      this.pgeIndex = 0
+      this.pageIndex = 0
       this.pageTotal = 9999
       this.dataList = []
       this.loadData()
     },
     loadData() {
-      this.PageIndex++;
+      this.pageIndex++;
       console.log(this.params)
       const dataList = []
       // 异步更新数据

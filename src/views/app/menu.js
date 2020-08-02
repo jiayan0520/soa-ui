@@ -56,7 +56,7 @@ const menu = [
         type: 'warming'
       },
       {
-        to: './dorm-rank',
+        to: './dorm/check-list',
         label: '检查信息',
         icon: 'checklist',
         type: 'success'
@@ -72,6 +72,17 @@ const menu = [
         label: '评分榜',
         icon: 'paihang',
         type: 'success'
+      },
+      {
+        to: './aroom',
+        label: '活动室',
+        icon: 'dorm'
+      },
+      {
+        to: './aroom/audit',
+        label: '活动室审核',
+        icon: 'shenhe',
+        type: 'warming'
       }
     ]
   }

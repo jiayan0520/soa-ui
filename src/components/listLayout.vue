@@ -8,6 +8,7 @@
         v-if="opLabel"
         type="warning"
         @click="handleOperator">{{ opLabel }}</van-button>
+      <slot name="tool-bar-left"/>
     </div>
     <section
       v-if="$slots.top"
@@ -187,13 +188,16 @@ export default {
   .tool-bar {
     // position: absolute;
     // top: 0;
-    height: 50px;
     line-height: 50px;
     width: 100%;
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    h3{
+      margin: 0;
+    }
     // border-bottom: 1px solid #f5f5f5;
   }
   .search-bar {

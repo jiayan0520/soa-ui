@@ -64,6 +64,36 @@ export default [
     name: 'dormRank',
     component: () => import('@/views/app/dorm/checkRank')
   },
+  // 检查列表
+  {
+    path: '/dorm/check-list',
+    name: 'dormCheckList',
+    component: () => import('@/views/app/dorm/checkList')
+  },
+  // 活动室
+  {
+    path: '/aroom',
+    name: 'aroom',
+    component: () => import('@/views/app/aroom')
+  },
+  // 活动室详情，包括学生扫码申请页
+  {
+    path: '/aroom/detail',
+    name: 'aroomDetail',
+    component: () => import('@/views/app/aroom/aroom-detail')
+  },
+  // 活动室审核列表
+  {
+    path: '/aroom/audit',
+    name: 'aroomAuditList',
+    component: () => import('@/views/app/aroom/aroomAudit')
+  },
+  // 活动室审核页面
+  {
+    path: '/aroom/audit/detail',
+    name: 'aroomAudit',
+    component: () => import('@/views/app/aroom/aroomAudit/aroom-audit-detail')
+  },
   {
     path: '/dorm-count',
     name: 'dormCount',

@@ -5,8 +5,12 @@
       :key="index">
       <h3
         class="soa-app-title"
-        @click="handleClick(index)">{{ value.header }}
-      <i :class="['van-icon van-icon-play', activeIndex.indexOf(index)>=0 && 'trasform']"/></h3>
+        @click="handleClick(index)">
+        {{ value.header }}
+        <i
+          :class="['van-icon van-icon-play', activeIndex.indexOf(index)>=0 && 'trasform']"
+        />
+      </h3>
       <van-grid
         v-if="activeIndex.indexOf(index)>=0"
         :border="false">
@@ -17,7 +21,7 @@
           :url="item.url">
           <menu-icon
             :icon="item.icon"
-            :type="item.type"/>
+            :type="item.type" />
           <span class="soa-app_label">{{ item.label }}</span>
         </van-grid-item>
       </van-grid>
@@ -31,7 +35,8 @@
           :icon="item.icon"
           :type="item.type"
           class="soa-app-list-icon"
-          size="mini"/>
+          size="mini"
+        />
       </div>
     </div>
   </div>
@@ -45,7 +50,7 @@ export default {
   components: {
     MenuIcon
   },
-  data () {
+  data() {
     return {
       moduleList: menu,
       activeIndex: [0, 1]
@@ -66,30 +71,33 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.soa-app_label{
-  font-size: 14px;
-  margin-top: 5px
-}
-.soa-app-title{
-  position: relative;
-}
-.soa-app-title i{
-  position: absolute;
-  top: 4px
-}
-.trasform{
-  transform:rotate(90deg);
-  -ms-transform:rotate(90deg); 	/* IE 9 */
-  -moz-transform:rotate(90deg); 	/* Firefox */
-  -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
-  -o-transform:rotate(90deg); 	/* Opera */
-}
-.soa-app-list{
-  background-color: #f2f2f2;
-  padding: 10px 10px;
-  border-radius: 10px
-}
-.soa-app-list-icon{
-  margin-left: 5px
+.soa-app {
+  overflow: auto;
+  .soa-app_label {
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  .soa-app-title {
+    position: relative;
+  }
+  .soa-app-title i {
+    position: absolute;
+    top: 4px;
+  }
+  .trasform {
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -moz-transform: rotate(90deg); /* Firefox */
+    -webkit-transform: rotate(90deg); /* Safari 和 Chrome */
+    -o-transform: rotate(90deg); /* Opera */
+  }
+  .soa-app-list {
+    background-color: #f2f2f2;
+    padding: 10px 10px;
+    border-radius: 10px;
+  }
+  .soa-app-list-icon {
+    margin-left: 5px;
+  }
 }
 </style>

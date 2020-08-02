@@ -107,10 +107,6 @@ export default {
         { prop: 'cost', label: '宿舍费用', unit: '元/人/年' },
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'bedName', label: '床位' }
-      ],
-      moreOpList: [
-        { value: 'edit', label: '编辑' },
-        { value: 'del', label: '删除' }
       ]
     }
   },

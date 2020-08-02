@@ -3,17 +3,6 @@
     <custom-panel
       :data="data"
       :field-list="fieldList" />
-    <custom-cell title="楼栋照片">
-      <template slot="value">
-        <van-uploader
-          v-model="data.annexList"
-          :disabled="true"
-          :deletable="false"
-          :show-upload="false"
-          multiple
-        />
-      </template>
-    </custom-cell>
     <custom-cell
       title="楼栋位置"
       value="福州大学学生公寓1号楼（福州市闽侯县）" />
@@ -75,6 +64,11 @@ export default {
           childrenFields: [
             { prop: 'userName' },
             { prop: 'telephone', class: 'c-info' }]
+        },
+        {
+          prop: 'annexList',
+          label: '楼栋照片',
+          type: 'uploader'
         }
       ]
     }

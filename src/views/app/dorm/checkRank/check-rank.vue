@@ -2,17 +2,34 @@
   <list-layout
     ref="listLayout"
     :data-list="list"
-    class="soa-list-rank"
+    title="评分榜"
+    class="soa-list-rank check-rank"
     @search="onSearch"
     @loadData="onLoad"
   >
+    <template slot="tool-bar-left">
+      <div
+        :style ="`${rankType?'color:#ff976a':''}`"
+        class="rank-sort"
+        @click="changeRankType">
+        分数
+        <div class="sort-arrow">
+          <div
+            :style ="`${rankType==='up'?'border-bottom-color:#ff976a':''}`"
+            class="arrow-up" />
+          <div
+            :style ="`${rankType==='down'?'border-top-color:#ff976a':''}`"
+            class="arrow-down" />
+        </div>
+      </div>
+    </template>
     <template slot="top">
       <div class="soa-list__search">
         <div
           class="title"
           @click="bindSearchClick">
           搜索条件
-          <span />
+          <span class="arrow-down" />
         </div>
         <div
           v-if="showSearch"
@@ -138,7 +155,8 @@ export default {
         endTime: null,
         xy: null,
         zybj: null
-      }
+      },
+      rankType: null // 排序类型 'up','down'
     }
   },
   methods: {
@@ -165,13 +183,23 @@ export default {
     },
     bindSearchClick() {
       this.showSearch = !this.showSearch
+    },
+    // 改变排序类型
+    changeRankType() {
+      if (!this.rankType) {
+        this.rankType = 'up'
+      } else if (this.rankType === 'up') {
+        this.rankType = 'down'
+      } else if (this.rankType === 'down') {
+        this.rankType = 'up'
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import '@/assets/style/var.scss';
+@import "@/assets/style/var.scss";
 
 .soa-list-rank {
   .soa-list-rank__row {
@@ -195,21 +223,26 @@ export default {
       border-bottom: #f5f5f5;
     }
   }
- .soa-list__search {
-    margin-top: 10px;
-    & .title {
-      text-align: center;
-      padding: 10px;
-      border-bottom: 1px solid #f5f6f8;
-      box-shadow: 0 8px 6px rgba(0, 0, 0, 0.08);
-      & > span {
-        display: inline-block;
+  .rank-sort {
+    font-size: 1.17em;
+    .sort-arrow {
+      display: inline-block;
+      .arrow-up {
         width: 0;
         height: 0;
-        border-width: 8px;
-        border-style: solid;
-        border-color: $--color-light transparent transparent transparent;
-        vertical-align: middle;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid black;
+        overflow: hidden;
+      }
+      .arrow-down {
+        margin-top: 3px;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid black;
+        overflow: hidden;
       }
     }
   }

@@ -73,6 +73,15 @@
               </span>
             </div>
           </div>
+          <div v-else-if="field.type==='uploader'">
+            <van-uploader
+              v-model="data[field.prop]"
+              :disabled="true"
+              :deletable="false"
+              :show-upload="false"
+              multiple
+            />
+          </div>
           <span v-else>
             <slot
               :field="field"
