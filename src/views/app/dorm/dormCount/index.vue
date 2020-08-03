@@ -88,33 +88,35 @@
         </div>
       </div>
     </div>
+    <div class="soa-dorm-count__chart">
+      <div class="soa-dorm-count__circle">
+        <div class="c-tc">占比统计</div>
+        <v-chart
+          :data="data"
+          :width="chartWidth">
+          <v-scale
+            :options="yOptions"
+            y />
+          <v-tooltip disabled />
+          <v-pie
+            :radius="0.85"
+            series-field="name" />
+          <v-legend :options="legendOptions" />
+        </v-chart>
+      </div>
+      <div class="soa-dorm-count__bar">
+        <div class="c-tc">次数统计</div>
+        <v-chart
+          ref="demo"
+          :data="barData"
+          :width="chartWidth">
+          <v-bar />
+          <v-tooltip :show-item-marker="true" />
+        </v-chart>
 
-    <div class="soa-dorm-count__circle">
-      <div class="c-tc">占比统计</div>
-      <v-chart
-        :data="data"
-        :width="chartWidth">
-        <v-scale
-          :options="yOptions"
-          y />
-        <v-tooltip disabled />
-        <v-pie
-          :radius="0.85"
-          series-field="name" />
-        <v-legend :options="legendOptions" />
-      </v-chart>
+      </div>
     </div>
-    <div class="soa-dorm-count__bar">
-      <div class="c-tc">次数统计</div>
-      <v-chart
-        ref="demo"
-        :data="barData"
-        :width="chartWidth">
-        <v-bar />
-        <v-tooltip :show-item-marker="true" />
-      </v-chart>
 
-    </div>
   </div>
 </template>
 
@@ -212,7 +214,7 @@ export default {
          text-align: center;
          padding: 10px;
          border-bottom: 1px solid #F5F6F8;
-         box-shadow:0 8px 6px rgba(0, 0, 0, 0.08);
+        //  box-shadow:0 8px 6px rgba(0, 0, 0, 0.08);
          & > span{
            display: inline-block;
            width: 0;
@@ -224,19 +226,12 @@ export default {
          }
        }
     }
-    @include e(bar) {
+    @include e(chart) {
+      padding-top: 10px;
+      height: calc(100% - 125px);
+      box-sizing: border-box;
+      overflow: auto;
       margin-bottom: 40px;
-    }
-    @include e(head) {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: #ffffff;
-      z-index: 101;
-    }
-    @include e(circle){
-      padding-top: 146px;
     }
 }
 </style>
