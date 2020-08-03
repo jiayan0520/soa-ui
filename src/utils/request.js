@@ -53,5 +53,26 @@ export function get(url, data = {}, timeout = TIMEOUT) {
     timeout: timeout
   });
 }
-
+// 上传文件
+export function UploadFile(url, params = {}) {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    for (const key in params) {
+      formData.append(key, params[key])
+    }
+    service.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then(res => {
+      Toast.clear()
+      if (res.data.code !== 200) {
+        Toast(res.data.message);
+        reject(res.data.message);
+        return;
+      }
+      resolve(res.data)
+    })
+  })
+}
 export default service;
