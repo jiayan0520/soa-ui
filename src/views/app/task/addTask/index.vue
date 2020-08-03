@@ -1,16 +1,17 @@
 <template>
   <div>
     <van-form
-      class="soa-task-add"
+      label-width="7.2em"
+      class="soa-task-add soa-custom-form"
       @submit="onSubmit">
       <van-field
-        v-model="query.title"
+        v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
         name="请输入任务标题"
         placeholder="请输入任务标题"
       />
       <van-field
-        v-model="query.content"
+        v-model="form.content"
         :rules="[{ required: true, message: '请输入任务内容' }]"
         maxlength="200"
         show-word-limit
@@ -19,22 +20,27 @@
         placeholder="请输入任务内容"
       />
       <people-picker
-        v-model="query.executor"
+        v-model="form.executor"
         title="执行人"/>
-      <van-cell
-        center
-        title="是否提醒">
-        <van-switch
-          v-model="query.checked"
-          size="20" />
-      </van-cell>
+      <van-field
+        v-model="form.files"
+        :readonly="true"
+        label="是否提醒"
+        placeholder=""
+      >
+        <template #input>
+          <van-switch
+            v-model="form.checked"
+            size="20" />
+        </template>
+      </van-field>
       <van-field
         center
         label="截止时间"
       >
         <template #input>
           <date-picker
-            v-model="query.deadline"
+            v-model="form.deadline"
             :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
             :editable="false"
             :not-before="minDate"
@@ -46,45 +52,23 @@
             append-to-body/>
         </template>
       </van-field>
-      <van-field
-        v-model="query.expire"
-        :readonly="true"
-        label="到期提醒"
-        right-icon="arrow"
-        @click="showInfoAction = true"
-      />
-      <van-action-sheet
-        v-model="showInfoAction"
+      <custom-sheet
+        v-model="form.expire"
         :actions="infoActions"
-        @select="onInfoSelect" />
-
-      <van-field
-        v-model="query.critical"
-        :readonly="true"
-        label="紧急系数"
-        right-icon="arrow"
-        @click="showCriticalAction = true"
-      />
-      <van-action-sheet
-        v-model="showCriticalAction"
+        label="到期提醒"/>
+      <custom-sheet
+        v-model="form.critical"
         :actions="criticalActions"
-        @select="onCriticalSelect" />
-      <van-field
-        v-model="query.weight"
-        :readonly="true"
-        label="任务权重"
-        right-icon="arrow"
-        @click="showWeightAction = true"
-      />
-      <van-action-sheet
-        v-model="showWeightAction"
+        label="紧急系数"/>
+      <custom-sheet
+        v-model="form.weight"
         :actions="weightActions"
-        @select="onWeightSelect" />
+        label="任务权重"/>
       <people-picker
-        v-model="query.searcher"
+        v-model="form.searcher"
         title="可公开查阅人"/>
       <van-field
-        v-model="query.files"
+        v-model="form.files"
         :readonly="true"
         label="附件"
         placeholder=""
@@ -99,7 +83,7 @@
       <van-divider />
       <van-cell>
         <div
-          v-for="(item, index) in query.child"
+          v-for="(item, index) in form.child"
           :key="index"
           class="soa-task-add__child">
           <div class="content">
@@ -133,7 +117,6 @@
           </van-button>
         </div>
       </van-cell>
-
       <van-divider />
       <div class="soa-task-add__submit">
         <van-button
@@ -146,7 +129,7 @@
     </van-form>
     <AddChild
       :show="showModal"
-      :deadline="query.deadline"
+      :deadline="form.deadline"
       :params="editObj"
       @childData="getChildData"
       @closeModal="closeChildModal"/>
@@ -157,17 +140,19 @@
 import DatePicker from 'vue2-datepicker'
 import AddChild from '../taskChild'
 import peoplePicker from '@/components/peoplePicker'
+import customSheet from '@/components/customSheet'
 // import formatData from '@/utils/index.js'
 export default {
   name: 'AddTask',
   components: {
     DatePicker,
     AddChild,
-    peoplePicker
+    peoplePicker,
+    customSheet
   },
   data() {
     return {
-      query: {
+      form: {
         title: '',
         content: '',
         executor: '', // 执行人
@@ -199,40 +184,24 @@ export default {
     onSubmit() {
       console.log('')
     },
-    handleExecutorClick() {
-      this.$router.push('/task-add-executor');
-      console.log('handleExecutorClick')
-    },
-    onInfoSelect(item) {
-      this.showInfoAction = false;
-      this.query.expire = item.name
-    },
-    onCriticalSelect(item) {
-      this.showCriticalAction = false;
-      this.query.critical = item.name
-    },
-    onWeightSelect(item) {
-      this.showWeightAction = false;
-      this.query.weight = item.name
-    },
     handleAddChildClick() {
       this.showModal = true;
     },
     handleChildEdit(index) {
-      this.editObj = this.query.child[index];
+      this.editObj = this.form.child[index];
       this.showModal = true;
       console.log('编辑子任务')
     },
     handleChildClear(index) {
-      const arr = this.query.child;
+      const arr = this.form.child;
       arr.splice(index, 1);
-      this.query.child = arr;
+      this.form.child = arr;
     },
     // 获取子任务数据
     getChildData(data) {
-      const arr = this.query.child;
+      const arr = this.form.child;
       arr.push(data);
-      this.query.child = arr;
+      this.form.child = arr;
       this.showModal = false;
     },
     // 关闭modal

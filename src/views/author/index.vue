@@ -4,7 +4,6 @@
 // import cookie from 'vux/src/tools/cookie'
 import { Toast } from 'vant'
 import { mapGetters } from 'vuex';
-import { getAppInfo, getUserId, getUserInfo } from '@/api/author'
 export default {
   data() {
     return {
@@ -62,7 +61,7 @@ export default {
     },
     // 通过免登授权码换取用户账号
     loginByDDCode(code) {
-      getUserId({ code: code }).then(res => {
+      this.$api.getUserId({ code: code }).then(res => {
         const data = res.data.data
         this.hideLoading();
         if (res.data.code === 200) {
@@ -78,7 +77,7 @@ export default {
     },
     getUserInfo() {
       // 获取用户信息
-      getUserInfo({ userId: this.userAccount }).then(res => {
+      this.$api.getUserInfo({ userId: this.userAccount }).then(res => {
         console.log('获取用户信息');
         if (res.data.code === 200) {
           if (this.toRoute) {
@@ -103,7 +102,7 @@ export default {
       // }
       // console.warn('signCall', url);
 
-      getAppInfo().then(res => {
+      this.$api.getAppInfo().then(res => {
         console.log(res);
         if (res.data.code === 200) {
           const { agentId, corpId, timeStamp, nonceStr, signature } = res.data.data
