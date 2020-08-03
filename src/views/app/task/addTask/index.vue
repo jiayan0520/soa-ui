@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="soa-task-add">
     <van-form
       label-width="7.2em"
-      class="soa-task-add soa-custom-form"
+      class="soa-custom-form"
       @submit="onSubmit">
       <van-field
         v-model="form.title"
@@ -20,17 +20,17 @@
         placeholder="请输入任务内容"
       />
       <people-picker
-        v-model="form.executor"
-        title="执行人"/>
+        v-model="form.soaTaskPerform"
+        title="执行人"
+        @complexPickerParent="handlePicker"/>
       <van-field
-        v-model="form.files"
         :readonly="true"
         label="是否提醒"
         placeholder=""
       >
         <template #input>
           <van-switch
-            v-model="form.checked"
+            v-model="form.isRemind"
             size="20" />
         </template>
       </van-field>
@@ -48,24 +48,24 @@
             type="datetime"
             value-type="format"
             format="YYYY-MM-DD HH:mm"
-            placeholder="请选择截止时间"
+            placeholder="请选择时间"
             append-to-body/>
         </template>
       </van-field>
       <custom-sheet
-        v-model="form.expire"
+        v-model="form.dueReminder"
         :actions="infoActions"
         label="到期提醒"/>
       <custom-sheet
-        v-model="form.critical"
+        v-model="form.emergencyCoefficient"
         :actions="criticalActions"
         label="紧急系数"/>
       <custom-sheet
-        v-model="form.weight"
+        v-model="form.difficulty"
         :actions="weightActions"
         label="任务权重"/>
       <people-picker
-        v-model="form.searcher"
+        v-model="form.soaTaskReader"
         title="可公开查阅人"/>
       <van-field
         v-model="form.files"
@@ -117,7 +117,6 @@
           </van-button>
         </div>
       </van-cell>
-      <van-divider />
       <div class="soa-task-add__submit">
         <van-button
           block
@@ -141,6 +140,7 @@ import DatePicker from 'vue2-datepicker'
 import AddChild from '../taskChild'
 import peoplePicker from '@/components/peoplePicker'
 import customSheet from '@/components/customSheet'
+import dayjs from 'dayjs';
 // import formatData from '@/utils/index.js'
 export default {
   name: 'AddTask',
@@ -155,12 +155,12 @@ export default {
       form: {
         title: '',
         content: '',
-        executor: '', // 执行人
-        checked: false,
+        soaTaskPerform: '', // 执行人
+        isRemind: true,
         deadline: '',
-        expire: '不提醒',
-        critical: '特急',
-        weight: '1.0',
+        dueReminder: '不提醒',
+        emergencyCoefficient: '特急',
+        difficulty: '1.0',
         searcher: '', // 可查阅人
         files: '', // 附件
         child: [
@@ -168,10 +168,7 @@ export default {
         ]
       },
       showModal: false,
-      minDate: '',
-      showInfoAction: false,
-      showCriticalAction: false,
-      showWeightAction: false,
+      minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
       fileList: [],
       criticalActions: [{ name: '特急' }, { name: '紧急' }, { name: '一般' }, { name: '不急' }],
       infoActions: [{ name: '不提醒' }, { name: '截止15分钟' }, { name: '截止1小时' }, { name: '截止3小时' }, { name: '截止前1天' }],
@@ -180,9 +177,20 @@ export default {
       editObj: null
     }
   },
+  mounted() {
+    console.log('minDate', this.minDate)
+    // 截止时间默认为今日或次日18点
+    var date = new Date();
+    if (new Date().getHours() < 18) {
+      this.form.deadline = dayjs(date.setHours(18)).format('YYYY-MM-DD HH:mm') + ':00';
+    } else {
+      date.setDate(date.getDate() + 1);
+      this.form.deadline = dayjs(date.setHours(18)).format('YYYY-MM-DD HH:mm') + ':00';
+    }
+  },
   methods: {
     onSubmit() {
-      console.log('')
+      console.log(this.form)
     },
     handleAddChildClick() {
       this.showModal = true;
@@ -191,6 +199,9 @@ export default {
       this.editObj = this.form.child[index];
       this.showModal = true;
       console.log('编辑子任务')
+    },
+    handlePicker(people, departments) {
+      console.log('handlePicker', people, departments)
     },
     handleChildClear(index) {
       const arr = this.form.child;

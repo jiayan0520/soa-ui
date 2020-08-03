@@ -5,7 +5,6 @@ import App from './App'
 import router from './router'
 import 'vant/lib/index.css'
 import './assets/index.scss'
-import 'vue2-datepicker/index.css';
 import '@/assist/permission'; // 权限控制
 import Vant from 'vant'
 import * as dd from 'dingtalk-jsapi'; // 此方式为整体加载，也可按需进行加载
