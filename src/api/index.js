@@ -1,9 +1,8 @@
-const TASK = `/task`
+import * as author from './author'
+import * as task from './task'
 
-const AUTHOR = `/dingding`
-
-export {
-  TASK,
-  AUTHOR
+export default {
+  ...author,
+  ...task
 }
 

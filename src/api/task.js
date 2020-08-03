@@ -1,7 +1,17 @@
-import { post } from '@/utils/request'
+import { post, get } from '@/utils/request'
 
-import { TASK } from '@/api'
+// 前缀
+const prefix = `/taskModule`
 
-export function addTask(params) {
-  return post(`${TASK}/addTask`, params)
+function addTask(params) {
+  return post(`${prefix}/addTask`, params)
+}
+// 任务排行榜列表
+function getTaskStatisticsList(params) {
+  return get(`${prefix}/statistics/list`, params)
+}
+
+export {
+  addTask,
+  getTaskStatisticsList
 }

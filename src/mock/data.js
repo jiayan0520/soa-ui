@@ -96,5 +96,32 @@ export default {
       msg: 'create is success'
     };
     return result;
+  },
+  getTaskStatisticsList: config => {
+    const result = {
+      'content': {
+        'itemArr': [
+          {
+            'averageScore': 0,
+            'finishNumber': 0,
+            'id': '',
+            'name': '张三三',
+            'serialNumber': 0,
+            'totalScore': 0
+          },
+          {
+            'averageScore': 0,
+            'finishNumber': 0,
+            'id': '',
+            'name': '李思思',
+            'serialNumber': 0,
+            'totalScore': 0
+          }
+        ],
+        'total': 1
+      },
+      'message': ''
+    }
+    return result;
   }
 };
