@@ -153,8 +153,6 @@ export default {
           this.form.annexId.push(res.data.annexId)
         })
       })
-
-      console.log(this.form)
     },
 
     handlePicker(people, departments) {
