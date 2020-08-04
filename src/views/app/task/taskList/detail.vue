@@ -41,7 +41,8 @@
         <div class="c-tc">
           <van-button
             type="info"
-            size="small">审核</van-button>
+            size="small"
+            @click="handleExamine">审核</van-button>
         </div>
       </van-collapse-item>
     </van-collapse>
@@ -95,6 +96,7 @@ export default {
   },
   data() {
     return {
+      id: '',
       activeNames: [],
       inputText: '',
       showModal: false,
@@ -129,9 +131,18 @@ export default {
       }
     }
   },
+  mounted() {
+    this.id = this.$route.query.id;
+  },
   methods: {
     handleDelectClick() {
       console.log('删除子任务')
+    },
+    handleExamine() {
+      this.$router.push({
+        path: '/task-examine-detail',
+        query: { id: this.id }
+      })
     },
     //* *** 查看单个执行人详情***//
     bindDetail() {
