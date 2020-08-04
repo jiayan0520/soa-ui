@@ -1,7 +1,7 @@
 <template>
   <div class="soa-task-add">
     <van-form
-      label-width="7.2em"
+      label-width="110px"
       class="soa-custom-form"
       @submit="onSubmit">
       <van-field
@@ -81,42 +81,7 @@
         </template>
       </van-field>
       <van-divider />
-      <van-cell>
-        <div
-          v-for="(item, index) in form.child"
-          :key="index"
-          class="soa-task-add__child">
-          <div class="content">
-            <div class="title">{{ item.title }}</div>
-            <div class="c-mr20">{{ item.done }}/{{ item.total }}完成</div>
-            <div
-              :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
-              class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-          </div>
-          <div class="icon">
-            <div class="c-mr10">
-              <van-icon
-                name="clear"
-                color="#f00"
-                @click="handleChildClear(index)"/>
-            </div>
-            <div>
-              <van-icon
-                name="edit"
-                @click="handleChildEdit(index)"/>
-            </div>
-          </div>
-        </div>
-        <div class="c-tc">
-          <van-button
-            block
-            icon="add-o"
-            type="info"
-            @click="handleAddChildClick">
-            添加子任务
-          </van-button>
-        </div>
-      </van-cell>
+      <childTaskList :list="form.child"/>
       <div class="soa-task-add__submit">
         <van-button
           block
@@ -126,29 +91,23 @@
         </van-button>
       </div>
     </van-form>
-    <AddChild
-      :show="showModal"
-      :deadline="form.deadline"
-      :params="editObj"
-      @childData="getChildData"
-      @closeModal="closeChildModal"/>
   </div>
 </template>
 
 <script>
 import DatePicker from 'vue2-datepicker'
-import AddChild from '../taskChild'
 import peoplePicker from '@/components/peoplePicker'
 import customSheet from '@/components/customSheet'
+import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
 // import formatData from '@/utils/index.js'
 export default {
   name: 'AddTask',
   components: {
     DatePicker,
-    AddChild,
     peoplePicker,
-    customSheet
+    customSheet,
+    childTaskList
   },
   data() {
     return {
@@ -164,7 +123,7 @@ export default {
         searcher: '', // 可查阅人
         files: '', // 附件
         child: [
-          { title: '搜集党员信息子任务', total: 5, done: 0 }
+          { title: '搜集党员信息子任务', total: 5, done: 0, state: 'FAILED' }
         ]
       },
       showModal: false,
@@ -192,32 +151,9 @@ export default {
     onSubmit() {
       console.log(this.form)
     },
-    handleAddChildClick() {
-      this.showModal = true;
-    },
-    handleChildEdit(index) {
-      this.editObj = this.form.child[index];
-      this.showModal = true;
-      console.log('编辑子任务')
-    },
+
     handlePicker(people, departments) {
       console.log('handlePicker', people, departments)
-    },
-    handleChildClear(index) {
-      const arr = this.form.child;
-      arr.splice(index, 1);
-      this.form.child = arr;
-    },
-    // 获取子任务数据
-    getChildData(data) {
-      const arr = this.form.child;
-      arr.push(data);
-      this.form.child = arr;
-      this.showModal = false;
-    },
-    // 关闭modal
-    closeChildModal(val) {
-      this.showModal = !val
     }
   }
 }
@@ -229,25 +165,6 @@ export default {
 @include b(task-add){
   @include e(submit){
     margin: 16px 16px 55px
-  }
- @include e(child){
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background: #ddd;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    & .content{
-      display: flex;
-      width: 92%;
-      & > .title{
-        font-size: $--font-size-extra-small;
-        width: 50%;
-      }
-    }
-    & > .icon {
-      display: flex;
-    }
   }
 }
 </style>

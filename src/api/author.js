@@ -1,6 +1,6 @@
 import { get } from '@/utils/request'
 // 前缀
-const prefix = `/dingding`
+const prefix = `/prod-api/dingding`
 
 function getAppInfo(params) {
   return get(`${prefix}/getAppInfo`, params)

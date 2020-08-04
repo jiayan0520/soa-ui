@@ -129,7 +129,7 @@
 
 <script>
 import DatePicker from 'vue2-datepicker'
-import AddChild from '../taskChild'
+import AddChild from '../components/taskChildForm'
 import customCell from '@/components/customCell'
 export default {
   name: 'Detail',
