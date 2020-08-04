@@ -1,7 +1,7 @@
 <template>
   <list-layout
     ref="listLayout"
-    :data-list="dataList"
+    :data-list="list"
     :detail-url="detailUrl"
     :more-op-list="moreOpList"
     class="soa-task-examine-list"
@@ -29,10 +29,10 @@
       slot-scope="slotProps">
       <div class="soa-list-item-content content">
         <div>
-          <div class="c-ft16">{{ slotProps.item.label }}</div>
-          <div class="c-light">{{ slotProps.item.end }}</div>
-          <div class="c-light">{{ slotProps.item.start }}</div>
-          <span class="c-info">{{ slotProps.item.charge }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
+          <div class="c-ft16">{{ slotProps.item.title }}</div>
+          <div class="c-light">{{ slotProps.item.endTime }} 截止</div>
+          <div class="c-light">{{ slotProps.item.beginTime }} 发布</div>
+          <span class="c-info">{{ slotProps.item.deadline }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
         </div>
         <div :class="[stateMap[slotProps.item.state],'soa-task-examine-list__status']">{{ slotProps.item.state }}</div>
       </div>
@@ -51,13 +51,15 @@ export default {
     return {
       active: 0,
       searchValue: '',
-      dataList: [],
+      list: [],
       tab: ['待审核', '已审核'],
       moreOpList: [],
       stateMap: {
         '审核中': 'c-warm',
         '审核失败': 'c-danger'
-      }
+      },
+      page: 1, // 当前页码
+      limit: 20 // 每页请求数量
     }
   },
   computed: {
@@ -67,32 +69,23 @@ export default {
   },
   methods: {
     onSearch(searchValue) {
-      this.dataList = []
+      this.page = 1;
+      this.list = []
       this.$refs.listLayout.loading = true
       this.$refs.listLayout.finished = false
       this.onLoad()
     },
     onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.dataList.push({
-            id: this.dataList.length + 1,
-            label: '20200705收集班级学生旷课情况',
-            star: '2020年06月20日 15时30分 截止',
-            end: '2020年06月20日 15时30分 发布',
-            state: (i % 2 === 0) ? '审核中' : '审核失败',
-            info: '距截止还剩3天1小时' });
-        }
-
+      this.$api.getTaskExamineList({ page: this.page, limit: this.limit }).then((res) => {
+        console.log('任务审核列表数据' + res);
+        this.list = res.data.content.rows;
         // 加载状态结束
-        this.$refs.listLayout.loading = false
+        this.$refs.listLayout.loading = false;
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.list.length >= res.data.content.total) {
           this.$refs.listLayout.finished = true
         }
-      }, 1000);
+      })
     }
   }
 }

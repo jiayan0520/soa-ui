@@ -123,5 +123,56 @@ export default {
       'message': ''
     }
     return result;
+  },
+  getTaskExamineList: config => {
+    const result = {
+      'content': {
+        'total': 1,
+        'rows': [{
+          'id': 1,
+          'endTime': '22020年06月20 15时00分',
+          'title': '202006071 收集班级学生旷课情况',
+          'beginTime': '2020年06月07 15时00分',
+          'state': '审核中',
+          'deadline': '据截止还剩3天1小时'
+        }]
+      },
+      'message': ''
+    }
+    return result;
+  },
+  getTaskExamineDetail: config => {
+    const result = {
+      'content': {
+        'performUserName': '李晓明',
+        'content': '请各位尽快收拾好党员信息，按照excel表格里要求的数据进行填写',
+        'title': '收集党员信息',
+        'deadline': '2020年6月19日 18时00分',
+        'state': '未完成',
+        'soaTaskNewsList': [
+          {
+            createBy: '吴小小',
+            content: '任务总结信息，已完成了，请审核'
+          },
+          {
+            createBy: '罗永浩',
+            content: '任务总结信息，已完成了，请审核'
+          }
+        ],
+        'soaAnnexList': [
+          { filePath: '/images/myw3schoolimage.jpg', fileName: '任务反馈附件集合.zip' }
+        ],
+        'type': 'TASK'
+      }
+    }
+    return result;
+  },
+  saveTaskExamine: config => {
+    const result = {
+      'content': '',
+      'message': '提交成功',
+      'status': 200
+    }
+    return result;
   }
 };

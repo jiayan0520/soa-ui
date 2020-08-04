@@ -10,8 +10,22 @@ function addTask(params) {
 function getTaskStatisticsList(params) {
   return get(`${prefix}/statistics/list`, params)
 }
-
+// 任务审核列表
+function getTaskExamineList(params) {
+  return get(`${prefix}/audit/list`, params)
+}
+// 任务审核详情
+function getTaskExaminDetail(id) {
+  return post(`${prefix}/audit/getInfo`, id)
+}
+// 保存审核结果
+function saveTaskExamine(params) {
+  return post(`${prefix}/audit/saveTaskAudit`, params)
+}
 export {
   addTask,
-  getTaskStatisticsList
+  getTaskStatisticsList,
+  getTaskExamineList,
+  getTaskExaminDetail,
+  saveTaskExamine
 }
