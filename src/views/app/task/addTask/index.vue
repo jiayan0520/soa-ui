@@ -68,14 +68,13 @@
         v-model="form.soaTaskReader"
         title="可公开查阅人"/>
       <van-field
-        v-model="form.files"
         :readonly="true"
         label="附件"
         placeholder=""
       >
         <template #input>
           <van-uploader
-            v-model="fileList"
+            v-model="form.files"
             upload-icon="upgrade"
             accept="*"/>
         </template>
@@ -111,6 +110,7 @@ export default {
   data() {
     return {
       form: {
+        annexId: [],
         title: '',
         content: '',
         soaTaskPerform: '', // 执行人
@@ -120,12 +120,11 @@ export default {
         emergencyCoefficient: '特急',
         difficulty: '1.0',
         searcher: '', // 可查阅人
-        files: '', // 附件
+        files: [], // 附件
         subTasks: []
       },
       showModal: false,
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
-      fileList: [],
       criticalActions: [{ name: '特急' }, { name: '紧急' }, { name: '一般' }, { name: '不急' }],
       infoActions: [{ name: '不提醒' }, { name: '截止15分钟' }, { name: '截止1小时' }, { name: '截止3小时' }, { name: '截止前1天' }],
       weightActions: [{ name: '1.0' }, { name: '1.1' }, { name: '1.2' }, { name: '1.3' },
@@ -146,6 +145,15 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.form.annexId = []
+      console.log('上传文件', this.form.files)
+      this.form.files.forEach((item) => {
+        this.$api.upload(item).then((res) => {
+          console.log('上传组件', res)
+          this.form.annexId.push(res.data.annexId)
+        })
+      })
+
       console.log(this.form)
     },
 

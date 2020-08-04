@@ -2,8 +2,8 @@
   <list-layout
     ref="listLayout"
     :data-list="dataList"
-    :detail-url="detailUrl"
     :more-op-list="moreOpList"
+    detail-url="/task-examine-detail"
     class="soa-task-examine-list"
     @search="onSearch"
     @loadData="onLoad">
@@ -58,11 +58,6 @@ export default {
         '审核中': 'c-warm',
         '审核失败': 'c-danger'
       }
-    }
-  },
-  computed: {
-    detailUrl() {
-      return '/task-examine-detail'
     }
   },
   methods: {
