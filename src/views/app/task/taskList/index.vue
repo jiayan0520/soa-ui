@@ -43,8 +43,8 @@
         slot-scope="slotProps">
         <div class="soa-list-item-content content">
           <div>
-            <div class="c-ft16">{{ slotProps.item.label }}</div>
-            <div class="c-light">{{ slotProps.item.end }}</div>
+            <div class="c-ft16">{{ slotProps.item.title }}</div>
+            <div class="c-light">{{ slotProps.item.deadline }}</div>
             <div class="c-light">{{ slotProps.item.start }}</div>
             <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
             <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
@@ -84,7 +84,9 @@ export default {
       tab1: ['未完成', '已完成', '所有'],
       stateMap: {
         '审核中': 'c-warm'
-      }
+      },
+      limit: 20, // 每页行数
+      page: 1// 当前页码 total 总条数
     }
   },
   computed: {
@@ -123,12 +125,13 @@ export default {
     },
     onLoad() {
       // 异步更新数据
-      setTimeout(() => {
+      this.$api.getTaskList({ page: this.page, limit: this.limit }).then((data) => {
+        console.log(data)
         for (let i = 0; i < 10; i++) {
           this.dataList.push({
             id: this.dataList.length + 1,
-            label: '20200705收集班级学生旷课情况',
-            end: '2020年06月20日 15时30分 截止',
+            title: '20200705收集班级学生旷课情况',
+            deadline: '2020年06月20日 15时30分 截止',
             start: '2020年06月20日 15时30分 发布',
             state: '审核中',
             info: '距截止还剩3天1小时',
@@ -137,14 +140,13 @@ export default {
             done: '2',
             btn: ['编辑', '失败', '删除'] });
         }
-
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
         if (this.dataList.length >= 20) {
           this.$refs.listLayout.finished = true
         }
-      }, 1000);
+      })
     },
     // 下拉点击事件
     clickMoreBtn(value, item) {
