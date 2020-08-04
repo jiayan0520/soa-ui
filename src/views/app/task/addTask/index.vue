@@ -81,15 +81,14 @@
         </template>
       </van-field>
       <van-divider />
-      <childTaskList :list="form.child"/>
-      <div class="soa-task-add__submit">
-        <van-button
-          block
-          type="info"
-          native-type="submit">
-          提交
-        </van-button>
-      </div>
+      <childTaskList :list="form.subTasks"/>
+      <van-button
+        block
+        class="soa-task-add__submit"
+        type="info"
+        native-type="submit">
+        提交
+      </van-button>
     </van-form>
   </div>
 </template>
@@ -122,9 +121,7 @@ export default {
         difficulty: '1.0',
         searcher: '', // 可查阅人
         files: '', // 附件
-        child: [
-          { title: '搜集党员信息子任务', total: 5, done: 0, state: 'FAILED' }
-        ]
+        subTasks: []
       },
       showModal: false,
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
@@ -164,7 +161,7 @@ export default {
 @import '@/assets/style/var.scss';
 @include b(task-add){
   @include e(submit){
-    margin: 16px 16px 55px
+    margin: 16px 0 55px
   }
 }
 </style>

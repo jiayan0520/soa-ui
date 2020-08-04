@@ -5,14 +5,14 @@
       :key="index"
       class="soa-child-task__child">
       <div class="title">{{ item.title }}</div>
-      <div>{{ item.done }}/{{ item.total }}完成
+      <div class="c-light">{{ item.done }}/{{ item.total }}完成
         <span
-          v-if="showStatus"
-          :class="['c-ml20',`c-${stateMap[item.state].type}`]">{{ stateMap[item.state].label }}</span>
+          v-if="showStatus && item.state"
+          :class="['c-ml10',`c-${stateMap[item.state].type}`]">{{ stateMap[item.state].label }}</span>
       </div>
       <div class="c-mr10">
         <i
-          class="van-icon van-icon-edit c-info"
+          class="van-icon van-icon-edit c-info c-mr10"
           @click="handleEdit(index)"/>
         <i
           class="van-icon van-icon-clear c-danger"
@@ -29,8 +29,8 @@
     <TaskChildForm
       :show="show"
       :deadline="deadline"
-      :params="taskDetail"
-      @childData="getChildData"
+      :params="editTask"
+      @input="handleInput"
       @closeModal="closeChildModal"/>
   </div>
 </template>
@@ -69,12 +69,29 @@ export default {
   data() {
     return {
       show: false,
-      taskDetail: {},
+      taskIndex: '',
       stateMap: {
         NUFINISHED: { label: '  任务未完成', type: 'light' },
         FAILED: { label: '  未完成', type: 'danger' },
         PASS: { label: '  已完成', type: 'success' }
       }
+    }
+  },
+  computed: {
+    editTask() {
+      const tempTask = {
+        title: '',
+        content: '',
+        soaTaskPerform: '', // 执行人
+        isRemind: true,
+        deadline: '',
+        dueReminder: '不提醒',
+        emergencyCoefficient: '特急',
+        difficulty: '1.0',
+        searcher: '', // 可查阅人
+        files: '' // 附件
+      }
+      return this.taskIndex || this.taskIndex === 0 ? this.list[this.taskIndex] : tempTask
     }
   },
   methods: {
@@ -83,23 +100,29 @@ export default {
       this.$emit('input', listtemp.splice(index, 1))
     },
     handleAdd() {
+      this.taskIndex = '';
       this.show = true;
     },
     handleEdit(index) {
-      this.taskDetail = this.list[index];
+      this.taskIndex = index;
       this.show = true;
-      console.log('编辑子任务')
     },
     // 获取子任务数据
-    getChildData(data) {
-      const arr = this.form.child;
-      arr.push(data);
-      this.form.child = arr;
+    handleInput(data) {
+      const listtemp = this.list
+      if (this.taskIndex || this.taskIndex === 0) {
+        listtemp[this.taskIndex] = data
+      } else {
+        listtemp.push(data)
+      }
+      this.$emit('input', listtemp)
       this.show = false;
+      this.taskIndex = '';
     },
     // 关闭modal
     closeChildModal(val) {
       this.show = !val
+      this.taskIndex = '';
     }
   }
 }
@@ -112,6 +135,7 @@ export default {
  @include e(child){
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px;
     background: #ddd;
     border-radius: 6px;
