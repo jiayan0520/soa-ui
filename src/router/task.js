@@ -10,11 +10,6 @@ export default [
     component: () => import('@/views/app/task/addTask/executor')
   },
   {
-    path: '/task-child-detail',
-    name: 'taskChildDetail',
-    component: () => import('@/views/app/task/taskList/childDetail')
-  },
-  {
     path: '/task-list',
     name: 'taskList',
     component: () => import('@/views/app/task/taskList/index')
@@ -33,11 +28,6 @@ export default [
     path: '/task-message',
     name: 'taskMessage',
     component: () => import('@/views/app/task/taskList/detail')
-  },
-  {
-    path: '/task-receive-detail',
-    name: 'taskReceiveDetail',
-    component: () => import('@/views/app/task/taskList/receiveDetail')
   },
   {
     path: '/task-single-detail',

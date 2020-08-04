@@ -1,16 +1,16 @@
 <template>
   <div class="soa-task-detail">
     <custom-cell
-      :value="params.promoter"
+      :value="form.promoter"
       title="发起人"/>
     <custom-cell
-      :value="params.task"
+      :value="form.task"
       title="任务名称"/>
     <custom-cell
-      :value="params.remark"
+      :value="form.remark"
       title="备注"/>
     <custom-cell
-      :value="params.deadline"
+      :value="form.deadline"
       title="截止时间"/>
     <van-collapse v-model="activeNames">
       <van-collapse-item
@@ -18,7 +18,7 @@
         value="3/5完成"
         name="1">
         <div
-          v-for="(item,index) in params.accomplish"
+          v-for="(item,index) in form.accomplish"
           :key="index"
           class="soa-task-detail__complateList">
           <div :class="[stateMap[item.state]]">{{ item.state }}</div>
@@ -48,52 +48,15 @@
     <custom-cell title="附件信息">
       <template slot="value">
         <a
-          v-for="(item,index) in params.file"
+          v-for="(item,index) in form.file"
           :key="index"
           :href="item.url"
           download="w3logo">{{ item.fileName }}</a>
       </template>
     </custom-cell>
-    <van-cell>
-      <div
-        v-for="(item, index) in params.child"
-        :key="index"
-        class="soa-task-detail__child">
-        <div
-          class="content"
-          @click="bindChildDetailClick">
-          <div class="title">{{ item.title }}</div>
-          <div class="c-mr20">{{ item.done }}/{{ item.total }}完成</div>
-          <div
-            :class="{'c-success':item.total==item.done,'c-danger':item.total!=item.done}"
-            class="c-ft12">{{ item.total==item.done?'已完成':'未完成' }}</div>
-        </div>
-        <div class="icon">
-          <div class="c-mr10">
-            <van-icon
-              name="clear"
-              color="#f00"
-              @click="handleChildClear(index)"/>
-          </div>
-          <div>
-            <van-icon
-              name="edit"
-              @click="handleChildEdit(index)"/>
-          </div>
-        </div>
-      </div>
-      <div class="c-tc">
-        <van-button
-          block
-          icon="add-o"
-          type="info"
-          @click="handleAddChildClick">
-          添加子任务
-        </van-button>
-      </div>
-    </van-cell>
+    <childTaskList :list="form.subTasks"/>
     <van-cell
-      v-for="items in params.infos"
+      v-for="items in form.infos"
       :key="items.index">
       <div class="soa-task-detail__commentList">
         <div class="name">【{{ items.name }}】</div>
@@ -116,27 +79,19 @@
         </template>
       </van-field>
     </van-cell>
-    <!--新建子任务-->
-    <AddChild
-      :show="showModal"
-      :deadline="params.deadline"
-      :params="editObj"
-      @childData="getChildData"
-      @closeModal="closeChildModal"/>
-
   </div>
 </template>
 
 <script>
 import DatePicker from 'vue2-datepicker'
-import AddChild from '../components/taskChildForm'
 import customCell from '@/components/customCell'
+import childTaskList from '../components/childTaskList'
 export default {
   name: 'Detail',
   components: {
     DatePicker,
-    AddChild,
-    customCell
+    customCell,
+    childTaskList
   },
   data() {
     return {
@@ -144,7 +99,7 @@ export default {
       inputText: '',
       showModal: false,
       editObj: null,
-      params: {
+      form: {
         promoter: '李晓明',
         task: '收集党员信息',
         detail: '请各位尽快收拾好党员信息，按照excel表格里要求的数据进行填写',
@@ -152,7 +107,7 @@ export default {
         remark: '审核不通过原因：没有附件',
         deadline: '2020年6月19日 18时00分',
         file: [{ url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }, { url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }],
-        child: [{ title: '搜集党员信息子任务', total: 5, done: 0 }],
+        subTasks: [{ title: '搜集党员信息子任务', total: 5, done: 0 }],
         infos: [
           { name: '黄德彬', content: '这个任务很简单，大家尽快执行完后反馈该任务信息', time: '6月19日 18时00分' },
           { name: '李荣文', content: '已查看该任务', time: '6月19日 15时00分' },
@@ -187,30 +142,6 @@ export default {
     },
     handleAddChildClick() {
       this.showModal = true;
-    },
-    handleChildEdit(index) {
-      this.editObj = this.params.child[index];
-      this.showModal = true;
-      console.log('编辑子任务')
-    },
-    handleChildClear(index) {
-      const arr = this.params.child;
-      arr.splice(index, 1);
-      this.params.child = arr;
-    },
-    // 获取子任务数据
-    getChildData(data) {
-      const arr = this.params.child;
-      arr.push(data);
-      this.params.child = arr;
-      this.showModal = false;
-    },
-    // 关闭modal
-    closeChildModal(val) {
-      this.showModal = !val
-    },
-    bindChildDetailClick() {
-      this.$router.push('/task-child-detail')
     }
   }
 }

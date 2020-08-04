@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     detailUrl() {
-      return this.active === 0 ? '/task-detail' : '/task-receive-detail'
+      return '/task-detail'
     }
   },
   methods: {
@@ -137,7 +137,7 @@ export default {
       if (value === 'submit') {
         this.$router.push('/task-list-feekback')
       } else {
-        this.$router.push('/task-receive-detail')
+        this.$router.push('/task-detail')
       }
     },
     // 日期转换
