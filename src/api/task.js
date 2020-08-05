@@ -6,6 +6,9 @@ const prefix = `/taskModule`
 function addTask(params) {
   return post(`${prefix}/task`, params)
 }
+function getTaskList(params) {
+  return get(`${prefix}/task/list`, params)
+}
 // 任务排行榜列表
 function getTaskStatisticsList(params) {
   return get(`${prefix}/statistics/list`, params)
@@ -24,6 +27,7 @@ function saveTaskExamine(params) {
 }
 export {
   addTask,
+  getTaskList,
   getTaskStatisticsList,
   getTaskExamineList,
   getTaskExaminDetail,

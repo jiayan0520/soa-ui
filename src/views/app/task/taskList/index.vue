@@ -1,87 +1,108 @@
 <template>
-  <list-layout
-    ref="listLayout"
-    :more-op-list="moreOpList"
-    :data-list="dataList"
-    :detail-url="detailUrl"
-    title="任务列表"
-    op-label="任务结算"
-    class="soa-task-list"
-    @search="onSearch"
-    @loadData="onLoad"
-    @clickOperator="onSubmit"
-    @clickMoreBtn="clickMoreBtn"
-  >
-    <template slot="top">
-      <van-search
-        v-model="searchValue"
-        show-action
-        label="任务内容"
-        placeholder="请输入搜索关键词"
-        @search="onSearch"
-      />
-      <van-tabs
-        v-model="active"
-        @click="onSearch">
-        <van-tab
-          v-for="item in tab"
-          :key="item"
-          :title="item"/>
-      </van-tabs>
-      <van-tabs
-        v-model="active1"
-        @click="onSearch">
-        <van-tab
-          v-for="item in tab1"
-          :key="item"
-          :title="item"/>
-      </van-tabs>
-    </template>
-    <template
-      slot="item-content"
-      slot-scope="slotProps">
-      <div class="soa-list-item-content content">
-        <div>
-          <div class="c-ft16">{{ slotProps.item.label }}</div>
-          <div class="c-light">{{ slotProps.item.end }}</div>
-          <div class="c-light">{{ slotProps.item.start }}</div>
-          <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
-          <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
+  <div>
+    <list-layout
+      ref="listLayout"
+      :more-op-list="moreOpList"
+      :data-list="dataList"
+      :detail-url="detailUrl"
+      :op-label="!active && '任务结算'"
+      title="任务列表"
+      class="soa-task-list"
+      @search="onSearch"
+      @loadData="onLoad"
+      @clickOperator="onSubmit"
+      @clickMoreBtn="clickMoreBtn"
+    >
+      <template slot="top">
+        <van-search
+          v-model="searchValue"
+          show-action
+          label="任务内容"
+          placeholder="请输入搜索关键词"
+          @search="onSearch"
+        />
+        <van-tabs
+          v-model="active"
+          @click="onSearch">
+          <van-tab
+            v-for="item in tab"
+            :key="item"
+            :title="item"/>
+        </van-tabs>
+        <van-tabs
+          v-model="active1"
+          @click="onSearch">
+          <van-tab
+            v-for="item in tab1"
+            :key="item"
+            :title="item"/>
+        </van-tabs>
+      </template>
+      <template
+        slot="item-content"
+        slot-scope="slotProps">
+        <div class="soa-list-item-content content">
+          <div>
+            <div class="c-ft16">{{ slotProps.item.title }}</div>
+            <div class="c-light">{{ slotProps.item.deadline }}</div>
+            <div class="c-light">{{ slotProps.item.start }}</div>
+            <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
+            <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
+          </div>
+          <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
         </div>
-        <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
-      </div>
-    </template>
-  </list-layout>
+      </template>
+    </list-layout>
+    <van-popup
+      v-model="isShowEditPopup"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom">
+      <add-task/>
+    </van-popup>
+  </div>
+
 </template>
 
 <script>
-import { addTask } from '@/api/task'
 import listLayout from '@/components/listLayout'
+import addTask from '../addTask/index'
 export default {
-  name: 'AddTask',
+  name: 'TaskList',
   components: {
-    listLayout
+    listLayout,
+    addTask
   },
   data() {
     return {
       active: 0,
       active1: 0,
+      isShowEditPopup: false,
       searchValue: '',
       dataList: [],
       tab: ['我发布的', '我收到的'],
       tab1: ['未完成', '已完成', '所有'],
-      moreOpList: [
-        { value: 'submit', label: '提交' },
-        { value: 'apply', label: '任务失败申请' }
-      ],
       stateMap: {
         '审核中': 'c-warm'
-      }
+      },
+      limit: 20, // 每页行数
+      page: 1// 当前页码 total 总条数
     }
   },
   computed: {
     detailUrl() {
       return '/task-detail'
+    },
+    moreOpList() {
+      const publishOp = [
+        { value: 'edit', label: '编辑' },
+        { value: 'delete', label: '删除' },
+        { value: 'fail', label: '任务失败' }
+      ]
+      const reOp = [
+        { value: 'submit', label: '提交' }
+      ]
+      return this.active ? reOp : publishOp
     }
   },
   methods: {
@@ -104,15 +125,13 @@ export default {
     },
     onLoad() {
       // 异步更新数据
-      setTimeout(() => {
-        addTask({ id: '1111' }).then(response => {
-          console.log(response)
-        })
+      this.$api.getTaskList({ page: this.page, limit: this.limit }).then((data) => {
+        console.log(data)
         for (let i = 0; i < 10; i++) {
           this.dataList.push({
             id: this.dataList.length + 1,
-            label: '20200705收集班级学生旷课情况',
-            end: '2020年06月20日 15时30分 截止',
+            title: '20200705收集班级学生旷课情况',
+            deadline: '2020年06月20日 15时30分 截止',
             start: '2020年06月20日 15时30分 发布',
             state: '审核中',
             info: '距截止还剩3天1小时',
@@ -121,23 +140,30 @@ export default {
             done: '2',
             btn: ['编辑', '失败', '删除'] });
         }
-
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
         if (this.dataList.length >= 20) {
           this.$refs.listLayout.finished = true
         }
-      }, 1000);
+      })
     },
     // 下拉点击事件
-    clickMoreBtn(value) {
+    clickMoreBtn(value, item) {
       console.log('clickMoreBtn', value)
-
-      if (value === 'submit') {
-        this.$router.push('/task-list-feekback')
-      } else {
-        this.$router.push('/task-detail')
+      switch (value) {
+        // 编辑
+        case 'edit':
+          this.rowId = item.id
+          this.isShowEditPopup = true
+          break
+        case 'delete':
+          break
+        case 'fail':
+          break
+        case 'submit':
+          this.$router.push('/task-list-feekback')
+          break
       }
     },
     // 日期转换
