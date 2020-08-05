@@ -54,12 +54,10 @@ export function get(url, data = {}, timeout = TIMEOUT) {
   });
 }
 // 上传文件
-export function UploadFile(url, params = {}) {
+export function uploadFile(url, params = {}) {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
-    for (const key in params) {
-      formData.append(key, params[key])
-    }
+    formData.append(`file`, params.file)
     service.post(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'

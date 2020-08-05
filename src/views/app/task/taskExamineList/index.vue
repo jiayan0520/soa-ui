@@ -1,9 +1,9 @@
 <template>
   <list-layout
     ref="listLayout"
-    :data-list="list"
-    :detail-url="detailUrl"
+    :data-list="dataList"
     :more-op-list="moreOpList"
+    detail-url="/task-examine-detail"
     class="soa-task-examine-list"
     @search="onSearch"
     @loadData="onLoad">
@@ -51,7 +51,7 @@ export default {
     return {
       active: 0,
       searchValue: '',
-      list: [],
+      dataList: [],
       tab: ['待审核', '已审核'],
       moreOpList: [],
       stateMap: {
@@ -62,15 +62,10 @@ export default {
       limit: 20 // 每页请求数量
     }
   },
-  computed: {
-    detailUrl() {
-      return '/task-examine-detail'
-    }
-  },
   methods: {
     onSearch(searchValue) {
       this.page = 1;
-      this.list = []
+      this.dataList = []
       this.$refs.listLayout.loading = true
       this.$refs.listLayout.finished = false
       this.onLoad()
@@ -78,11 +73,11 @@ export default {
     onLoad() {
       this.$api.getTaskExamineList({ page: this.page, limit: this.limit }).then((res) => {
         console.log('任务审核列表数据' + res);
-        this.list = res.data.content.rows;
+        this.dataList = res.data.content.rows;
         // 加载状态结束
         this.$refs.listLayout.loading = false;
         // 数据全部加载完成
-        if (this.list.length >= res.data.content.total) {
+        if (this.dataList.length >= res.data.content.total) {
           this.$refs.listLayout.finished = true
         }
       })
