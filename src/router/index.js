@@ -31,6 +31,11 @@ export default new Router({
       name: 'exception-401',
       component: () => import('@/views/exception-401')
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login')
+    },
     ...task,
     ...dorm
   ]

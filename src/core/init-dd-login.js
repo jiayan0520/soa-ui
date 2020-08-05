@@ -7,15 +7,14 @@ export default async function initDD() {
   // 通过免登授权码换取用户账号
   const loginByDDCode = (code) => {
     console.log('2.通过免登授权码登录');
-    api.getAuthLogin({ code: code }).then(
-      ({ data }) => {
-        // this.hideLoading();
-        // 2*.免密登录成功
-        this.account = data.account;
-        console.log('获取当前account' + data.account);
-        localStorage.setItem('account', data.account);
-        this.init();
-      }).catch(err => {
+    api.getAuthLogin({ code: code }).then(data => {
+      // this.hideLoading();
+      // 2*.免密登录成功，将token保存起来
+      // this.account = data.account;
+      // console.log('获取当前account' + data.account);
+      // localStorage.setItem('account', data.account);
+      // this.init();
+    }).catch(err => {
       console.log(err)
     });
   }

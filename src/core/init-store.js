@@ -1,5 +1,5 @@
 // import axios from 'axios'
-import Signer from './Signer'
+import Signer from './utils/Signer'
 // import { Base64 } from 'js-base64'
 import api from '@/api'
 
@@ -49,10 +49,36 @@ export default function initStore(store, router, cycle) {
       async auth({ getters, dispatch }, { path = location.path, msg = '请登录' } = {}) {
         // * 用户是否已登录
         const isAuthorizedUser = getters.fresh.check()
-        if (isAuthorizedUser) {
+        // * 是否免鉴权页面
+        // 登录路由必须免登录
+        const isAuthorizedPath = path === '/login'
+        // *** 路由权限逻辑
+        // * 已登录
+        //   * 授权页面：sync 初始化用户/菜单
+        //   * 非授权页面：sync 初始化用户/菜单
+        // * 未登录
+        //   * 授权页面：直接渲染
+        //     * -> push(未授权页面) -> 如何跳转到登录页面？
+        //       1. 路由勾子（动态鉴权）
+        //       2. ...
+        //     * -> push(授权页面) -> 不做处理
+        //   * 非授权页面：引导到登录页面
+        if (isAuthorizedUser && isAuthorizedPath) {
+          // 如果是白名单页面，比如门户，大屏，则做异步权限加载
+          // 若发现某个页面对user和menus的依赖是非异步的，再考虑改成await
+          dispatch('boot')
+        }
+        if (isAuthorizedUser && !isAuthorizedPath) {
+          // 如果是需权限页面，比如表单，gis模块（区划信息），同步加载权限
           await dispatch('boot')
-        } else {
-          alert('无权限，请登录')
+        }
+        // if (!isAuthorizedUser && isAuthorizedPath) {
+        //   console.log('do nothing')
+        // }
+        if (!isAuthorizedUser && !isAuthorizedPath) {
+          // token逻辑还未走通，先退回，若是钉钉，需要调用钉钉的登录
+          // router.push('/login')
+          console.warn(msg)
         }
       },
       // 重置

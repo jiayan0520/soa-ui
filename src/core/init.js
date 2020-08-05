@@ -1,5 +1,6 @@
 import initStore from './init-store'
 import initVue from './init-vue'
+import initProxy from './init-proxy'
 import initDD from './init-dd-login'
 import initDdSign from './init-dd-sign'
 
@@ -33,6 +34,8 @@ export default function init(
     console.time('【框架日志】框架开销')
     // 初始化状态管理
     initStore(store, router, cycle)
+    // 初始化接口代理
+    initProxy(store, router)
     // 初始化钉钉授权一些api
     initDdSign()
     // 钉钉登录

@@ -1,4 +1,4 @@
-import { uploadFile } from '@/core/request'
+import { uploadFile } from './request'
 // 前缀
 const prefix = `/common`
 
