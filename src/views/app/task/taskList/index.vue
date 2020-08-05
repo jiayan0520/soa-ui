@@ -44,10 +44,10 @@
         <div class="soa-list-item-content content">
           <div>
             <div class="c-ft16">{{ slotProps.item.title }}</div>
-            <div class="c-light">{{ slotProps.item.deadline }}</div>
-            <div class="c-light">{{ slotProps.item.start }}</div>
-            <span class="c-info">{{ slotProps.item.charge }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
-            <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.infoNum }}完成  （未结算）</div>
+            <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
+            <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
+            <span class="c-info">{{ slotProps.item.createUserId }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
+            <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div>
           </div>
           <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
         </div>
@@ -83,10 +83,12 @@ export default {
       tab: ['我发布的', '我收到的'],
       tab1: ['未完成', '已完成', '所有'],
       stateMap: {
-        '审核中': 'c-warm'
+        '未完成': 'c-warm',
+        '已完成': 'c-success',
+        '任务失败': 'c-danger'
       },
       limit: 20, // 每页行数
-      page: 1// 当前页码 total 总条数
+      page: 1 // 当前页码 total 总条数
     }
   },
   computed: {
@@ -127,23 +129,11 @@ export default {
       // 异步更新数据
       this.$api.getTaskList({ page: this.page, limit: this.limit }).then((data) => {
         console.log(data)
-        for (let i = 0; i < 10; i++) {
-          this.dataList.push({
-            id: this.dataList.length + 1,
-            title: '20200705收集班级学生旷课情况',
-            deadline: '2020年06月20日 15时30分 截止',
-            start: '2020年06月20日 15时30分 发布',
-            state: '审核中',
-            info: '距截止还剩3天1小时',
-            charge: '林小明',
-            infoNum: '3',
-            done: '2',
-            btn: ['编辑', '失败', '删除'] });
-        }
+        this.dataList = data.data.rows;
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.data.total) {
           this.$refs.listLayout.finished = true
         }
       })
@@ -158,6 +148,7 @@ export default {
           this.isShowEditPopup = true
           break
         case 'delete':
+          this.deleteTask()
           break
         case 'fail':
           break
@@ -166,6 +157,8 @@ export default {
           break
       }
     },
+    // 删除任务
+    deleteTask() {},
     // 日期转换
     format() {
       var days = new Date();

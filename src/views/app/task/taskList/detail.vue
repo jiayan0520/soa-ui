@@ -65,21 +65,25 @@
         <div class="time">{{ items.time }}</div>
       </div>
     </van-cell>
-    <van-cell>
-      <van-field
-        v-model="inputText"
-        center
-        clearable
-        label=""
-        placeholder="输入回复内容"
-      >
-        <template #button>
-          <van-button
-            size="small"
-            type="info">发送</van-button>
-        </template>
-      </van-field>
-    </van-cell>
+    <div class="soa-task-detail__reback">
+      <van-cell>
+        <van-field
+          v-model="inputText"
+          center
+          clearable
+          label=""
+          placeholder="输入回复内容"
+        >
+          <template #button>
+            <van-button
+              size="small"
+              type="info"
+              @click="submitFeedBack">发送</van-button>
+          </template>
+        </van-field>
+      </van-cell>
+    </div>
+
   </div>
 </template>
 
@@ -133,8 +137,14 @@ export default {
   },
   mounted() {
     this.id = this.$route.query.id;
+    this.getData(this.$route.query.id)
   },
   methods: {
+    getData(id) {
+      this.$api.getTaskDetail(id).then((res) => {
+        console.log(res);
+      })
+    },
     handleDelectClick() {
       console.log('删除子任务')
     },
@@ -153,7 +163,33 @@ export default {
     },
     handleAddChildClick() {
       this.showModal = true;
+    },
+    // 发送回复内容
+    submitFeedBack() {
+      var query = {
+        content: this.inputText,
+        name: '李明生',
+        time: this.timeDate()
+      };
+      var arr = this.form.infos;
+      arr.push(query);
+      this.form.infos = arr;
+    },
+    timeDate() {
+      var now = new Date();
+      var month = now.getMonth() + 1;
+      var day = now.getDate();
+      var h = now.getHours();
+      var m = now.getMinutes();
+      if (h >= 0 && h <= 9) {
+        h = '0' + h;
+      }
+      if (m >= 0 && m <= 9) {
+        m = '0' + m;
+      }
+      return month + '月' + day + '日 ' + h + '时' + m + '分';
     }
+
   }
 }
 </script>
@@ -162,6 +198,8 @@ export default {
 @import '@/assets/mixins/mixins.scss';
 @import '@/assets/style/var.scss';
 @include b(task-detail){
+  overflow: scroll;
+  padding-bottom: 130px!important;
   @include e(complateList){
     display:flex;
     justify-content: space-between;
@@ -196,6 +234,11 @@ export default {
        color: $--color-light;
      }
      & > .content{width: 45%;}
+  }
+  @include e(reback){
+    position: fixed;
+    bottom: 50px;
+    width: 100%;
   }
 }
 

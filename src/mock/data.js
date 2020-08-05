@@ -129,11 +129,19 @@ export default {
       'content': {
         'total': 1,
         'rows': [{
-          'id': 1,
+          'taskId': 1,
           'endTime': '22020年06月20 15时00分',
           'title': '202006071 收集班级学生旷课情况',
           'beginTime': '2020年06月07 15时00分',
           'state': '审核中',
+          'deadline': '据截止还剩3天1小时'
+        },
+        {
+          'taskId': 2,
+          'endTime': '22020年06月20 15时00分',
+          'title': '202006071 收集班级学生旷课情况',
+          'beginTime': '2020年06月07 15时00分',
+          'state': '未审核',
           'deadline': '据截止还剩3天1小时'
         }]
       },
@@ -172,6 +180,23 @@ export default {
       'content': '',
       'message': '提交成功',
       'status': 200
+    }
+    return result;
+  },
+  getTaskList: config => {
+    const result = {
+      'rows': [{
+        id: 1,
+        title: '20200705收集班级学生旷课情况',
+        deadline: '2020年06月20日 15时30分',
+        createTime: '2020年06月20日 15时30分',
+        state: '未完成',
+        createUserId: '林小明',
+        taskNumber: '5',
+        done: '2',
+        infoNum: '3'
+      }],
+      'total': 1
     }
     return result;
   }

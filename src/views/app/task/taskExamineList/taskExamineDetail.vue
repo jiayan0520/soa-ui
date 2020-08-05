@@ -60,13 +60,13 @@
     <van-dialog
       v-model="show"
       :title= "title"
-      show-cancel-button
-      @confirm="handleConfirm"
-      @cancle="handlecCancle">
+      :before-close="DialogBeforeClose"
+      show-cancel-button>
       <van-form>
         <template v-if="isCheck">
           <van-field
             v-model="examineQuery.score"
+            :rules="[{ required: true, message: '请填写质量分' }]"
             type="digit"
             label="质量分" />
           <van-field
@@ -86,10 +86,12 @@
 
 <script>
 import customCell from '@/components/customCell'
+import { Notify } from 'vant'
 export default {
   name: 'TaskExamineList',
   components: {
-    customCell
+    customCell,
+    Notify
   },
   data() {
     return {
@@ -133,11 +135,50 @@ export default {
       this.isCheck = false
       this.show = true
     },
-    handleConfirm() {
-
+    DialogBeforeClose(action, done) {
+      console.log(action);
+      if (action === 'confirm') {
+        // 审核通过的情况
+        if (this.isCheck) {
+          if (this.examineQuery.score === '') {
+            Notify({ type: 'danger', message: '质量分不能为空' });
+            done();
+          } else {
+            this.submitToDataset(done)
+          }
+        } else { // 审核未通过的情况
+          if (this.examineQuery.content === '') {
+            Notify({ type: 'danger', message: '不通过原因不能为空' });
+            done();
+          } else {
+            this.submitToDataset(done)
+          }
+        }
+      } else {
+        done();
+      }
     },
-    handlecCancle() {
-
+    submitToDataset(done) {
+      this.$api.saveTaskExamine(this.examineQuery).then((res) => {
+        if (res.data.status === 200) {
+          Notify({ type: 'success', message: '提交成功' });
+          done();
+          this.getNextPage()
+        }
+      })
+    },
+    getNextPage() {
+      this.$api.getTaskExamineList({ page: 1, limit: 6558 }).then((res) => {
+        var arr = res.data.content.rows;
+        for (let i = 0, l = arr.length; i < l; i++) {
+          if (arr[i].state === '未审核') {
+            const taskId = arr[i].taskId;
+            this.$router.replace({
+              query: { id: taskId }
+            })
+          }
+        }
+      })
     }
   }
 }
