@@ -1,8 +1,10 @@
-<template><div/></template>
+<template>
+  <div />
+</template>
 
 <script>
-// import cookie from 'vux/src/tools/cookie'
 import { Toast } from 'vant'
+// import cookie from 'vux/src/tools/cookie'
 import { mapGetters } from 'vuex';
 export default {
   data() {
@@ -36,28 +38,6 @@ export default {
       }
       /* 1.授权免登加载中 */
       this.showLoading();
-      this.$dd.ready(() => {
-        // 获取微应用免登授权码
-        this.$dd.runtime.permission.requestAuthCode({
-          corpId: this.corpId,
-          onSuccess: info => {
-            var code = info.code;
-            // 获取微应用免登授权码
-            this.loginByDDCode(code);
-          },
-          onFail: err => {
-            if (this.$dd.ios || this.$dd.android) {
-              this.$dd.device.notification.hidePreloader({});
-            } else {
-              Toast.clear()
-            }
-            alert('requestAuthCode fail: ' + JSON.stringify(err));
-          }
-        });
-      });
-      this.$dd.error(function(error) {
-        alert('this.$dd error: ' + JSON.stringify(error));
-      });
     },
     // 通过免登授权码换取用户账号
     loginByDDCode(code) {

@@ -19,14 +19,28 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(response => {
   // store.commit('updateLoadingStatus', { isLoading: true })
-  return response
+  const resData = response.data || {};
+  if (resData.rows && resData.total) {
+    resData.data = {
+      rows: response.rows,
+      total: response.total
+    }
+  }
+  // console.log(111, resData.data)
+  return resData.data
 }, error => {
   if (error && error.stack && error.stack.indexOf('timeout') !== -1) {
     Toast('请求超时,请稍后重试!');
-  } else {
-    Toast('服务器异常,请稍后重试!');
+    return Promise.reject(error)
   }
-  return Promise.reject(error)
+  let errorText;
+  if (typeof error.response !== 'undefined' && typeof error.response.data !== 'undefined' && typeof error.response.data.error !== 'undefined') {
+    errorText = error.response.data.error.errorText;
+  } else {
+    errorText = error;
+  }
+  // Toast('服务器异常,请稍后重试!');
+  return Promise.reject(errorText)
 }
 );
 

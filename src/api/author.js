@@ -1,4 +1,4 @@
-import { get } from '@/utils/request'
+import { get } from '@/core/request'
 // 前缀
 const prefix = `/prod-api/dingding`
 

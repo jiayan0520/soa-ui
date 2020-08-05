@@ -4,6 +4,7 @@
       ref="listLayout"
       :data-list="dataList"
       :title="'未分配人员'"
+      detail-url="/dorm/allocate"
       @search="onSearch"
       @loadData="loadData"
     >

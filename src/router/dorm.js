@@ -28,6 +28,12 @@ export default [
     name: 'unallocated',
     component: () => import('@/views/app/dorm/unallocated')
   },
+  // 分配
+  {
+    path: '/dorm/allocate',
+    name: 'allocate',
+    component: () => import('@/views/app/dorm/unallocated/dorm-allocate')
+  },
   // 调换审核列表
   {
     path: '/dorm/exchange',

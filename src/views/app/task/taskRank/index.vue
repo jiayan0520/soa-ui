@@ -61,11 +61,11 @@ export default {
     onLoad() {
       this.$api.getTaskStatisticsList({ page: this.page, limit: this.limit }).then((data) => {
         console.log(data)
-        this.list = data.data.content.itemArr
+        this.list = data.rows
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.list.length >= data.data.content.total) {
+        if (this.list.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
       })

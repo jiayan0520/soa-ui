@@ -1,4 +1,4 @@
-import { post, get } from '@/utils/request'
+import { post, get } from '@/core/request'
 
 // 前缀
 const prefix = `/taskModule`

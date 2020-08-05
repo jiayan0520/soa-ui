@@ -8,7 +8,7 @@
         v-if="opLabel"
         type="warning"
         @click="handleOperator">{{ opLabel }}</van-button>
-      <slot name="tool-bar-left"/>
+      <slot name="tool-bar-left" />
     </div>
     <section
       v-if="$slots.top"
@@ -33,15 +33,15 @@
           <van-row
             v-for="(item,index) in dataList"
             :key="index"
-            class="soa-list-item"
-          >
+            class="soa-list-item">
             <div
               v-show="isShowBar"
               class="soa-list-item-checkbox">
               <van-checkbox
                 v-model="item.isCheck"
                 shape="square"
-                @click.native="changeRowCheckbox(item)" />
+                @click.native="changeRowCheckbox(item)"
+              />
             </div>
             <div
               class="soa-list-item-main"
@@ -142,8 +142,10 @@ export default {
     },
     // 加载数据
     loadData() {
-      this.showMoreIndex === -1
-      this.$emit('loadData')
+      if (this.loading) {
+        this.showMoreIndex === -1
+        this.$emit('loadData')
+      }
     },
     // 行复选框点击
     changeRowCheckbox(item) {
@@ -162,12 +164,14 @@ export default {
     },
     // 点击行进入详情页
     handleClick(item) {
-      console.log('handleClick', item, this.detailUrl)
-      const id = item.id
-      this.$router.push({
-        path: this.detailUrl,
-        query: { id }
-      })
+      if (this.detailUrl) {
+        console.log('handleClick', item, this.detailUrl)
+        const id = item.id
+        this.$router.push({
+          path: this.detailUrl,
+          query: { id }
+        })
+      }
     },
     // 管理操作按钮
     handleOperator() {
@@ -198,10 +202,10 @@ export default {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    h3{
+    h3 {
       margin: 0;
     }
-    .btn-check-all{
+    .btn-check-all {
       width: 60px;
       padding: 0;
     }

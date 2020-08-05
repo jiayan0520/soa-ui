@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': {
-        target: 'http://192.168.50.53:8080/', // 正式服务器
+        target: 'http://yuheng.asuscomm.com:2204/', // 正式服务器
         changeOrigin: false,
         secure: false
       }
