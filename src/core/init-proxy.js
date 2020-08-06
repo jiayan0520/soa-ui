@@ -26,16 +26,6 @@ export default function initProxy(store, router) {
       this.config = { method, url, async, user, password, _method }
 
       /* api代理 --- 匹配成功则返回false，拦截open方法 */
-      // 代理支持字符串拼接和自定义函数
-      // 出于兼容和性能考虑 micromatch -> minimatch
-      // 只支持
-      // 通配符：api/v1/**
-      // 参考：http://www.ruanyifeng.com/blog/2018/09/bash-wildcards.html
-      // 扩展：@(em|ebu|ebi)/api/**
-      // 参考：https://www.52cik.com/2018/05/02/bash-extended-globbing.html
-      // e.g. { '/api/**': '/rest' } -> '/rest/api'
-      // e.g. { '/api/**': function (method, url) { return '/custom/api/xxxx' } }
-      // e.g. [{ context: ['/em/**', '/ebu/**'], target: '/rest' }]
       let matched
       // 重写
       if (matched) {
@@ -84,7 +74,7 @@ export default function initProxy(store, router) {
     onreadystatechange() {
       // 拦截401状态
       if (this.readyState === 4 && this.status === 401) {
-        // 如果刷新token不存在，说明未登录或者登录失效，直接注销
+        // 如果刷新token不存在，说明未登录或者登录失效，直接注销重新登录钉钉
         logout('登录状态已过期', this)
         // 告诉代理器不用继续执行原生方法
         return false

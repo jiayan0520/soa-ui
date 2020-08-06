@@ -1,4 +1,3 @@
-// import axios from 'axios'
 import Signer from './utils/Signer'
 // import { Base64 } from 'js-base64'
 import api from '@/api'
@@ -14,22 +13,18 @@ export default function initStore(store, router, cycle) {
   // 标记名称
   const name = 'token'
   // 动态token标记
-  const token = new Signer({ target: 'localStorage', sign, name })
-  // 用户登录标记
-  const fresh = new Signer({ target: 'cookie', sign, name })
+  const token = new Signer({ target: 'cookie', sign, name })
   // 注册状态管理
   store.registerModule(namespace, {
     namespaced: true,
-    state: { token, fresh, user: null, authorized: false },
+    state: { token, user: null, authorized: false },
     getters: {
       // 是否已鉴权
       authorized: state => state.authorized,
       // 用户信息
       user: state => state.user || {},
       // 用户token
-      token: state => state.token,
-      // 刷新token - 作为用户登录标记
-      fresh: state => state.fresh
+      token: state => state.token
     },
     mutations: {
       setAuthorized(state, value) {
@@ -41,14 +36,13 @@ export default function initStore(store, router, cycle) {
       },
       // 设置token信息
       setToken(state, token) {
-        state.token.set(`${token.tokenType} ${token.accessToken}`)
-        state.fresh.set(`${token.refreshToken}`, token.refreshTokenExpiresIn)
+        state.token.set(`Bearer ${token}`)
       }
     },
     actions: {
       async auth({ getters, dispatch }, { path = location.path, msg = '请登录' } = {}) {
         // * 用户是否已登录
-        const isAuthorizedUser = getters.fresh.check()
+        const isAuthorizedUser = getters.token.check()
         // * 是否免鉴权页面
         // 登录路由必须免登录
         const isAuthorizedPath = path === '/login'
@@ -77,7 +71,7 @@ export default function initStore(store, router, cycle) {
         // }
         if (!isAuthorizedUser && !isAuthorizedPath) {
           // token逻辑还未走通，先退回，若是钉钉，需要调用钉钉的登录
-          // router.push('/login')
+          router.push('/login')
           console.warn(msg)
         }
       },
@@ -85,7 +79,6 @@ export default function initStore(store, router, cycle) {
       reset({ getters, commit }) {
         // 清理token信息
         getters.token.clear()
-        getters.fresh.clear()
         // 清理用户信息
         commit('setUser', null)
         // 重置鉴权标记
@@ -119,19 +112,18 @@ export default function initStore(store, router, cycle) {
       // 登录之后的重定向操作由调用登录的组件自行决定
       async login({ getters, commit, dispatch }, { username, password }) {
         const data = {
-          userName: username,
-          userPwd: password
+          username: username,
+          password: password
         }
-        const response = (await api.login(data))
+        const result = (await api.loginTest(data))
         try {
-          const result = response.data.data
-          // 针对部署内外网映射穿透的bug的补丁 v0.3.1 by@wsn
+          console.log(result)
           const token = result.token ? result.token : result
           console.log(token)
           dispatch('reset')
           commit('setToken', token)
         } catch (e) {
-          console.warn(response)
+          console.warn(result)
           throw e
         }
       }

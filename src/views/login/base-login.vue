@@ -51,6 +51,20 @@ export default {
     rememberPassword: {
       type: Boolean,
       default: true
+    },
+    from: {
+      type: [Object, String],
+      default: '/home'
+    }, // 登录之后需要跳转的路由
+    // 登录成功后钩子
+    afterLoginSuccess: {
+      type: Function,
+      default() {
+        this.$router.push({
+          path: this.from.path || this.from,
+          query: this.from.query
+        });
+      }
     }
   },
   data() {
@@ -107,19 +121,14 @@ export default {
         username: loginForm.username,
         password: loginForm.password
       };
-      this.$api.login(data)
-        .then(data => {
-          this.loading = false;
-          this.$store.dispatch('dev5/login', data).then(() => {
-            this.afterLoginSuccess();
-          });
-          this.remember ? this.rememberAccount() : this.removeAccount();
-        })
-        .catch(err => {
-          this.getValidCode();
-          this.loading = false;
-          Toast.fail(err.message);
-        });
+      this.$store.dispatch('core/login', data).then(() => {
+        this.loading = false;
+        this.afterLoginSuccess();
+        this.rememberAccount()
+      }).catch(err => {
+        this.loading = false;
+        Toast.fail(err.message);
+      });
     },
     // 记住密码登录记住账号
     rememberAccount() {
