@@ -56,7 +56,9 @@
         <template #input>
           <van-radio-group
             v-model="formData.formatType"
-            direction="horizontal">
+            direction="horizontal"
+            @change="changeFormatType"
+          >
             <van-radio name="1">字母</van-radio>
             <van-radio name="2">数字</van-radio>
           </van-radio-group>
@@ -126,7 +128,7 @@ export default {
         dormName: null,
         HeadName: null,
         dormType: '1',
-        peopleNum: null,
+        peopleNum: 6,
         formatType: '1',
         bedNames: null,
         cost: 600
@@ -157,6 +159,22 @@ export default {
       this.formData.buildingId = obj.value
       this.formData.buildName = obj.text
       this.isShowSelect = false;
+    },
+    // 宿舍类型改变床位号
+    changeFormatType() {
+      if (this.formData.peopleNum) {
+        const bedNameList = []
+        if (this.formData.dormType === '1') {
+          for (let i = 1; i <= this.formData.peopleNum; i++) {
+            bedNameList.push(i)
+          }
+        } else {
+          for (let i = 1; i <= this.formData.peopleNum; i++) {
+            bedNameList.push(i)
+          }
+        }
+        this.formData.bedNames.join(',')
+      }
     },
     getDetail() {
       this.$api.getDormDetail({ id: this.id }).then(data => {

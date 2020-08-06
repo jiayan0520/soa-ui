@@ -47,28 +47,14 @@ export default function initStore(store, router, cycle) {
         // 登录路由必须免登录
         const isAuthorizedPath = path === '/login'
         // *** 路由权限逻辑
-        // * 已登录
-        //   * 授权页面：sync 初始化用户/菜单
-        //   * 非授权页面：sync 初始化用户/菜单
-        // * 未登录
-        //   * 授权页面：直接渲染
-        //     * -> push(未授权页面) -> 如何跳转到登录页面？
-        //       1. 路由勾子（动态鉴权）
-        //       2. ...
-        //     * -> push(授权页面) -> 不做处理
         //   * 非授权页面：引导到登录页面
         if (isAuthorizedUser && isAuthorizedPath) {
-          // 如果是白名单页面，比如门户，大屏，则做异步权限加载
-          // 若发现某个页面对user和menus的依赖是非异步的，再考虑改成await
           dispatch('boot')
         }
         if (isAuthorizedUser && !isAuthorizedPath) {
-          // 如果是需权限页面，比如表单，gis模块（区划信息），同步加载权限
           await dispatch('boot')
         }
-        // if (!isAuthorizedUser && isAuthorizedPath) {
-        //   console.log('do nothing')
-        // }
+        console.log(3333, path, isAuthorizedUser)
         if (!isAuthorizedUser && !isAuthorizedPath) {
           // token逻辑还未走通，先退回，若是钉钉，需要调用钉钉的登录
           router.push('/login')
@@ -104,6 +90,7 @@ export default function initStore(store, router, cycle) {
 
         // 每次鉴权成功后的固定循环
         await cycle(store, router)
+        console.log(222222222222)
         // 鉴权完毕，设置标记
         commit('setAuthorized', true)
       },

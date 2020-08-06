@@ -37,7 +37,7 @@ export default function init(
     // 初始化接口代理
     initProxy(store, router)
     // 初始化钉钉授权一些api
-    initDdSign()
+    initDdSign(store, router)
     // 钉钉登录
     initDD(store, router).then(() => {
       // 初始化vue根实例

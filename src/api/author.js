@@ -7,14 +7,11 @@ function loginTest(params) {
 }
 // 钉钉登录
 function getAuthLogin(params) {
-  return get(`${prefix}/loginTest`, params)
+  return get(`${prefix}//getUserId`, params)
 }
 // 获取钉钉钉签名信息
 function getAppInfo(params) {
   return get(`${prefix}/getAppInfo`, params)
-}
-function getUserId(params) {
-  return get(`${prefix}/getUserId`, params)
 }
 // 获取用户信息
 function getUserInfo(params) {
@@ -24,6 +21,5 @@ export {
   loginTest,
   getAuthLogin,
   getAppInfo,
-  getUserId,
   getUserInfo
 }
