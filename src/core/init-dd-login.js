@@ -1,5 +1,6 @@
 import api from '@/api'
 import * as $dd from 'dingtalk-jsapi';
+import { Toast } from 'vant'
 /**
  * 初始化钉钉信息
  */
@@ -19,11 +20,36 @@ export default async function initDD(store, router) {
         console.log(err)
       });
     }
+    const showLoading = () => {
+      /* 1.授权免登加载中 */
+      if ($dd.ios || $dd.android) {
+        // 钉钉移动端
+        $dd.device.notification.showPreloader({
+          text: '正在验证身份中，请稍后..',
+          showIcon: true
+        });
+      } else {
+        // 钉钉PC端
+        Toast.loading({
+          duration: 0, // 持续展示 toast
+          forbidClick: true,
+          message: '正在验证身份中，请稍后..'
+        })
+      }
+    }
+    const closeLoading = () => {
+      if ($dd.ios || $dd.android) {
+        $dd.device.notification.hidePreloader({});
+      } else {
+        Toast.clear()
+      }
+    }
     if ($dd.env.platform === 'notInDingTalk') {
       // alert('请用钉钉打开！');
       console.log('【框架日志】非钉钉环境')
       resolve(true);
     } else {
+      showLoading()
       // 将调用钉钉的接口先进行签名
       console.log('【框架日志】1.钉钉授权码获取');
       $dd.ready(() => {
@@ -35,15 +61,12 @@ export default async function initDD(store, router) {
             // cookie.set('auth_code', code);
             console.log('【框架日志】1.1获取微应用免登授权码成功：' + code);
             loginByDDCode(code).then(() => {
+              closeLoading()
               resolve(true);
             });
           },
           onFail: err => {
-            if ($dd.ios || $dd.android) {
-              $dd.device.notification.hidePreloader({});
-            } else {
-              // this.$vux.loading.hide();
-            }
+            closeLoading()
             // alert('requestAuthCode fail: ' + err.errorMessage);
             alert('requestAuthCode fail: ' + JSON.stringify(err));
             resolve(false)

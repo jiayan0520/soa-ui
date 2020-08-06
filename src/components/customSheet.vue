@@ -1,7 +1,7 @@
 <template>
   <div class="soa-custom-sheet">
     <van-field
-      v-model="value"
+      v-model="selectValue"
       :readonly="true"
       :label="label"
       right-icon="arrow"
@@ -35,13 +35,26 @@ export default {
   },
   data() {
     return {
-      show: false
+      show: false,
+      selectValue: this.actions[0].name
+    }
+  },
+  watch: {
+    value: {
+      handler: function(val, oldval) {
+        const selectItem = this.actions.filter((item) => {
+          return val === item.id;
+        })
+        selectItem.length && (this.selectValue = selectItem[0].name);
+      },
+      immediate: true
     }
   },
   methods: {
     handleSelect(item) {
       this.show = false;
-      this.$emit('input', item.name)
+      this.selectValue = item.name
+      this.$emit('input', item.id)
     }
   }
 }
