@@ -3,9 +3,15 @@
     <van-form
       class="soa-custom-form"
       @submit="onSubmit">
-      <custom-cell
-        value="福州生活1区1号楼"
-        title="楼栋名称" />
+      <van-field
+        :readonly="true"
+        v-model="formData.buildName"
+        center
+        label="楼栋名称"
+        right-icon="arrow"
+        placeholder="请选择"
+        @click="isShowSelect=true"
+      />
       <van-field
         v-model="formData.dormName"
         :rules="[{ required: true, message: '请输入宿舍名称' }]"
@@ -83,6 +89,17 @@
           native-type="submit">提交</van-button>
       </div>
     </van-form>
+    <van-popup
+      v-model="isShowSelect"
+      position="bottom"
+      style="min-height: 20% ">
+      <van-picker
+        :columns="floorList"
+        show-toolbar
+        @confirm="onConfirm"
+        @cancel="isShowSelect = false"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -96,12 +113,16 @@ export default {
   props: {
     id: {
       type: String,
-      default: ''
+      default: null
     }
   },
   data() {
     return {
+      isAdd: false, // 是否是新增
+      isShowSelect: false, // 下拉选择楼栋
       formData: {
+        buildingId: '123333',
+        buildName: '福州生活1区1号楼',
         dormName: null,
         HeadName: null,
         dormType: '1',
@@ -109,7 +130,18 @@ export default {
         formatType: '1',
         bedNames: null,
         cost: 600
-      }
+      },
+      floorList: [
+        { value: '123333', text: '福州生活1区1号楼' }
+      ],
+      data: {}
+    }
+  },
+  created() {
+    if (!this.id) {
+      this.isAdd = true
+    } else {
+      this.getDetail()
     }
   },
   methods: {
@@ -119,10 +151,24 @@ export default {
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
       console.log('handleExecutorClick')
+    },
+    // 选择楼栋内容
+    onConfirm(obj) {
+      this.formData.buildingId = obj.value
+      this.formData.buildName = obj.text
+      this.isShowSelect = false;
+    },
+    getDetail() {
+      this.$api.getDormDetail({ id: this.id }).then(data => {
+        console.log(data)
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
+.dorm-edit {
+  padding-top: 20px;
+}
 </style>

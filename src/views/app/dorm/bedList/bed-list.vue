@@ -174,8 +174,8 @@ export default {
         searchValue: ''
       },
       dataList: [],
-      pageIndex: 0, // 前端分页页码
-      pageSize: 10,
+      page: 0, // 前端分页页码
+      limit: 10,
       pageTotal: 9999, // 总页数
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
@@ -194,8 +194,8 @@ export default {
     params() {
       return {
         ...this.searchForm,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        page: this.page,
+        limit: this.limit
       }
     }
   },
@@ -224,13 +224,13 @@ export default {
       this.showMore = false
     },
     onSearch() {
-      this.pageIndex = 0
+      this.page = 0
       this.pageTotal = 9999
       this.dataList = []
       this.loadData()
     },
     loadData() {
-      this.pageIndex++;
+      this.page++;
       const dataList = []
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
@@ -253,7 +253,7 @@ export default {
         if (this.dataList.length >= 20) {
           this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
+        // if (this.dataList.length < this.limit) {
         //     this.$refs.cardList.finished = true;
         //   }
       }, 1000)

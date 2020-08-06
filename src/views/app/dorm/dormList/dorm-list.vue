@@ -25,6 +25,10 @@
           </van-button>
           <van-button
             class="btn-op"
+            type="info"
+            @click="add">新增</van-button>
+          <van-button
+            class="btn-op"
             type="info">清空宿舍</van-button>
           <van-button
             class="btn-op"
@@ -222,6 +226,11 @@ export default {
         //     this.$refs.cardList.finished = true;
         //   }
       }, 1000)
+    },
+    // 新增
+    add() {
+      this.isShowEditPopup = true
+      this.rowId = null
     }
   }
 }
@@ -229,6 +238,6 @@ export default {
 
 <style lang="scss">
 .dorm-list {
- height: 100%;
+  height: 100%;
 }
 </style>
