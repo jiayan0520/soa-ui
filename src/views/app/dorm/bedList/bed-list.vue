@@ -191,6 +191,9 @@ export default {
     user() {
       return this.$store.getters['core/user'] || {};
     },
+    system() {
+      return this.$store.getters['core/system']
+    },
     params() {
       return {
         ...this.searchForm,
@@ -200,7 +203,7 @@ export default {
     }
   },
   created() {
-    console.log(this.user)
+    console.log(this.user, this.system)
   },
   methods: {
     // 复选框选择所有

@@ -19,8 +19,9 @@
         name="请输入任务内容"
         placeholder="请输入任务内容"
       />
+      <!-- :disabledUsers="[userid]" -->
       <people-picker
-        v-model="form.soaTaskPerform"
+        v-model="form.executor"
         title="执行人"
         @complexPickerParent="handlePicker"/>
       <van-field
@@ -31,6 +32,8 @@
         <template #input>
           <van-switch
             v-model="form.isRemind"
+            active-value="Y"
+            inactive-value="N"
             size="20" />
         </template>
       </van-field>
@@ -98,6 +101,7 @@ import peoplePicker from '@/components/peoplePicker'
 import customSheet from '@/components/customSheet'
 import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
+import { criticalActions, infoActions, weightActions } from './enum'
 // import formatData from '@/utils/index.js'
 export default {
   name: 'AddTask',
@@ -110,25 +114,24 @@ export default {
   data() {
     return {
       form: {
-        annexId: [],
-        title: '',
-        content: '',
-        soaTaskPerform: '', // 执行人
-        isRemind: true,
+        annexId: '',
+        title: '任务1',
+        content: '任务1',
+        executor: '', // 执行人
+        isRemind: 'Y',
         deadline: '',
-        dueReminder: '不提醒',
-        emergencyCoefficient: '特急',
-        difficulty: '1.0',
-        searcher: '', // 可查阅人
+        dueReminder: 'NOT_NOTICE',
+        emergencyCoefficient: 'GENERAL',
+        difficulty: 'DICFFICULTY1',
+        reader: '', // 可查阅人
         files: [], // 附件
         subTasks: []
       },
       showModal: false,
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
-      criticalActions: [{ name: '特急' }, { name: '紧急' }, { name: '一般' }, { name: '不急' }],
-      infoActions: [{ name: '不提醒' }, { name: '截止15分钟' }, { name: '截止1小时' }, { name: '截止3小时' }, { name: '截止前1天' }],
-      weightActions: [{ name: '1.0' }, { name: '1.1' }, { name: '1.2' }, { name: '1.3' },
-        { name: '1.4' }, { name: '1.5' }, { name: '1.6' }, { name: '1.7' }, { name: '1.8' }, { name: '1.9' }, { name: '2.0' }],
+      criticalActions,
+      infoActions,
+      weightActions,
       editObj: null
     }
   },
@@ -145,14 +148,20 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.form.annexId = []
-      console.log('上传文件', this.form.files)
-      this.form.files.forEach((item) => {
-        this.$api.upload(item).then((res) => {
-          console.log('上传组件', res)
-          this.form.annexId.push(res.data.annexId)
-        })
-      })
+      console.log('任务form', this.form)
+      // this.form.annex = []
+      // console.log('上传文件', this.form.files)
+      // if (this.form.files.length) {
+      //   this.form.files.forEach((item) => {
+      //     this.$api.upload(item).then((res) => {
+      //       console.log('上传组件', res)
+      //       res.data.annexId = '59dd9cfedf93495397d6b34ed0d86b3e'
+      //       res.data.type = 'task'
+      //       this.form.annex.push(res.data)
+      //       this.$api.annex(this.form.annex).then((res) => { console.log(res) })
+      //     })
+      //   })
+      // }
     },
 
     handlePicker(people, departments) {

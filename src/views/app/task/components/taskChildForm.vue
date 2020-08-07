@@ -103,6 +103,7 @@
 import DatePicker from 'vue2-datepicker'
 import peoplePicker from '@/components/peoplePicker'
 import customSheet from '@/components/customSheet'
+import { criticalActions, infoActions, weightActions } from '../addTask/enum'
 import dayjs from 'dayjs'
 export default {
   name: 'TaskChild',
@@ -144,10 +145,9 @@ export default {
       },
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
       showModal: false,
-      criticalActions: [{ name: '特急' }, { name: '紧急' }, { name: '一般' }, { name: '不急' }],
-      infoActions: [{ name: '不提醒' }, { name: '截止15分钟' }, { name: '截止1小时' }, { name: '截止3小时' }, { name: '截止前1天' }],
-      weightActions: [{ name: '1.0' }, { name: '1.1' }, { name: '1.2' }, { name: '1.3' },
-        { name: '1.4' }, { name: '1.5' }, { name: '1.6' }, { name: '1.7' }, { name: '1.8' }, { name: '1.9' }, { name: '2.0' }],
+      criticalActions,
+      infoActions,
+      weightActions,
       fileList: []
     }
   },

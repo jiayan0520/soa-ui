@@ -127,7 +127,7 @@ export default {
         this.rememberAccount()
       }).catch(err => {
         this.loading = false;
-        Toast.fail(err.message);
+        Toast.fail(err);
       });
     },
     // 记住密码登录记住账号

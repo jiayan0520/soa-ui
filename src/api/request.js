@@ -18,8 +18,10 @@ service.interceptors.request.use(config => {
 
 // respone拦截器
 service.interceptors.response.use(response => {
-  // store.commit('updateLoadingStatus', { isLoading: true })
   const resData = response.data || {};
+  if (resData.code >= 300) {
+    return Promise.reject(resData.msg)
+  }
   if (resData.rows && resData.total) {
     resData.data = {
       rows: response.rows,

@@ -61,11 +61,10 @@ export default function initStore(store, router, cycle) {
         if (isAuthorizedUser && !isAuthorizedPath) {
           await dispatch('boot')
         }
-        console.log(3333, path, isAuthorizedUser)
         if (!isAuthorizedUser && !isAuthorizedPath) {
           // token逻辑还未走通，先退回，若是钉钉，需要调用钉钉的登录
           router.push('/login')
-          console.warn(msg)
+          console.warn('【框架日志】' + msg)
         }
       },
       // 重置
@@ -89,15 +88,14 @@ export default function initStore(store, router, cycle) {
           try {
             const user = (await api.getUserInfo())
             commit('setUser', user)
-            console.log('用户信息初始化完成：', user)
+            console.log('【框架日志】用户信息初始化完成：', user)
           } catch (e) {
-            console.error('获取用户信息失败，请联系管理员', e)
+            console.error('【框架日志】获取用户信息失败，请联系管理员', e)
           }
         }
 
         // 每次鉴权成功后的固定循环
         await cycle(store, router)
-        console.log(222222222222)
         // 鉴权完毕，设置标记
         commit('setAuthorized', true)
       },
@@ -109,20 +107,18 @@ export default function initStore(store, router, cycle) {
           username: username,
           password: password
         }
-        const result = (await api.loginTest(data))
+        const response = (await api.loginTest(data))
         try {
-          console.log(result)
-          const token = result.token ? result.token : result
-          console.log(token)
+          const token = response.token ? response.token : response
           dispatch('reset')
           commit('setToken', token)
         } catch (e) {
-          console.warn(result)
+          console.warn('【框架日志】' + response)
           throw e
         }
       }
     }
   })
 
-  console.log('框架状态初始化完成：', store)
+  console.log('【框架日志】框架状态初始化完成：', store)
 }
