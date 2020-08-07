@@ -8,8 +8,9 @@ import api from '@/api'
 export default function initStore(store, router, cycle) {
   // 全局命名空间
   const namespace = 'core'
-
-  const sign = 'soa_' + location.port
+  const system = window.$soa
+  // token记录标识
+  const sign = system.sign
   // 标记名称
   const name = 'token'
   // 动态token标记
@@ -17,8 +18,10 @@ export default function initStore(store, router, cycle) {
   // 注册状态管理
   store.registerModule(namespace, {
     namespaced: true,
-    state: { token, user: null, authorized: false },
+    state: { system, token, user: null, authorized: false },
     getters: {
+      // 系统配置
+      system: state => state.system,
       // 是否已鉴权
       authorized: state => state.authorized,
       // 用户信息
@@ -27,6 +30,10 @@ export default function initStore(store, router, cycle) {
       token: state => state.token
     },
     mutations: {
+      // 设置系统配置
+      setSystem(state, system) {
+        state.system = system
+      },
       setAuthorized(state, value) {
         state.authorized = value
       },
