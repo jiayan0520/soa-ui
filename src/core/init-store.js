@@ -1,6 +1,7 @@
 import Signer from './utils/Signer'
 // import { Base64 } from 'js-base64'
 import api from '@/api'
+import initDD from './init-dd-login'
 
 /**
  * 初始化状态管理
@@ -62,8 +63,12 @@ export default function initStore(store, router, cycle) {
           await dispatch('boot')
         }
         if (!isAuthorizedUser && !isAuthorizedPath) {
-          // token逻辑还未走通，先退回，若是钉钉，需要调用钉钉的登录
-          router.push('/login')
+          // 非钉钉环境直接跳回到登录页，若是钉钉，需要调用钉钉的登录
+          const result = (await initDD(store, router))
+          console.log(result)
+          if (!result) {
+            router.push('/login')
+          }
           console.warn('【框架日志】' + msg)
         }
       },

@@ -46,7 +46,7 @@ export default async function initDD(store, router) {
     if ($dd.env.platform === 'notInDingTalk') {
       // alert('请用钉钉打开！');
       console.log('【框架日志】非钉钉环境')
-      resolve(true);
+      resolve(false);
     } else {
       showLoading()
       // 将调用钉钉的接口先进行签名

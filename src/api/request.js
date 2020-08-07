@@ -35,14 +35,8 @@ service.interceptors.response.use(response => {
     Toast('请求超时,请稍后重试!');
     return Promise.reject(error)
   }
-  let errorText;
-  if (typeof error.response !== 'undefined' && typeof error.response.data !== 'undefined' && typeof error.response.data.error !== 'undefined') {
-    errorText = error.response.data.error.errorText;
-  } else {
-    errorText = error;
-  }
   // Toast('服务器异常,请稍后重试!');
-  return Promise.reject(errorText)
+  return Promise.reject(error)
 }
 );
 

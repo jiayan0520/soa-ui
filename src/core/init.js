@@ -34,19 +34,20 @@ export default function init(
     console.log('【框架日志】初始化参数：', { store, router, plugins, hooks, cycle })
     console.time('【框架日志】框架开销')
     // 初始化系统配置
-    initSystem()
-    // 初始化状态管理
-    initStore(store, router, cycle)
-    // 初始化接口代理
-    initProxy(store, router)
-    // 初始化钉钉授权一些api
-    initDdSign(store, router)
-    // 钉钉登录
-    initDD(store, router).then(() => {
-      // 初始化vue根实例
-      initVue(store, router, plugins, hooks)
+    initSystem(store, router).then(() => {
+      // 初始化状态管理
+      initStore(store, router, cycle)
+      // 初始化接口代理
+      initProxy(store, router)
+      // 初始化钉钉授权一些api
+      initDdSign(store, router)
+      // 钉钉登录,并初始化实例
+      initDD(store, router).then(() => {
+        // 初始化vue根实例
+        initVue(store, router, plugins, hooks)
+      })
+      console.timeEnd('【框架日志】框架开销')
+      resolve()
     })
-    console.timeEnd('【框架日志】框架开销')
-    resolve()
   })
 }
