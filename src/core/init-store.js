@@ -44,7 +44,7 @@ export default function initStore(store, router, cycle) {
       },
       // 设置token信息
       setToken(state, token) {
-        state.token.set(`Bearer ${token}`)
+        state.token.set(`Bearer ${token}`, 600000) // 86400秒=24小时
       }
     },
     actions: {
@@ -65,7 +65,6 @@ export default function initStore(store, router, cycle) {
         if (!isAuthorizedUser && !isAuthorizedPath) {
           // 非钉钉环境直接跳回到登录页，若是钉钉，需要调用钉钉的登录
           const result = (await initDD(store, router))
-          console.log(result)
           if (!result) {
             router.push('/login')
           }

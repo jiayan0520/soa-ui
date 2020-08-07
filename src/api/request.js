@@ -28,7 +28,6 @@ service.interceptors.response.use(response => {
       total: response.total
     }
   }
-  // console.log(111, resData.data)
   return resData.data
 }, error => {
   if (error && error.stack && error.stack.indexOf('timeout') !== -1) {
