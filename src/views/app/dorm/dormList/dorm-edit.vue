@@ -80,7 +80,9 @@
             :rules="[{ required: true, message: '请输入每人每年费用' }]"
             style="padding:0"
           />
-          <span class="unit">(元/人/年)</span>
+          <span
+            class="unit"
+            style="width:80px">(元/人/年)</span>
         </template>
       </van-field>
       <van-divider />
@@ -139,9 +141,22 @@ export default {
       data: {}
     }
   },
+  computed: {
+    peopleNum() {
+      return this.formData.peopleNum
+    }
+  },
+  watch: {
+    peopleNum() {
+      if (this.isAdd) {
+        this.changeFormatType()
+      }
+    }
+  },
   created() {
     if (!this.id) {
       this.isAdd = true
+      this.changeFormatType()
     } else {
       this.getDetail()
     }
@@ -162,18 +177,21 @@ export default {
     },
     // 宿舍类型改变床位号
     changeFormatType() {
+      console.log(this.formData.formatType)
       if (this.formData.peopleNum) {
         const bedNameList = []
-        if (this.formData.dormType === '1') {
+        if (this.formData.formatType === '2') {
+          // 数字
           for (let i = 1; i <= this.formData.peopleNum; i++) {
             bedNameList.push(i)
           }
         } else {
-          for (let i = 1; i <= this.formData.peopleNum; i++) {
-            bedNameList.push(i)
+          // 字母
+          for (let i = 0; i < this.formData.peopleNum; i++) {
+            bedNameList.push(String.fromCharCode(i + 65))
           }
         }
-        this.formData.bedNames.join(',')
+        this.formData.bedNames = bedNameList.join(',')
       }
     },
     getDetail() {

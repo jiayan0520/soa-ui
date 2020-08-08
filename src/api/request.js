@@ -18,8 +18,10 @@ service.interceptors.request.use(config => {
 
 // respone拦截器
 service.interceptors.response.use(response => {
-  // store.commit('updateLoadingStatus', { isLoading: true })
   const resData = response.data || {};
+  if (resData.code >= 300) {
+    return Promise.reject(resData.msg)
+  }
   if (resData.rows && resData.total) {
     resData.data = {
       rows: resData.rows,
@@ -32,14 +34,8 @@ service.interceptors.response.use(response => {
     Toast('请求超时,请稍后重试!');
     return Promise.reject(error)
   }
-  let errorText;
-  if (typeof error.response !== 'undefined' && typeof error.response.data !== 'undefined' && typeof error.response.data.error !== 'undefined') {
-    errorText = error.response.data.error.errorText;
-  } else {
-    errorText = error;
-  }
   // Toast('服务器异常,请稍后重试!');
-  return Promise.reject(errorText)
+  return Promise.reject(error)
 }
 );
 
