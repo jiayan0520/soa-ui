@@ -1,6 +1,6 @@
 import { uploadFile, post } from './request'
 // 前缀
-const prefix = `/common`
+const prefix = `/prod-api/common`
 
 function upload(params) {
   return uploadFile(`${prefix}/upload`, params)

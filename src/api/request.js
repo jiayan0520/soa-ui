@@ -22,11 +22,10 @@ service.interceptors.response.use(response => {
   const resData = response.data || {};
   if (resData.rows && resData.total) {
     resData.data = {
-      rows: response.rows,
-      total: response.total
+      rows: resData.rows,
+      total: resData.total
     }
   }
-  // console.log(111, resData.data)
   return resData.data
 }, error => {
   if (error && error.stack && error.stack.indexOf('timeout') !== -1) {
@@ -77,13 +76,12 @@ export function uploadFile(url, params = {}) {
         'Content-Type': 'multipart/form-data'
       }
     }).then(res => {
+      Toast.fail('上传文件失败');
       Toast.clear()
-      if (res.data.code !== 200) {
-        Toast(res.data.message);
-        reject(res.data.message);
-        return;
-      }
       resolve(res.data)
+    }).catch((e) => {
+      Toast.fail('上传文件失败');
+      reject();
     })
   })
 }
