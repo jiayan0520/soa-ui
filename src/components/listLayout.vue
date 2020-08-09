@@ -58,11 +58,14 @@
               <ul
                 v-if="showMoreIndex === index"
                 class="soa-op__dropdown">
-                <li
+                <div
                   v-for="btn in moreOpList"
-                  :key="btn.index"
-                  @click.stop="clickMoreBtn(btn.value,item)"
-                >{{ btn.label }}</li>
+                  :key="btn.index">
+                  <li
+                    v-if="showMoreOpItem(item,btn)"
+                    @click.stop="clickMoreBtn(btn.value,item)"
+                  >{{ btn.label }}</li>
+                </div>
               </ul>
             </div>
           </van-row>
@@ -132,9 +135,18 @@ export default {
   created() {
   },
   methods: {
+    // 控制是否显示按钮
+    showMoreOpItem(item, btn) {
+      let isShow = true
+      const allowStatus = btn.allowStatus
+      allowStatus && Reflect.ownKeys(allowStatus).forEach(function(key) {
+        if (!(item[key] && allowStatus[key].includes(item[key]))) { isShow = false }
+      });
+      return isShow
+    },
     // 下拉刷新
     onRefresh() {
-      this.showMoreIndex === -1
+      this.showMoreIndex = -1
       setTimeout(() => {
         this.refreshing = false
         this.$emit('search')
@@ -143,7 +155,7 @@ export default {
     // 加载数据
     loadData() {
       if (this.loading) {
-        this.showMoreIndex === -1
+        this.showMoreIndex = -1
         this.$emit('loadData')
       }
     },

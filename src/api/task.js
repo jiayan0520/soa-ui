@@ -11,8 +11,8 @@ function getTaskList(params) {
   return get(`${prefix}/task/list`, params)
 }
 // 任务详情
-function getTaskDetail(id) {
-  return get(`${prefix}/task/${id}`)
+function getTaskDetail(params) {
+  return get(`${prefix}/task/${params}`)
 }
 // 删除任务
 // function deleteTask(ids) {
@@ -27,11 +27,21 @@ function getTaskExamineList(params) {
   return get(`${prefix}/audit/list`, params)
 }
 // 任务审核详情
-function getTaskExaminDetail(id) {
-  return post(`${prefix}/audit/getInfo`, id)
+function getTaskExaminDetail(params) {
+  return post(`${prefix}/audit/getInfo`, params)
 }
+
 // 保存审核结果
 function saveTaskExamine(params) {
+  return post(`${prefix}/audit/saveTaskAudit`, params)
+}
+
+// 任务反馈详情
+function getTaskFeedbackInfo(params) {
+  return post(`${prefix}/audit/getTaskFeedbackInfo`, params)
+}
+// 任务反馈提交
+function saveTaskFeedbackInfo(params) {
   return post(`${prefix}/audit/saveTaskAudit`, params)
 }
 export {
@@ -42,5 +52,7 @@ export {
   getTaskStatisticsList,
   getTaskExamineList,
   getTaskExaminDetail,
-  saveTaskExamine
+  getTaskFeedbackInfo,
+  saveTaskExamine,
+  saveTaskFeedbackInfo
 }

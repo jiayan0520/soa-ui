@@ -107,7 +107,7 @@ import customSheet from '@/components/customSheet'
 import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
 import { Toast } from 'vant';
-import { uuid32 } from '@/utils/index.js'
+import { uuid32, uploadFile } from '@/utils/index.js'
 import { criticalActions, infoActions, weightActions } from './enum'
 export default {
   name: 'AddTask',
@@ -174,7 +174,9 @@ export default {
       const annexList = []
       const parentAnnexId = uuid32()
       for (var i = 0; i < this.form.files.length; i++) {
-        await this.uploadTask(this.form.files[i], parentAnnexId).then(() => {}).catch((e) => {
+        await uploadFile(this.form.files[i], parentAnnexId).then((res) => {
+          annexList.push(res)
+        }).catch((e) => {
           throw e
         });
       }
@@ -197,7 +199,7 @@ export default {
       const subAnnexList = []
       const subAnnexId = uuid32()
       for (var i = 0; i < files.length; i++) {
-        await this.uploadTask(files[i], subAnnexId).then((res) => {
+        await uploadFile(files[i], subAnnexId).then((res) => {
           subAnnexList.push(res)
         }).catch((e) => {
           throw e
@@ -206,16 +208,6 @@ export default {
       subAnnexList.length && await this.$api.annex(subAnnexList).then((res) => {
         this.form.subTasks[index].annexId = subAnnexId
       }).catch((e) => { throw e })
-    },
-    // 统一上传方法
-    uploadTask(file, annexId) {
-      return new Promise((resolve, reject) => {
-        this.$api.upload(file).then((res) => {
-          res.annexId = annexId
-          res.type = 'task'
-          resolve(res)
-        }).catch(() => { reject() })
-      })
     },
     onSubmit() {
       Toast.loading('任务创建中，请稍后...')

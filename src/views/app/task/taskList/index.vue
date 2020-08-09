@@ -5,7 +5,7 @@
       :more-op-list="moreOpList"
       :data-list="dataList"
       :detail-url="detailUrl"
-      :op-label="!active && '任务结算'"
+      :op-label="(!active && '任务结算') || ''"
       title="任务列表"
       class="soa-task-list"
       @search="onSearch"
@@ -49,7 +49,7 @@
             <span class="c-info">{{ slotProps.item.createUserId }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
             <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div>
           </div>
-          <div :class="[stateMap[slotProps.item.state]]">{{ slotProps.item.state }}</div>
+          <div :class="[taskStatus[slotProps.item.state].type]">{{ taskStatus[slotProps.item.state].label }}</div>
         </div>
       </template>
     </list-layout>
@@ -67,6 +67,7 @@
 <script>
 import listLayout from '@/components/listLayout'
 import addTask from '../addTask/index'
+import { taskStatus } from '../components/taskEnum'
 export default {
   name: 'TaskList',
   components: {
@@ -75,6 +76,7 @@ export default {
   },
   data() {
     return {
+      taskStatus,
       active: 0,
       active1: 0,
       isShowEditPopup: false,
@@ -82,11 +84,6 @@ export default {
       dataList: [],
       tab: ['我发布的', '我收到的'],
       tab1: ['未完成', '已完成', '所有'],
-      stateMap: {
-        '未完成': 'c-warm',
-        '已完成': 'c-success',
-        '任务失败': 'c-danger'
-      },
       limit: 20, // 每页行数
       page: 1 // 当前页码 total 总条数
     }
@@ -97,12 +94,12 @@ export default {
     },
     moreOpList() {
       const publishOp = [
-        { value: 'edit', label: '编辑' },
+        { value: 'edit', label: '编辑', allowStatus: { state: ['NUFINISHED'] }},
         { value: 'delete', label: '删除' },
-        { value: 'fail', label: '任务失败' }
+        { value: 'fail', label: '任务失败', allowStatus: { state: ['NUFINISHED'] }}
       ]
       const reOp = [
-        { value: 'submit', label: '提交' }
+        { value: 'submit', label: '提交', allowStatus: { state: ['NUFINISHED'] }}
       ]
       return this.active ? reOp : publishOp
     }
@@ -128,12 +125,12 @@ export default {
     onLoad() {
       // 异步更新数据
       this.$api.getTaskList({ page: this.page, limit: this.limit }).then((data) => {
-        console.log(data)
-        this.dataList = data.data.rows;
+        this.dataList = (data && data.rows) || [];
+        const total = (data && data.total) || 0;
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.dataList.length >= data.data.total) {
+        if (this.dataList && (this.dataList.length >= total)) {
           this.$refs.listLayout.finished = true
         }
       })
@@ -153,7 +150,10 @@ export default {
         case 'fail':
           break
         case 'submit':
-          this.$router.push('/task-list-feekback')
+          this.$router.push({
+            path: '/task-list-feekback',
+            query: { id: item.id }
+          })
           break
       }
     },

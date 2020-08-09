@@ -1,28 +1,28 @@
 <template>
   <div class="soa-task-feedback">
     <custom-cell
-      :value="params.promoter"
+      :value="feedInfo.createUserName"
       title="发起人"/>
     <custom-cell
-      :value="params.task"
+      :value="feedInfo.title"
       title="任务名称"/>
     <custom-cell
-      :value="params.detail"
+      :value="feedInfo.content"
       title="任务详情"/>
     <custom-cell
-      :value="params.deadline"
+      :value="feedInfo.deadline"
       title="截止时间"/>
     <custom-cell
       title="任务状态">
       <template slot="value">
-        <div class="c-warm">未完成</div>
+        <div :class="[taskStatus[feedInfo.state].type]">{{ taskStatus[feedInfo.state].label }}</div>
       </template>
     </custom-cell>
     <custom-cell
-      :value="params.remark"
+      :value="feedInfo.remark"
       title="备注"/>
     <van-field
-      v-model="message"
+      v-model="form.content"
       rows="5"
       autosize
       label=""
@@ -31,11 +31,10 @@
     />
     <custom-cell title="附件信息">
       <template slot="value">
-        <a
-          v-for="(item,index) in params.file"
-          :key="index"
-          :href="item.url"
-          download="w3logo">{{ item.fileName }}</a>
+        <van-uploader
+          v-model="form.files"
+          upload-icon="upgrade"
+          accept="*"/>
       </template>
     </custom-cell>
     <div>
@@ -43,7 +42,7 @@
         block
         type="info"
         native-type="submit"
-        @click="bindSubmit">
+        @click="feedSubmit">
         提交
       </van-button>
     </div>
@@ -52,6 +51,9 @@
 
 <script>
 import customCell from '@/components/customCell'
+import { taskStatus } from '../components/taskEnum'
+import { uuid32, uploadFile } from '@/utils/index.js'
+import { Toast } from 'vant'
 export default {
   name: 'FeekBack',
   components: {
@@ -59,30 +61,68 @@ export default {
   },
   data() {
     return {
+      id: '',
+      taskStatus,
       message: '',
-      params: {
-        promoter: '李晓明',
-        task: '收集党员信息',
-        detail: '请各位尽快收拾好党员信息，按照excel表格里要求的数据进行填写',
-        remark: '审核不通过原因：没有附件',
-        deadline: '2020年6月19日 18时00分',
-        file: [{ url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }, { url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }]
+      feedInfo: {
+        createUserName: '',
+        title: '',
+        content: '',
+        remark: '',
+        deadline: '',
+        state: 'NUFINISHED'
       },
-      stateMap: {
-        '未完成': 'c-danger',
-        '待审核': 'c-warm',
-        '已完成': 'c-success'
+      form: {
+        content: '',
+        files: []
       }
     }
   },
+  created() {
+    console.log(this.$route.query.id)
+    // this.id = this.$route.query.id
+    this.form.taskPerformId = '1c0a3a5184074527973dfe6106085feb'
+    this.init()
+  },
   methods: {
-    bindSubmit() {
-      console.log('提交')
+    init() {
+      Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中...'
+      })
+      this.$api.getTaskFeedbackInfo({ id: this.form.taskPerformId }).then((res) => {
+        this.feedInfo = res;
+        Toast.clear()
+      }).catch((err) => {
+        Toast.clear()
+        Toast.fail(err)
+      })
+    },
+    async handleData() {
+      const annexList = []
+      const annexId = uuid32()
+      for (var i = 0; i < this.form.files.length; i++) {
+        await uploadFile(this.form.files[i], annexId).then((res) => {
+          annexList.push(res)
+        }).catch((e) => {
+          throw e
+        });
+      }
+      annexList.length && await this.$api.annex(annexList).then((res) => {
+        this.form.annexId = annexId
+      }).catch((e) => { throw e })
+    },
+    feedSubmit() {
+      Toast.loading('提交中，请稍后...')
+      this.handleData().then(() => {
+        this.$api.saveTaskFeedbackInfo(this.form).then(() => {
+          Toast.clear()
+        }).catch(() => {
+          Toast.clear()
+        })
+      }).catch((e) => { Toast.clear(); throw e })
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

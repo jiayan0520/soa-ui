@@ -1,3 +1,5 @@
+import api from '@/api'
+
 // 生成32位uuid
 export function uuid32() {
   var s = [];
@@ -10,4 +12,15 @@ export function uuid32() {
   s[8] = s[13] = s[18] = s[23];
   var uuid = s.join('');
   return uuid;
+}
+
+// 统一上传方法
+export function uploadFile(file, annexId) {
+  return new Promise((resolve, reject) => {
+    api.upload(file).then((res) => {
+      res.annexId = annexId
+      res.type = 'task'
+      resolve(res)
+    }).catch(() => { reject() })
+  })
 }

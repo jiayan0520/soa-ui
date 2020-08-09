@@ -30,11 +30,11 @@
       <div class="soa-list-item-content content">
         <div>
           <div class="c-ft16">{{ slotProps.item.title }}</div>
-          <div class="c-light">{{ slotProps.item.endTime }} 截止</div>
-          <div class="c-light">{{ slotProps.item.beginTime }} 发布</div>
+          <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
+          <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
           <span class="c-info">{{ slotProps.item.deadline }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
         </div>
-        <div :class="[stateMap[slotProps.item.state],'soa-task-examine-list__status']">{{ slotProps.item.state }}</div>
+        <div :class="[examStatus[slotProps.item.state].type,'soa-task-examine-list__status']">{{ examStatus[slotProps.item.state].label }}</div>
       </div>
     </template>
   </list-layout>
@@ -42,6 +42,7 @@
 
 <script>
 import listLayout from '@/components/listLayout'
+import { examStatus } from '../components/taskEnum'
 export default {
   name: 'TaskExamineList',
   components: {
@@ -49,15 +50,12 @@ export default {
   },
   data() {
     return {
+      examStatus,
       active: 0,
       searchValue: '',
       dataList: [],
       tab: ['待审核', '已审核'],
       moreOpList: [],
-      stateMap: {
-        '审核中': 'c-warm',
-        '审核失败': 'c-danger'
-      },
       page: 1, // 当前页码
       limit: 20 // 每页请求数量
     }
@@ -71,13 +69,19 @@ export default {
       this.onLoad()
     },
     onLoad() {
-      this.$api.getTaskExamineList({ page: this.page, limit: this.limit }).then((res) => {
+      const params = {
+        // state: this.active ? ['WAITING'] : ['PASS', 'FAILED'],
+        page: this.page,
+        limit: this.limit
+      }
+      this.$api.getTaskExamineList(params).then((res) => {
         console.log('任务审核列表数据' + res);
-        this.dataList = res.data.content.rows;
+        this.dataList = (res && res.rows) || [];
+        const total = (res && res.total) || 0;
         // 加载状态结束
-        this.$refs.listLayout.loading = false;
+        this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.dataList.length >= res.data.content.total) {
+        if (this.dataList && (this.dataList.length >= total)) {
           this.$refs.listLayout.finished = true
         }
       })

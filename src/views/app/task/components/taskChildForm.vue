@@ -45,7 +45,6 @@
         </template>
       </van-field>
       <van-field
-        :rules="[{ required: true, message: '请选择截止时间' }]"
         center
         label="截止时间"
       >
@@ -60,7 +59,8 @@
             value-type="format"
             format="YYYY-MM-DD HH:mm"
             placeholder="请选择时间"
-            append-to-body/>
+            append-to-body
+            @change="bindChildDeadlineChange"/>
         </template>
       </van-field>
       <custom-sheet
