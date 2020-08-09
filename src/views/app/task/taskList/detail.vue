@@ -52,7 +52,7 @@
           v-for="(item,index) in form.annexList"
           :key="index"
           :href="item.filePath"
-          :download="item.fileName">{{ item.fileName }}</a>
+          :download="item.fileName.split('/').pop()">{{ item.fileName.split('/').pop() }}</a>
       </template>
     </custom-cell>
     <childTaskList :list="form.subTaskList"/>

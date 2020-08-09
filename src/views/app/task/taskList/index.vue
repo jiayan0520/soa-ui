@@ -45,11 +45,12 @@
           <div>
             <div class="c-ft16">{{ slotProps.item.title }}</div>
             <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
-            <div class="c-light">{{ slotProps.item.create_time }} 发布</div>
-            <span class="c-info">{{ slotProps.item.createUserId }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
-            <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div>
+            <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
+            <span class="c-info">{{ slotProps.item.createUserName }}</span> |
+            <span :class="[`c-${computeTimes(slotProps.item.deadline).type}`]">{{ computeTimes(slotProps.item.deadline).value }}</span>
+            <!-- <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div> -->
           </div>
-          <div :class="[taskStatus[slotProps.item.state].type]">{{ taskStatus[slotProps.item.state].value }}</div>
+          <div :class="[taskStatus[slotProps.item.state].type]">{{ taskStatus[slotProps.item.state].label }}</div>
         </div>
       </template>
     </list-layout>
@@ -68,6 +69,7 @@
 import listLayout from '@/components/listLayout'
 import addTask from '../addTask/index'
 import { taskStatus } from '../components/taskEnum'
+import { computeDiffTime } from '@/utils/index.js'
 export default {
   name: 'TaskList',
   components: {
@@ -121,6 +123,10 @@ export default {
       this.$refs.listLayout.loading = true
       this.$refs.listLayout.finished = false
       this.onLoad()
+    },
+    computeTimes(deadline) {
+      const deadlineTime = deadline + ':00'
+      return computeDiffTime(deadlineTime)
     },
     onLoad() {
       const stateTypeMap = {

@@ -47,7 +47,7 @@
           v-for="(item,index) in params.soaAnnexList"
           :key="index"
           :href="item.filePath"
-          download="w3logo">{{ item.fileName }}</a>
+          :download="item.fileName.split('/').pop()">{{ item.fileName.split('/').pop() }}</a>
       </template>
     </custom-cell>
     <div class="soa-task-examine-detail__btn">
