@@ -178,7 +178,7 @@ export default {
     handleClick(item) {
       if (this.detailUrl) {
         console.log('handleClick', item, this.detailUrl)
-        const id = item.id
+        const id = item.id || item.taskPerformId
         this.$router.push({
           path: this.detailUrl,
           query: { id }

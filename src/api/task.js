@@ -8,7 +8,7 @@ function addTask(params) {
 }
 // 任务列表
 function getTaskList(params) {
-  return get(`${prefix}/task/list`, params)
+  return post(`${prefix}/task/list`, params)
 }
 // 任务详情
 function getTaskDetail(params) {
@@ -24,7 +24,7 @@ function getTaskStatisticsList(params) {
 }
 // 任务审核列表
 function getTaskExamineList(params) {
-  return get(`${prefix}/audit/list`, params)
+  return post(`${prefix}/audit/list?pageNum=${params.page}&pageSize=${params.limit}`, params)
 }
 // 任务审核详情
 function getTaskExaminDetail(params) {

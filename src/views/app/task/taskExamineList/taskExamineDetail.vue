@@ -2,25 +2,30 @@
   <div class="soa-task-examine-detail">
     <custom-cell
       :value="params.performUserName"
+      label-width="5.1em"
       title="提交者"/>
     <custom-cell
       :value="params.title"
+      label-width="5.1em"
       title="任务名称"/>
     <custom-cell
       :value="params.content"
+      label-width="5.1em"
       title="任务详情"/>
     <custom-cell
       :value="params.deadline"
+      label-width="5.1em"
       title="截止时间"/>
     <custom-cell
+      label-width="5.1em"
       title="任务状态">
       <template slot="value">
-        <div :class="[taskStateMap[params.state]]">{{ params.state }}</div>
+        <div :class="[computeTimes(params.deadline).type]">{{ computeTimes(params.deadline).value }}</div>
       </template>
     </custom-cell>
-    <custom-cell
+    <!-- <custom-cell
       :value="params.type==='TASK'?'任务消息':'执行消息'"
-      title="申请类别"/>
+      title="申请类别"/> -->
     <van-collapse v-model="activeNames">
       <van-collapse-item
         title="任务总结"
@@ -29,12 +34,14 @@
           v-for="(item,index) in params.soaTaskNewsList"
           :key="index"
           class="soa-task-examine-detail__task-list">
-          <div class="c-light">{{ item.createBy }}</div>
+          <div class="c-light">{{ item.userName }}</div>
           <div class="c-light">{{ item.content }}</div>
         </div>
       </van-collapse-item>
     </van-collapse>
-    <custom-cell title="附件信息">
+    <custom-cell
+      title="附件信息"
+      label-width="5.1em">
       <template slot="value">
         <a
           v-for="(item,index) in params.soaAnnexList"
@@ -60,9 +67,9 @@
     <van-dialog
       v-model="show"
       :title= "title"
-      :before-close="DialogBeforeClose"
+      :before-close="handleConfirm"
       show-cancel-button>
-      <van-form>
+      <van-form ref="examineForm">
         <template v-if="isCheck">
           <van-field
             v-model="examineQuery.score"
@@ -87,6 +94,7 @@
 <script>
 import customCell from '@/components/customCell'
 import { Notify } from 'vant'
+import { computeDiffTime } from '@/utils/index.js'
 export default {
   name: 'TaskExamineList',
   components: {
@@ -100,12 +108,6 @@ export default {
       isCheck: false,
       number: 0,
       params: {},
-      taskStateMap: {
-        '审核通过': 'c-success',
-        '未完成': 'c-danger',
-        '审核未通过': 'c-danger',
-        '等待审核': 'c-warm'
-      },
       examineQuery: {
         score: '',
         content: ''
@@ -121,10 +123,13 @@ export default {
     this.getData(this.$route.query.id)
   },
   methods: {
+    computeTimes(deadline) {
+      const deadlineTime = deadline + ':00'
+      return computeDiffTime(deadlineTime)
+    },
     getData(id) {
       this.$api.getTaskExaminDetail({ id: id }).then((res) => {
-        console.log(res);
-        this.params = res.data.content;
+        this.params = res;
       })
     },
     handleChecked() {
@@ -135,49 +140,34 @@ export default {
       this.isCheck = false
       this.show = true
     },
-    DialogBeforeClose(action, done) {
-      console.log(action);
+    handleConfirm(action, done) {
       if (action === 'confirm') {
-        // 审核通过的情况
-        if (this.isCheck) {
-          if (this.examineQuery.score === '') {
-            Notify({ type: 'danger', message: '质量分不能为空' });
-            done();
-          } else {
-            this.submitToDataset(done)
-          }
-        } else { // 审核未通过的情况
-          if (this.examineQuery.content === '') {
-            Notify({ type: 'danger', message: '不通过原因不能为空' });
-            done();
-          } else {
-            this.submitToDataset(done)
-          }
-        }
+        this.$refs.examineForm.validate().then((valid) => {
+          this.examineQuery.auditUserId = this.$store.getters['core/user'].userId
+          this.examineQuery.state = this.isCheck ? 'PASS' : 'FAILED'
+          this.$api.saveTaskExamine(this.examineQuery).then((res) => {
+            this.getNextPage(done)
+          }).catch(() => { done(false) })
+        }).catch(() => { done(false) })
       } else {
         done();
       }
     },
-    submitToDataset(done) {
-      this.$api.saveTaskExamine(this.examineQuery).then((res) => {
-        if (res.data.status === 200) {
-          Notify({ type: 'success', message: '提交成功' });
-          done();
-          this.getNextPage()
+    getNextPage(done) {
+      const params = {
+        type: 'WAITING',
+        page: 1,
+        limit: 1
+      }
+      this.$api.getTaskExamineList({ params }).then((res) => {
+        if (res.length) {
+          this.$router.replace({
+            query: { id: res[0].taskPerformId }
+          })
+          this.getData(this.$route.query.id)
+          done()
         }
-      })
-    },
-    getNextPage() {
-      this.$api.getTaskExamineList({ page: 1, limit: 6558 }).then((res) => {
-        var arr = res.data.content.rows;
-        for (let i = 0, l = arr.length; i < l; i++) {
-          if (arr[i].state === '未审核') {
-            const taskId = arr[i].taskId;
-            this.$router.replace({
-              query: { id: taskId }
-            })
-          }
-        }
+        this.show = false
       })
     }
   }

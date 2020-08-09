@@ -5,10 +5,11 @@
       :key="index"
       class="soa-child-task__child">
       <div class="title">{{ item.title }}</div>
-      <div class="c-light">{{ item.done }}/{{ item.total }}完成
+      <div class="c-light">
+        <!-- {{ item.done }}/{{ item.total }}完成 -->
         <span
           v-if="showStatus && item.state"
-          :class="['c-ml10',`c-${stateMap[item.state].type}`]">{{ stateMap[item.state].label }}</span>
+          :class="['c-ml10',taskStatus[item.state].type]">{{ taskStatus[item.state].label }}</span>
       </div>
       <div class="c-mr10">
         <i
@@ -37,6 +38,7 @@
 
 <script>
 import TaskChildForm from './taskChildForm'
+import { taskStatus } from '../components/taskEnum'
 export default {
   name: 'ChildTaskList',
   components: {
@@ -70,11 +72,7 @@ export default {
     return {
       show: false,
       taskIndex: '',
-      stateMap: {
-        NUFINISHED: { label: '  任务未完成', type: 'light' },
-        FAILED: { label: '  未完成', type: 'danger' },
-        PASS: { label: '  已完成', type: 'success' }
-      }
+      taskStatus
     }
   },
   computed: {

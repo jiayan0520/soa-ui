@@ -24,3 +24,23 @@ export function uploadFile(file, annexId) {
     }).catch(() => { reject() })
   })
 }
+// 计算时间差
+export function computeDiffTime(date) {
+  const nowDate = new Date().getTime()
+  let dealine = new Date(date).getTime()
+  if (!dealine) {
+    dealine = new Date(date.replace(/\-/g, '/')).getTime()
+  }
+  const timeDiff = dealine - nowDate
+  const timeDiffAbs = Math.abs(timeDiff)
+  // 计算出相差天数
+  var days = Math.floor(timeDiffAbs / (24 * 3600 * 1000))
+  // 计算出小时数
+  var leave1 = timeDiffAbs % (24 * 3600 * 1000) // 计算天数后剩余的毫秒数
+  var hours = Math.floor(leave1 / (3600 * 1000))
+  const res = {
+    value: (timeDiff > 0 ? '距截止还剩' : '已逾期') + days + '天' + hours + '小时',
+    type: timeDiff > 0 ? 'success' : 'danger'
+  }
+  return res
+}

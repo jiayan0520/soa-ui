@@ -45,11 +45,11 @@
           <div>
             <div class="c-ft16">{{ slotProps.item.title }}</div>
             <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
-            <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
+            <div class="c-light">{{ slotProps.item.create_time }} 发布</div>
             <span class="c-info">{{ slotProps.item.createUserId }}</span> | <span class="c-success">{{ slotProps.item.info }}</span>
             <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div>
           </div>
-          <div :class="[taskStatus[slotProps.item.state].type]">{{ taskStatus[slotProps.item.state].label }}</div>
+          <div :class="[taskStatus[slotProps.item.state].type]">{{ taskStatus[slotProps.item.state].value }}</div>
         </div>
       </template>
     </list-layout>
@@ -94,9 +94,9 @@ export default {
     },
     moreOpList() {
       const publishOp = [
-        { value: 'edit', label: '编辑', allowStatus: { state: ['NUFINISHED'] }},
-        { value: 'delete', label: '删除' },
-        { value: 'fail', label: '任务失败', allowStatus: { state: ['NUFINISHED'] }}
+        // { value: 'edit', label: '编辑', allowStatus: { state: ['NUFINISHED'] }},
+        { value: 'delete', label: '删除' }
+        // { value: 'fail', label: '任务失败', allowStatus: { state: ['NUFINISHED'] }}
       ]
       const reOp = [
         { value: 'submit', label: '提交', allowStatus: { state: ['NUFINISHED'] }}
@@ -123,8 +123,21 @@ export default {
       this.onLoad()
     },
     onLoad() {
+      const stateTypeMap = {
+        0: 'NUFINISHED',
+        1: 'FINISHED',
+        2: ''
+      }
+      const parms = {
+        type: this.active + 1,
+        content: this.searchValue,
+        state: stateTypeMap[this.active1],
+        page: this.page,
+        limit: this.limit,
+        userId: this.$store.getters['core/user'].userId
+      }
       // 异步更新数据
-      this.$api.getTaskList({ page: this.page, limit: this.limit }).then((data) => {
+      this.$api.getTaskList(parms).then((data) => {
         this.dataList = (data && data.rows) || [];
         const total = (data && data.total) || 0;
         // 加载状态结束

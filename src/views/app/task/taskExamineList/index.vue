@@ -32,7 +32,7 @@
           <div class="c-ft16">{{ slotProps.item.title }}</div>
           <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
           <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
-          <span class="c-info">{{ slotProps.item.deadline }}</span> <span class="c-success">{{ slotProps.item.info }}</span>
+          <span :class="[`c-${computeTimes(slotProps.item.deadline).type}`]">{{ computeTimes(slotProps.item.deadline).value }}</span>
         </div>
         <div :class="[examStatus[slotProps.item.state].type,'soa-task-examine-list__status']">{{ examStatus[slotProps.item.state].label }}</div>
       </div>
@@ -43,6 +43,7 @@
 <script>
 import listLayout from '@/components/listLayout'
 import { examStatus } from '../components/taskEnum'
+import { computeDiffTime } from '@/utils/index.js'
 export default {
   name: 'TaskExamineList',
   components: {
@@ -62,15 +63,20 @@ export default {
   },
   methods: {
     onSearch(searchValue) {
-      this.page = 1;
+      this.page = 0;
       this.dataList = []
       this.$refs.listLayout.loading = true
       this.$refs.listLayout.finished = false
       this.onLoad()
     },
+    computeTimes(deadline) {
+      const deadlineTime = deadline + ':00'
+      return computeDiffTime(deadlineTime)
+    },
     onLoad() {
+      this.page++;
       const params = {
-        // state: this.active ? ['WAITING'] : ['PASS', 'FAILED'],
+        type: this.active ? 'AUDITED' : 'WAITING',
         page: this.page,
         limit: this.limit
       }

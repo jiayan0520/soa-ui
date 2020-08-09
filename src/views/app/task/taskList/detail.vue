@@ -1,16 +1,16 @@
 <template>
   <div class="soa-task-detail">
     <custom-cell
-      :value="form.promoter"
+      :value="form.soaTask && form.usersMap[form.soaTask.createUserId]"
       title="发起人"/>
     <custom-cell
-      :value="form.task"
+      :value="form.soaTask && form.soaTask.title"
       title="任务名称"/>
     <custom-cell
-      :value="form.remark"
-      title="备注"/>
+      :value="form.soaTask && form.soaTask.content"
+      title="任务详情"/>
     <custom-cell
-      :value="form.deadline"
+      :value="form.soaTask && form.soaTask.deadline"
       title="截止时间"/>
     <van-collapse v-model="activeNames">
       <van-collapse-item
@@ -49,14 +49,14 @@
     <custom-cell title="附件信息">
       <template slot="value">
         <a
-          v-for="(item,index) in form.file"
+          v-for="(item,index) in form.annexList"
           :key="index"
-          :href="item.url"
-          download="w3logo">{{ item.fileName }}</a>
+          :href="item.filePath"
+          :download="item.fileName">{{ item.fileName }}</a>
       </template>
     </custom-cell>
-    <childTaskList :list="form.subTasks"/>
-    <van-cell
+    <childTaskList :list="form.subTaskList"/>
+    <!-- <van-cell
       v-for="items in form.infos"
       :key="items.index">
       <div class="soa-task-detail__commentList">
@@ -82,8 +82,7 @@
           </template>
         </van-field>
       </van-cell>
-    </div>
-
+    </div> -->
   </div>
 </template>
 
@@ -105,34 +104,7 @@ export default {
       inputText: '',
       showModal: false,
       editObj: null,
-      form: {
-        promoter: '李晓明',
-        task: '收集党员信息',
-        detail: '请各位尽快收拾好党员信息，按照excel表格里要求的数据进行填写',
-        quality: '100',
-        remark: '审核不通过原因：没有附件',
-        deadline: '2020年6月19日 18时00分',
-        file: [{ url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }, { url: '/images/myw3schoolimage.jpg', fileName: '学生列表.xls' }],
-        subTasks: [{ title: '搜集党员信息子任务', total: 5, done: 0 }],
-        infos: [
-          { name: '黄德彬', content: '这个任务很简单，大家尽快执行完后反馈该任务信息', time: '6月19日 18时00分' },
-          { name: '李荣文', content: '已查看该任务', time: '6月19日 15时00分' },
-          { name: '韩雯雯', content: '已反馈该任务', time: '6月19日 11时30分' }
-        ],
-        accomplish: [
-          { name: '吴笑笑', state: '待审核' },
-          { name: '林小菲', state: '未完成' }
-        ]
-      },
-      accomplish: [
-        { name: '吴笑笑', state: '待审核' },
-        { name: '林小菲', state: '未完成' }
-      ],
-      stateMap: {
-        '未完成': 'c-danger',
-        '待审核': 'c-warm',
-        '已完成': 'c-success'
-      }
+      form: {}
     }
   },
   mounted() {
@@ -143,6 +115,7 @@ export default {
     getData(id) {
       this.$api.getTaskDetail(id).then((res) => {
         console.log(res);
+        this.form = res
       })
     },
     handleDelectClick() {
