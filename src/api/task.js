@@ -1,10 +1,10 @@
 import { post, get } from './request'
 
 // 前缀
-const prefix = `/taskModule`
+const prefix = `/prod-api/taskModule`
 
 function addTask(params) {
-  return post(`${prefix}/task`, params)
+  return post(`${prefix}/task/saveTask`, params)
 }
 // 任务列表
 function getTaskList(params) {

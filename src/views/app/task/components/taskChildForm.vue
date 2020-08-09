@@ -9,7 +9,7 @@
     <van-form
       label-width="110px"
       class="soa-custom-form"
-      @submit="onSubmit">
+      @submit="onSubmit1">
       <van-field
         v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
@@ -26,7 +26,9 @@
         placeholder="请输入任务内容"
       />
       <people-picker
-        v-model="form.soaTaskPerform"
+        v-model="form.executor"
+        :disabled-users="[userId]"
+        :user-only="false"
         title="执行人"
         @complexPickerParent="handlePicker"/>
       <van-field
@@ -37,10 +39,13 @@
         <template #input>
           <van-switch
             v-model="form.isRemind"
+            active-value="Y"
+            inactive-value="N"
             size="20" />
         </template>
       </van-field>
       <van-field
+        :rules="[{ required: true, message: '请选择截止时间' }]"
         center
         label="截止时间"
       >
@@ -54,9 +59,8 @@
             type="datetime"
             value-type="format"
             format="YYYY-MM-DD HH:mm"
-            placeholder="请选择截止时间"
-            append-to-body
-            @change="bindChildDeadlineChange"/>
+            placeholder="请选择时间"
+            append-to-body/>
         </template>
       </van-field>
       <custom-sheet
@@ -71,18 +75,14 @@
         v-model="form.difficulty"
         :actions="weightActions"
         label="任务权重"/>
-      <!-- <people-picker
-        v-model="form.soaTaskReader"
-        title="可公开查阅人"/> -->
       <van-field
-        v-model="form.files"
         :readonly="true"
         label="附件"
         placeholder=""
       >
         <template #input>
           <van-uploader
-            v-model="fileList"
+            v-model="form.files"
             upload-icon="upgrade"
             accept="*"/>
         </template>
@@ -103,6 +103,7 @@
 import DatePicker from 'vue2-datepicker'
 import peoplePicker from '@/components/peoplePicker'
 import customSheet from '@/components/customSheet'
+import { Notify } from 'vant'
 import { criticalActions, infoActions, weightActions } from '../addTask/enum'
 import dayjs from 'dayjs'
 export default {
@@ -131,17 +132,16 @@ export default {
   data() {
     return {
       form: {
-        title: '',
-        content: '',
-        soaTaskPerform: '', // 执行人
-        isRemind: true,
+        annexId: '',
+        title: '任务1',
+        content: '任务1',
+        executor: [], // 执行人
+        isRemind: 'Y',
         deadline: '',
-        dueReminder: '不提醒',
-        emergencyCoefficient: '特急',
-        difficulty: '1.0',
-        state: '',
-        searcher: '', // 可查阅人
-        files: '' // 附件
+        dueReminder: 'NOT_NOTICE',
+        emergencyCoefficient: 'GENERAL',
+        difficulty: 'DICFFICULTY1',
+        files: [] // 附件
       },
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
       showModal: false,
@@ -149,6 +149,11 @@ export default {
       infoActions,
       weightActions,
       fileList: []
+    }
+  },
+  computed: {
+    userId() {
+      return this.$store.getters['core/user'].userId
     }
   },
   watch: {
@@ -159,23 +164,31 @@ export default {
   },
   methods: {
     // 子任务事件
-    onSubmit() {
+    onSubmit1() {
+      console.log('this.deadline', this.deadline)
       if (this.deadline && this.form.deadline > this.deadline) {
-        this.$notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
+        this.form.deadline = ''
+        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
       } else {
         // 虚拟数据
-        this.form.total = 5;
-        this.form.done = 0;
+        this.form.total = this.form.executor.length;
+        this.form.done = this.form.done || 0;
         this.$emit('input', this.form);
       }
     },
     handlePicker(people, departments) {
+      people.forEach(item => {
+        item.userId = item.emplId
+        item.userName = item.name
+      });
+      this.form.executor = [].concat(people)
       console.log('handlePicker', people, departments)
     },
     // 子任务截止时间不能超过主任务的截止时间
     bindChildDeadlineChange(e) {
       if (e > this.deadline) {
-        this.$notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
+        this.form.deadline = ''
+        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
       }
     },
     // 关闭弹出框

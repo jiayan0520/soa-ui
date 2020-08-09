@@ -10,6 +10,7 @@
   />
 </template>
 <script>
+// import { Toast } from 'vant';
 export default {
   name: 'ComplexPicker',
   props: {
@@ -61,7 +62,7 @@ export default {
       default: () => []
     },
     value: {
-      type: String,
+      type: [String, Array],
       default: ''
     }
   },
@@ -100,12 +101,6 @@ export default {
   methods: {
     // 选人
     handleClick() {
-      console.group('选人传参');
-      console.log(this);
-      console.log(this.disabledUsers);
-      console.log(this.strChoosedPersonIds);
-      console.log(this.strChoosedDeptIds);
-      console.groupEnd();
       this.$dd.biz.contact.complexPicker({
         title: '选择' + this.title,
         corpId: 'ding2121e6f85c89c1f9f2c783f7214b6d69',
@@ -138,6 +133,7 @@ export default {
         },
 
         onFail: function(err) {
+          // Toast(JSON.stringify(err))
           console.error(err);
         }
       });

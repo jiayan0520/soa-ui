@@ -78,18 +78,23 @@ export default {
     }
   },
   computed: {
+    userId() {
+      return this.$store.getters['core/user'].userId
+    },
     editTask() {
       const tempTask = {
-        title: '',
-        content: '',
-        soaTaskPerform: '', // 执行人
-        isRemind: true,
+        createUserId: this.userId,
+        annexId: '',
+        title: '任务1',
+        content: '任务1',
+        executor: [], // 执行人
+        isRemind: 'Y',
         deadline: '',
-        dueReminder: '不提醒',
-        emergencyCoefficient: '特急',
-        difficulty: '1.0',
-        searcher: '', // 可查阅人
-        files: '' // 附件
+        dueReminder: 'NOT_NOTICE',
+        emergencyCoefficient: 'GENERAL',
+        difficulty: 'DICFFICULTY1',
+        files: [], // 附件
+        state: 'NUFINISHED'
       }
       return this.taskIndex || this.taskIndex === 0 ? this.list[this.taskIndex] : tempTask
     }

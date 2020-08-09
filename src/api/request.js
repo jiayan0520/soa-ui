@@ -63,22 +63,17 @@ export function get(url, data = {}, timeout = TIMEOUT) {
   });
 }
 // 上传文件
-export function uploadFile(url, params = {}) {
-  return new Promise((resolve, reject) => {
-    const formData = new FormData();
-    formData.append(`file`, params.file)
-    service.post(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then(res => {
-      Toast.fail('上传文件失败');
-      Toast.clear()
-      resolve(res.data)
-    }).catch((e) => {
-      Toast.fail('上传文件失败');
-      reject();
-    })
-  })
+export function uploadFile(url, params = {}, timeout = TIMEOUT) {
+  const formData = new FormData();
+  formData.append(`file`, params.file)
+  return service({
+    url: url,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    method: 'post',
+    data: formData,
+    timeout: timeout
+  });
 }
 export default service;

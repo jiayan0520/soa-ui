@@ -1,9 +1,8 @@
 <template>
   <div class="soa-task-add">
     <van-form
-      label-width="110px"
-      class="soa-custom-form"
-      @submit="onSubmit">
+      label-width="120px"
+      class="soa-custom-form">
       <van-field
         v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
@@ -19,9 +18,10 @@
         name="请输入任务内容"
         placeholder="请输入任务内容"
       />
-      <!-- :disabledUsers="[userid]" -->
       <people-picker
         v-model="form.executor"
+        :disabled-users="[userId]"
+        :user-only="true"
         title="执行人"
         @complexPickerParent="handlePicker"/>
       <van-field
@@ -68,8 +68,11 @@
         :actions="weightActions"
         label="任务权重"/>
       <people-picker
-        v-model="form.soaTaskReader"
-        title="可公开查阅人"/>
+        v-model="form.reader"
+        :disabled-users="[userId]"
+        :user-only="true"
+        title="可公开查阅人"
+        @complexPickerParent="handleReaderPicker"/>
       <van-field
         :readonly="true"
         label="附件"
@@ -83,12 +86,14 @@
         </template>
       </van-field>
       <van-divider />
-      <childTaskList :list="form.subTasks"/>
+      <childTaskList
+        :list="form.subTasks"
+        :deadline="form.deadline"/>
       <van-button
         block
         class="soa-task-add__submit"
         type="info"
-        native-type="submit">
+        @click="onSubmit">
         提交
       </van-button>
     </van-form>
@@ -101,8 +106,9 @@ import peoplePicker from '@/components/peoplePicker'
 import customSheet from '@/components/customSheet'
 import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
+import { Toast } from 'vant';
+import { uuid32 } from '@/utils/index.js'
 import { criticalActions, infoActions, weightActions } from './enum'
-// import formatData from '@/utils/index.js'
 export default {
   name: 'AddTask',
   components: {
@@ -117,15 +123,16 @@ export default {
         annexId: '',
         title: '任务1',
         content: '任务1',
-        executor: '', // 执行人
+        executor: [], // 执行人
         isRemind: 'Y',
         deadline: '',
         dueReminder: 'NOT_NOTICE',
         emergencyCoefficient: 'GENERAL',
         difficulty: 'DICFFICULTY1',
-        reader: '', // 可查阅人
+        reader: [], // 可查阅人
         files: [], // 附件
-        subTasks: []
+        subTasks: [],
+        state: 'NUFINISHED'
       },
       showModal: false,
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
@@ -135,8 +142,12 @@ export default {
       editObj: null
     }
   },
+  computed: {
+    userId() {
+      return this.$store.getters['core/user'].userId
+    }
+  },
   mounted() {
-    console.log('minDate', this.minDate)
     // 截止时间默认为今日或次日18点
     var date = new Date();
     if (new Date().getHours() < 18) {
@@ -147,25 +158,93 @@ export default {
     }
   },
   methods: {
+    // 创建任务
+    addTask() {
+      this.form.createUserId = this.userId
+      this.form.opType = 0
+      this.$api.addTask({ ...this.form }).then((res) => {
+        Toast.clear()
+        Toast('任务创建成功')
+        this.$router.push('/task-list');
+      })
+    },
+    // 上传父任务附件
+    async uploadParentTask() {
+      this.form.annexId = ''
+      const annexList = []
+      const parentAnnexId = uuid32()
+      for (var i = 0; i < this.form.files.length; i++) {
+        await this.uploadTask(this.form.files[i], parentAnnexId).then(() => {}).catch((e) => {
+          throw e
+        });
+      }
+      annexList.length && await this.$api.annex(annexList).then((res) => {
+        this.form.annexId = parentAnnexId
+      }).catch((e) => { throw e })
+    },
+    // 子任务
+    async subTask() {
+      for (var i = 0; i < this.form.subTasks.length; i++) {
+        await this.uploadSubTask(i).then(() => {}).catch((e) => {
+          throw e
+        });
+      }
+    },
+    // 单个子任务附件上传
+    async uploadSubTask(index) {
+      const files = this.form.subTasks[index].files
+      this.form.subTasks[index].annexId = ''
+      const subAnnexList = []
+      const subAnnexId = uuid32()
+      for (var i = 0; i < files.length; i++) {
+        await this.uploadTask(files[i], subAnnexId).then((res) => {
+          subAnnexList.push(res)
+        }).catch((e) => {
+          throw e
+        });
+      }
+      subAnnexList.length && await this.$api.annex(subAnnexList).then((res) => {
+        this.form.subTasks[index].annexId = subAnnexId
+      }).catch((e) => { throw e })
+    },
+    // 统一上传方法
+    uploadTask(file, annexId) {
+      return new Promise((resolve, reject) => {
+        this.$api.upload(file).then((res) => {
+          res.annexId = annexId
+          res.type = 'task'
+          resolve(res)
+        }).catch(() => { reject() })
+      })
+    },
     onSubmit() {
-      console.log('任务form', this.form)
-      // this.form.annex = []
-      // console.log('上传文件', this.form.files)
-      // if (this.form.files.length) {
-      //   this.form.files.forEach((item) => {
-      //     this.$api.upload(item).then((res) => {
-      //       console.log('上传组件', res)
-      //       res.data.annexId = '59dd9cfedf93495397d6b34ed0d86b3e'
-      //       res.data.type = 'task'
-      //       this.form.annex.push(res.data)
-      //       this.$api.annex(this.form.annex).then((res) => { console.log(res) })
-      //     })
-      //   })
-      // }
+      Toast.loading('任务创建中，请稍后...')
+      this.uploadParentTask().then(() => {
+        this.subTask().then(() => {
+          this.addTask()
+        }).catch(() => {
+          Toast.clear()
+          Toast('任务创建失败-上传子任务附件失败')
+        })
+      }).catch((e) => {
+        Toast.clear()
+        Toast('任务创建失败-上传父任务附件失败')
+      })
     },
 
     handlePicker(people, departments) {
-      console.log('handlePicker', people, departments)
+      people.forEach(item => {
+        item.userId = item.emplId
+        item.userName = item.name
+      });
+      this.form.executor = [].concat(people)
+    },
+    handleReaderPicker(people, departments) {
+      people.forEach(item => {
+        item.userId = item.emplId
+        item.userName = item.name
+      });
+      this.form.reader = [].concat(people)
     }
   }
 }

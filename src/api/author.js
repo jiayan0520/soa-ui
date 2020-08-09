@@ -7,7 +7,7 @@ function loginTest(params) {
 }
 // 钉钉登录
 function getAuthLogin(params) {
-  return get(`${prefix}//getUserId`, params)
+  return get(`${prefix}/getUserId`, params)
 }
 // 获取钉钉钉签名信息
 function getAppInfo(params) {
