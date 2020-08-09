@@ -80,8 +80,8 @@ export default {
   },
   created() {
     console.log(this.$route.query.id)
-    // this.id = this.$route.query.id
-    this.form.taskPerformId = '1c0a3a5184074527973dfe6106085feb'
+    // this.form.taskPerformId = '1c0a3a5184074527973dfe6106085feb'
+    this.form.taskPerformId = this.$route.query.id
     this.init()
   },
   methods: {
@@ -97,6 +97,7 @@ export default {
       }).catch((err) => {
         Toast.clear()
         Toast.fail(err)
+        this.$router.push('/task-list');
       })
     },
     async handleData() {
@@ -118,6 +119,7 @@ export default {
       this.handleData().then(() => {
         this.$api.saveTaskFeedbackInfo(this.form).then(() => {
           Toast.clear()
+          this.$router.push('/task-list');
         }).catch(() => {
           Toast.clear()
         })

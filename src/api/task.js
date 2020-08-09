@@ -42,7 +42,7 @@ function getTaskFeedbackInfo(params) {
 }
 // 任务反馈提交
 function saveTaskFeedbackInfo(params) {
-  return post(`${prefix}/audit/saveTaskAudit`, params)
+  return post(`${prefix}/audit/saveTaskFeedbackInfo`, params)
 }
 export {
   addTask,
