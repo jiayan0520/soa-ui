@@ -18,9 +18,9 @@ export default [
   },
   // 楼栋详情页
   {
-    path: '/dorm/floorDetail',
-    name: 'floorDetail',
-    component: () => import('@/views/app/dorm/floorList/floor-detail')
+    path: '/dorm/building/detail',
+    name: 'buildingDetail',
+    component: () => import('@/views/app/dorm/buildingList/building-detail')
   },
   // 未分配人员
   {

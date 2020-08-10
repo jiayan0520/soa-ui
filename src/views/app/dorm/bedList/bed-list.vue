@@ -25,9 +25,6 @@
           </van-button>
           <van-button
             class="btn-op"
-            type="info">新增</van-button>
-          <van-button
-            class="btn-op"
             type="info">提醒</van-button>
           <van-button
             class="btn-op"

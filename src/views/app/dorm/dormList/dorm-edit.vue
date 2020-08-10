@@ -5,7 +5,7 @@
       @submit="onSubmit">
       <van-field
         :readonly="true"
-        v-model="formData.buildName"
+        v-model="formData.buildingName"
         center
         label="楼栋名称"
         right-icon="arrow"
@@ -14,14 +14,14 @@
       />
       <van-field
         v-model="formData.dormName"
-        :rules="[{ required: true, message: '请输入宿舍名称' }]"
+        :rules="formDataRules.dormName"
         :required="true"
         maxlength="50"
         label="宿舍名称"
         placeholder="请输入宿舍名称"
       />
       <van-field
-        v-model="formData.HeadName"
+        v-model="formData.dormManagerIds"
         :readonly="true"
         label="舍长"
         right-icon="add"
@@ -35,38 +35,37 @@
           <van-radio-group
             v-model="formData.dormType"
             direction="horizontal">
-            <van-radio name="1">学生宿舍</van-radio>
-            <van-radio name="2">单教师宿舍</van-radio>
+            <van-radio :name="0">学生宿舍</van-radio>
+            <van-radio :name="1">单教师宿舍</van-radio>
           </van-radio-group>
         </template>
       </van-field>
       <van-field
         v-model="formData.peopleNum"
-        :rules="[{ required: true, message: '请输入人数' }]"
+        :rules="formDataRules.peopleNum"
         :required="true"
         type="number"
-        label="人数"
+        label="床位数"
       />
       <van-field
-        :rules="[{ required: true, message: '请输入床位编号格式' }]"
+        :rules="formDataRules.bedFormatType"
         :required="true"
         center
-        label="床位编号格式"
-      >
+        label="床位编号格式">
         <template #input>
           <van-radio-group
-            v-model="formData.formatType"
+            v-model="formData.bedFormatType"
             direction="horizontal"
             @change="changeFormatType"
           >
-            <van-radio name="1">字母</van-radio>
-            <van-radio name="2">数字</van-radio>
+            <van-radio :name="1">字母</van-radio>
+            <van-radio :name="2">数字</van-radio>
           </van-radio-group>
         </template>
       </van-field>
       <van-field
         v-model="formData.bedNames"
-        :rules="[{ required: true, message: '请输入床位号用、隔开' }]"
+        :rules="formDataRules.bedNames"
         :required="true"
         label="床位号"
         placeholder="请输入床位号用、隔开"
@@ -76,8 +75,8 @@
         label="单人费用">
         <template #input>
           <van-field
-            v-model="formData.cost"
-            :rules="[{ required: true, message: '请输入每人每年费用' }]"
+            v-model="formData.singleFee"
+            :rules="formDataRules.singleFee"
             style="padding:0"
           />
           <span
@@ -98,7 +97,7 @@
       position="bottom"
       style="min-height: 20% ">
       <van-picker
-        :columns="floorList"
+        :columns="buildingList"
         show-toolbar
         @confirm="onConfirm"
         @cancel="isShowSelect = false"
@@ -108,12 +107,8 @@
 </template>
 
 <script>
-import customCell from '@/components/customCell'
 export default {
   name: 'DormEdit',
-  components: {
-    customCell
-  },
   props: {
     id: {
       type: String,
@@ -126,19 +121,32 @@ export default {
       isShowSelect: false, // 下拉选择楼栋
       formData: {
         buildingId: '123333',
-        buildName: '福州生活1区1号楼',
+        buildingName: '福州生活1区1号楼',
         dormName: null,
-        HeadName: null,
-        dormType: '1',
+        dormManagerIds: null, // 舍长
+        dormType: 0,
         peopleNum: 6,
-        formatType: '1',
+        bedFormatType: 1, // 床位编号格式
+        bedIds: null,
         bedNames: null,
-        cost: 600
+        singleFee: 600
       },
-      floorList: [
+      buildingList: [
         { value: '123333', text: '福州生活1区1号楼' }
       ],
-      data: {}
+      data: {},
+      formDataRules: {
+        dormName: [{ required: true, message: '请输入宿舍名称' }],
+        peopleNum: [{ required: true, message: '请输入床位数' },
+          { validator: (value) => {
+            if (value) {
+              return value <= 10
+            }
+          }, message: '床位数不能超过10' }
+        ],
+        bedFormatType: [{ required: true, message: '请输入床位号用、隔开' }],
+        singleFee: [{ required: true, message: '请输入每人每年费用' }]
+      }
     }
   },
   computed: {
@@ -147,8 +155,8 @@ export default {
     }
   },
   watch: {
-    peopleNum() {
-      if (this.isAdd) {
+    peopleNum(val) {
+      if (this.isAdd && val <= 10) {
         this.changeFormatType()
       }
     }
@@ -172,15 +180,14 @@ export default {
     // 选择楼栋内容
     onConfirm(obj) {
       this.formData.buildingId = obj.value
-      this.formData.buildName = obj.text
+      this.formData.buildingName = obj.text
       this.isShowSelect = false;
     },
     // 宿舍类型改变床位号
     changeFormatType() {
-      console.log(this.formData.formatType)
       if (this.formData.peopleNum) {
         const bedNameList = []
-        if (this.formData.formatType === '2') {
+        if (this.formData.bedFormatType === 2) {
           // 数字
           for (let i = 1; i <= this.formData.peopleNum; i++) {
             bedNameList.push(i)

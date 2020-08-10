@@ -1,10 +1,10 @@
 <template>
-  <div class="floor-edit">
+  <div class="building-edit">
     <van-form
-      class="floor-edit-form soa-custom-form"
+      class="building-edit-form soa-custom-form"
       @submit="onSubmit">
       <van-field
-        v-model="formData.floorName"
+        v-model="formData.buildingName"
         :rules="[{ required: true, message: '请输入楼栋名称' }]"
         :required="true"
         maxlength="50"
@@ -12,7 +12,7 @@
         placeholder="请输入楼栋名称"
       />
       <van-field
-        v-model="formData.management"
+        v-model="formData.buildingManagerIds"
         :readonly="true"
         label="楼管"
         right-icon="add"
@@ -20,7 +20,7 @@
         @click="handleExecutorClick"
       />
       <van-field
-        v-model="formData.repair"
+        v-model="formData.maintenanceWorkerIds"
         :readonly="true"
         label="维修人员"
         right-icon="add"
@@ -31,11 +31,11 @@
         name="uploader"
         label="楼栋照片">
         <template #input>
-          <van-uploader v-model="formData.annexIds" />
+          <van-uploader v-model="formData.mainPicId" />
         </template>
       </van-field>
       <van-field
-        v-model="formData.address"
+        v-model="formData.addr"
         :readonly="true"
         label="楼栋位置"
         right-icon="arrow"
@@ -69,7 +69,7 @@
 <script>
 import addressSelect from '@/components/address-select'
 export default {
-  name: 'FloorEdit',
+  name: 'BuildingEdit',
   components: {
     addressSelect
   },
@@ -82,11 +82,14 @@ export default {
   data() {
     return {
       formData: {
-        floorName: null,
-        management: null,
-        repair: null,
-        address: null,
-        remark: null
+        buildingName: null,
+        remark: null,
+        addr: null,
+        latitude: null,
+        longitude: null,
+        mainPicId: null, // 楼栋照片
+        buildingManagerIds: null, // 楼栋管理员
+        maintenanceWorkerIds: null // 楼栋维修员
       },
       isShowAddressPopup: false
     }
@@ -104,7 +107,7 @@ export default {
 </script>
 
 <style lang="scss">
-.floor-edit {
+.building-edit {
   padding: 10px;
 }
 </style>

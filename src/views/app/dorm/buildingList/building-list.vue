@@ -1,12 +1,12 @@
 <template>
-  <div class="floor-list">
+  <div class="building-list">
     <list-layout
-      ref="listLayoutFloor"
+      ref="listLayoutBuilding"
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍楼列表'"
-      detail-url="/dorm/floorDetail"
+      detail-url="/dorm/buildingDetail"
       op-label="管理"
       class="dorm-list"
       @search="onSearch"
@@ -24,6 +24,10 @@
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />
           </van-button>
+          <van-button
+            class="btn-op"
+            type="info"
+            @click="add">新增</van-button>
           <van-button
             class="btn-op"
             type="info">清空宿舍</van-button>
@@ -62,20 +66,20 @@
       <template
         slot="item-content"
         slot-scope="slotProps">
-        <div class="floor-item-content">
+        <div class="building-item-content">
           <div class="flex-between">
             <img
               class="soa-avatar"
               src="../../../../assets/images/timg.jpg" >
             <div class="soa-list-item-content">
-              <div>{{ slotProps.item.floorName }}</div>
+              <div>{{ slotProps.item.buildingName }}</div>
               <div class="c-light">
                 <span>{{ slotProps.item.headName }}</span>
                 <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
               </div>
             </div>
           </div>
-          <div class="list-item-total">
+          <div class="soa-list-total">
             <div class="total-item">
               <span class="lable">可容纳：</span>
               <span class="val">200人</span>
@@ -125,19 +129,19 @@
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <floor-edit/>
+      <building-edit />
     </van-popup>
   </div>
 </template>
 
 <script>
 import listLayout from '@/components/listLayout'
-import floorEdit from './floor-edit'
+import buildingEdit from './building-edit'
 export default {
-  name: 'FloorList',
+  name: 'BuildingList',
   components: {
     listLayout,
-    floorEdit
+    buildingEdit
   },
   data() {
     return {
@@ -218,37 +222,43 @@ export default {
             isCheck: false,
             isShowMore: false,
             id: dataList.length + 1,
-            floorName: '福大生活一区103栋',
+            buildingName: '福大生活一区103栋',
             headName: '李幸福',
             telephone: '18233422111'
           });
         }
         // 加载状态结束
-        this.$refs.listLayoutFloor.loading = false
+        this.$refs.listLayoutBuilding.loading = false
         this.dataList = this.dataList.concat(dataList)
         // 数据全部加载完成
         if (this.dataList.length >= 20) {
-          this.$refs.listLayoutFloor.finished = true
+          this.$refs.listLayoutBuilding.finished = true
         }
         // if (this.dataList.length < this.pageSize) {
         //     this.$refs.cardList.finished = true;
         //   }
       }, 1000)
+    },
+    // 新增
+    add() {
+      this.rowId = null
+      this.isShowEditPopup = true
     }
   }
 }
 </script>
 
 <style lang="scss">
-.floor-list {
-   height: 100%;
-  .floor-item-content {
+.building-list {
+  height: 100%;
+  .building-item-content {
     flex-direction: column;
-    .list-item-total {
-      display: flex;
-      flex-wrap: wrap;
+    .soa-list-total {
+      background: #fff;
       .total-item {
-        margin: 0 10px;
+        .lable {
+          width: 60%;
+        }
       }
     }
   }

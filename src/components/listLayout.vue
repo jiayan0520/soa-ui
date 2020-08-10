@@ -139,7 +139,7 @@ export default {
     showMoreOpItem(item, btn) {
       let isShow = true
       const allowStatus = btn.allowStatus
-      allowStatus && Reflect.ownKeys(allowStatus).forEach(function(key) {
+      allowStatus && Reflect.ownKeys(allowStatus).forEach(function (key) {
         if (!(item[key] && allowStatus[key].includes(item[key]))) { isShow = false }
       });
       return isShow
@@ -217,13 +217,6 @@ export default {
     h3 {
       margin: 0;
     }
-    .btn-check-all {
-      width: 60px;
-      padding: 0;
-    }
-    // .btn-op{
-    //   padding: 0 8px;
-    // }
     // border-bottom: 1px solid #f5f5f5;
   }
   .search-bar {
@@ -251,17 +244,6 @@ export default {
         height: 100%;
         box-sizing: border-box;
         overflow: auto;
-        .soa-list-total {
-          flex: 1;
-          display: flex;
-          flex-wrap: wrap;
-          background: #f2f2f2;
-          padding: 10px 5px;
-          margin: 8px 0 12px 0;
-          .total-item {
-            margin: 0 10px;
-          }
-        }
         .soa-list-main {
           height: 100%;
           .soa-list-item {

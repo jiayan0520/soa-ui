@@ -200,8 +200,8 @@ a {
             }
         }
     }
-    &.soa-search-form{
-    padding: 0;
+    &.soa-search-form {
+        padding: 0;
     }
 }
 
@@ -246,6 +246,37 @@ a {
             border-right: 6px solid transparent;
             border-top: 8px solid $--color-light;
             vertical-align: middle;
+        }
+    }
+}
+
+// 统计行展示，宿舍total使用
+.soa-list-total {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    background: #f2f2f2;
+    padding: 10px 5px;
+    margin: 8px 0 12px 0;
+    .total-item {
+        display: flex;
+        .lable {
+            text-align: right;
+            width: 50%;
+        }
+    }
+}
+@media only screen and (max-width: 440px) {
+    .soa-list-total {
+        .total-item {
+            width: 50%;
+        }
+    }
+}
+@media only screen and (min-width: 440px) {
+    .soa-list-total {
+        .total-item {
+            width: 33%;
         }
     }
 }

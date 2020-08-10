@@ -1,5 +1,5 @@
 <template>
-  <div class="floor-detail">
+  <div class="building-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -29,7 +29,7 @@
 import customPanel from '@/components/customPanel'
 import customCell from '@/components/customCell'
 export default {
-  name: 'FloorDetail',
+  name: 'BuildingDetail',
   components: {
     customCell,
     customPanel
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       data: {
-        floorName: '福大生活1区1号楼-601',
+        buildingName: '福大生活1区1号楼-601',
         managementList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
         repairList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
         annexList: [
@@ -48,7 +48,7 @@ export default {
         ]
       },
       fieldList: [
-        { prop: 'floorName', label: '楼栋名称' },
+        { prop: 'buildingName', label: '楼栋名称' },
         {
           prop: 'managementList',
           label: '楼管',
@@ -79,7 +79,7 @@ export default {
 </script>
 
 <style lang="scss">
-.floor-detail {
+.building-detail {
   width: 100%;
   overflow: auto;
 }

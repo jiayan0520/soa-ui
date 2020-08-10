@@ -15,7 +15,7 @@
       <van-tab
         title="楼栋列表"
         name="3">
-        <floor-list />
+        <building-list />
       </van-tab>
     </van-tabs>
   </div>
@@ -24,13 +24,13 @@
 <script>
 import dormList from './dormList/dorm-list'
 import bedList from './bedList/bed-list'
-import floorList from './floorList/floor-list'
+import buildingList from './buildingList/building-list'
 export default {
   name: 'Dorm',
   components: {
     dormList,
     bedList,
-    floorList
+    buildingList
   },
   data() {
     return {

@@ -103,10 +103,12 @@
       </template>
     </list-layout>
     <van-popup
+      v-if="isShowEditPopup"
       v-model="isShowEditPopup"
       :style="{ height: '100%' }"
       closeable
-      position="bottom">
+      position="bottom"
+    >
       <dorm-edit :id="rowId" />
     </van-popup>
   </div>
@@ -239,5 +241,19 @@ export default {
 <style lang="scss">
 .dorm-list {
   height: 100%;
+  @media only screen and (max-width: 414px) {
+    .tool-bar {
+      .btn-op {
+        padding: 0 10px;
+      }
+    }
+  }
+  @media only screen and (max-width: 375px) {
+    .tool-bar {
+      .btn-op {
+        padding: 0 6px;
+      }
+    }
+  }
 }
 </style>
