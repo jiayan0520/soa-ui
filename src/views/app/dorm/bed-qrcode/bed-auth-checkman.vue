@@ -42,18 +42,20 @@
             </div>
             <div>{{ item.grade }}</div>
           </div>
-          <i
-            class="soa-icon soa-icon-gengduo"
-            @click.stop="bindMoreClick(index)" />
-          <ul
-            v-if="showMoreIndex === index"
-            class="soa-op__dropdown">
-            <li
-              v-for="btn in moreOpCheckList"
-              :key="btn.index"
-              @click.stop="clickMoreBtn(btn.value)"
-            >{{ btn.label }}</li>
-          </ul>
+          <div class="soa-gengduo">
+            <i
+              class="soa-icon soa-icon-gengduo"
+              @click.stop="bindMoreClick(index)" />
+            <ul
+              v-if="showMoreIndex === index"
+              class="soa-op__dropdown">
+              <li
+                v-for="btn in moreOpCheckList"
+                :key="btn.index"
+                @click.stop="clickMoreBtn(btn.value)"
+              >{{ btn.label }}</li>
+            </ul>
+          </div>
         </div>
       </van-collapse-item>
     </van-collapse>

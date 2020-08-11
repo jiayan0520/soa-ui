@@ -6,7 +6,7 @@
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍楼列表'"
-      detail-url="/dorm/buildingDetail"
+      detail-url="/dorm/building/detail"
       op-label="管理"
       class="dorm-list"
       @search="onSearch"
@@ -19,7 +19,7 @@
           v-if="isShowBar"
           class="tool-bar">
           <van-button
-            class="btn-op btn-check-all"
+            class="btn-op"
             type="info"
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />

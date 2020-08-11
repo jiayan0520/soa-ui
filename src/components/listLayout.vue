@@ -50,23 +50,25 @@
                 :item="item"
                 :index="index"
                 name="item-content" />
-              <i
+              <div
                 v-if="moreOpList.length"
-                class="soa-icon soa-icon-gengduo"
-                @click.stop="bindMoreClick(index)"
-              />
-              <ul
-                v-if="showMoreIndex === index"
-                class="soa-op__dropdown">
-                <div
-                  v-for="btn in moreOpList"
-                  :key="btn.index">
-                  <li
-                    v-if="showMoreOpItem(item,btn)"
-                    @click.stop="clickMoreBtn(btn.value,item)"
-                  >{{ btn.label }}</li>
-                </div>
-              </ul>
+                class="soa-gengduo">
+                <i
+                  class="soa-icon soa-icon-gengduo"
+                  @click.stop="bindMoreClick(index)" />
+                <ul
+                  v-if="showMoreIndex === index"
+                  class="soa-op__dropdown">
+                  <div
+                    v-for="btn in moreOpList"
+                    :key="btn.index">
+                    <li
+                      v-if="showMoreOpItem(item,btn)"
+                      @click.stop="clickMoreBtn(btn.value,item)"
+                    >{{ btn.label }}</li>
+                  </div>
+                </ul>
+              </div>
             </div>
           </van-row>
         </van-list>

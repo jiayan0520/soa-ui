@@ -1,5 +1,5 @@
 <template>
-  <div class="floor-edit">
+  <div class="aroom-edit">
     <van-form
       class="aroom-edit-form soa-custom-form"
       @submit="onSubmit">
@@ -79,5 +79,10 @@ export default {
 <style lang="scss">
 .aroom-edit {
   padding: 10px;
+  .soa-custom-form .van-field {
+    .van-field__label {
+      width: 7.2em;
+    }
+  }
 }
 </style>

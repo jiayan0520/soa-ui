@@ -18,20 +18,22 @@
               <div class="time">{{ item.time }}</div>
               <div class="c-info">结果：{{ item.checkResult }}</div>
             </div>
-            <div >{{ item.grade }}</div>
+            <div>{{ item.grade }}</div>
           </div>
-          <i
-            class="soa-icon soa-icon-gengduo"
-            @click.stop="bindMoreClick(index)" />
-          <ul
-            v-if="showMoreIndex === index"
-            class="soa-op__dropdown">
-            <li
-              v-for="btn in moreOpList"
-              :key="btn.index"
-              @click.stop="clickMoreBtn(btn.value)"
-            >{{ btn.label }}</li>
-          </ul>
+          <div class="soa-gengduo">
+            <i
+              class="soa-icon soa-icon-gengduo"
+              @click.stop="bindMoreClick(index)" />
+            <ul
+              v-if="showMoreIndex === index"
+              class="soa-op__dropdown">
+              <li
+                v-for="btn in moreOpList"
+                :key="btn.index"
+                @click.stop="clickMoreBtn(btn.value)"
+              >{{ btn.label }}</li>
+            </ul>
+          </div>
         </div>
       </van-collapse-item>
     </van-collapse>
@@ -46,8 +48,7 @@
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <bed-check
-        :data="data" />
+      <bed-check :data="data" />
     </van-popup>
   </div>
 </template>

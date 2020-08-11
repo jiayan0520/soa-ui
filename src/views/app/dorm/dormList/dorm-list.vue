@@ -18,7 +18,7 @@
           v-if="isShowBar"
           class="tool-bar">
           <van-button
-            class="btn-op btn-check-all"
+            class="btn-op"
             type="info"
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />

@@ -18,7 +18,7 @@
           v-if="isShowBar"
           class="tool-bar">
           <van-button
-            class="btn-op btn-check-all"
+            class="btn-op"
             type="info"
             @click="changeCheckAll">
             <span v-text="isCheckAll?'取消全选':'全选'" />
@@ -26,19 +26,21 @@
           <van-button
             class="btn-op"
             type="info">提醒</van-button>
-          <van-button
-            class="btn-op"
-            type="info"
-            @click="showMore = !showMore">更多</van-button>
-          <ul
-            v-if="showMore"
-            class="soa-op__dropdown op-more">
-            <li
-              v-for="item in moreOpList"
-              :key="item.index"
-              @click.stop="clickMoreBtn(item.value)"
-            >{{ item.label }}</li>
-          </ul>
+          <div class="soa-gengduo">
+            <van-button
+              class="btn-op"
+              type="info"
+              @click="showMore = !showMore">更多</van-button>
+            <ul
+              v-if="showMore"
+              class="soa-op__dropdown op-more">
+              <li
+                v-for="item in moreOpList"
+                :key="item.index"
+                @click.stop="clickMoreBtn(item.value)"
+              >{{ item.label }}</li>
+            </ul>
+          </div>
           <van-button
             class="btn-op"
             type="warning"
@@ -265,5 +267,12 @@ export default {
 <style lang="scss">
 .bed-list {
   height: 100%;
+  .soa-gengduo {
+    width: unset;
+    .op-more {
+      right: -15px;
+      top: 45px;
+    }
+  }
 }
 </style>

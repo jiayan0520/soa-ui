@@ -33,20 +33,23 @@
                   type="info"
                   @click="clickMoreBtn(moreOpList[0].value,item)"
                 >{{ moreOpList[0].label }}</van-button>
-                <i
+                <div
                   v-else-if="moreOpList.length>1"
-                  class="soa-icon soa-icon-gengduo"
-                  @click.stop="bindMoreClick(index)"
-                />
-                <ul
-                  v-if="showMoreIndex === index"
-                  class="soa-op__dropdown">
-                  <li
-                    v-for="btn in moreOpList"
-                    :key="btn.index"
-                    @click.stop="clickMoreBtn(btn.value,item)"
-                  >{{ btn.label }}</li>
-                </ul>
+                  class="soa-gengduo">
+                  <i
+                    class="soa-icon soa-icon-gengduo"
+                    @click.stop="bindMoreClick(index)"
+                  />
+                  <ul
+                    v-if="showMoreIndex === index"
+                    class="soa-op__dropdown">
+                    <li
+                      v-for="btn in moreOpList"
+                      :key="btn.index"
+                      @click.stop="clickMoreBtn(btn.value,item)"
+                    >{{ btn.label }}</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </van-collapse-item>
