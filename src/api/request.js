@@ -50,6 +50,17 @@ export function post(url, data, timeout = TIMEOUT, opt = {}) {
     ...opt
   });
 }
+export function put(url, data, timeout = TIMEOUT, opt = {}) {
+  // const autoRefresh = !!store.getters.refreshTimerId;
+  return service({
+    url: url,
+    method: 'post',
+    data: data || {},
+    timeout: timeout,
+    withCredentials: true,
+    ...opt
+  });
+}
 
 export function get(url, data = {}, timeout = TIMEOUT) {
   if (!_.isObject(data)) {

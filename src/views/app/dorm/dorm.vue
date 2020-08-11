@@ -1,7 +1,6 @@
 <template>
   <div class="soa-dorm">
-    <van-tabs
-      v-model="active">
+    <van-tabs v-model="active">
       <van-tab
         title="床位列表"
         name="1">
@@ -25,6 +24,7 @@
 import dormList from './dormList/dorm-list'
 import bedList from './bedList/bed-list'
 import buildingList from './buildingList/building-list'
+import { getQuery } from '@/utils/index.js'
 export default {
   name: 'Dorm',
   components: {
@@ -34,8 +34,11 @@ export default {
   },
   data() {
     return {
-      active: ''
+      active: '1'
     }
+  },
+  created() {
+    this.active = getQuery('active') || '1'
   },
   methods: {
   }
@@ -50,7 +53,7 @@ export default {
     padding-top: 50px;
     .van-tabs__content {
       height: calc(100% - 44px);
-      & .tool-bar{
+      & .tool-bar {
         position: absolute;
         top: 0;
       }

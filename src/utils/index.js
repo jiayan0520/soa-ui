@@ -44,3 +44,23 @@ export function computeDiffTime(date) {
   }
   return res
 }
+
+/**
+ * 获取 url地址中的参数
+ * @method GetQuery
+ * @param {string} strName  参数名
+ * @returns {string} 参数对应的值  如果不存在返回空
+ */
+export function getQuery(strName) {
+  var strHref = location.href
+  var intPos = strHref.indexOf('?')
+  var strRight = strHref.substr(intPos + 1)
+  var arrTmp = strRight.split('&')
+  for (var i = 0; i < arrTmp.length; i++) {
+    var arrTemp = arrTmp[i].split('=')
+    if (arrTemp[0].toUpperCase() === strName.toUpperCase()) {
+      return arrTemp[1]
+    }
+  }
+  return ''
+}

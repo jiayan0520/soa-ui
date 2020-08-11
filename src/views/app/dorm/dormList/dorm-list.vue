@@ -109,7 +109,9 @@
       closeable
       position="bottom"
     >
-      <dorm-edit :id="rowId" />
+      <dorm-edit
+        :id="rowId"
+        @close="closePopup" />
     </van-popup>
   </div>
 </template>
@@ -233,6 +235,12 @@ export default {
     add() {
       this.isShowEditPopup = true
       this.rowId = null
+    },
+    // 关闭弹框
+    closePopup(isload) {
+      this.isShowEditPopup = false
+      this.showMore = false
+      this.onSearch()
     }
   }
 }

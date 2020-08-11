@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
   name: 'DormEdit',
   props: {
@@ -170,9 +171,6 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      console.log('')
-    },
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
       console.log('handleExecutorClick')
@@ -202,9 +200,28 @@ export default {
       }
     },
     getDetail() {
-      this.$api.getDormDetail({ id: this.id }).then(data => {
-        console.log(data)
+      this.$api.getDormDetail('24fb6bca59014f4b8362dde7e10aface').then(data => {
+        this.formData = data
       })
+    },
+    // 保存
+    onSubmit() {
+      console.log(this.formData)
+      if (this.isAdd) {
+        Toast.loading('新增宿舍中，请稍后...')
+        this.$api.addDorm(this.formData).then(data => {
+          Toast.clear()
+          Toast('新增宿舍成功')
+          this.$emit('close', true)
+        })
+      } else {
+        Toast.loading('修改宿舍中，请稍后...')
+        this.$api.updateDorm(this.formData).then(data => {
+          Toast.clear()
+          Toast('修改宿舍成功')
+          this.$emit('close', true)
+        })
+      }
     }
   }
 }
