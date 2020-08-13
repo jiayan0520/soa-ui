@@ -35,8 +35,8 @@
           <van-radio-group
             v-model="formData.dormType"
             direction="horizontal">
-            <van-radio :name="0">学生宿舍</van-radio>
-            <van-radio :name="1">单教师宿舍</van-radio>
+            <van-radio name="ALLSTUDENT">学生宿舍</van-radio>
+            <van-radio name="ALLTEACHER">教师宿舍</van-radio>
           </van-radio-group>
         </template>
       </van-field>
@@ -58,8 +58,8 @@
             direction="horizontal"
             @change="changeFormatType"
           >
-            <van-radio :name="1">字母</van-radio>
-            <van-radio :name="2">数字</van-radio>
+            <van-radio name="LETTER">字母</van-radio>
+            <van-radio name="NUM">数字</van-radio>
           </van-radio-group>
         </template>
       </van-field>
@@ -121,20 +121,18 @@ export default {
       isAdd: false, // 是否是新增
       isShowSelect: false, // 下拉选择楼栋
       formData: {
-        buildingId: '123333',
-        buildingName: '福州生活1区1号楼',
+        buildingId: null,
+        buildingName: null,
         dormName: null,
         dormManagerIds: null, // 舍长
-        dormType: 0,
-        peopleNum: 6,
-        bedFormatType: 1, // 床位编号格式
+        dormType: 'ALLSTUDENT',
+        peopleNum: null,
+        bedFormatType: 'LETTER', // 床位编号格式
         bedIds: null,
         bedNames: null,
         singleFee: 600
       },
-      buildingList: [
-        { value: '123333', text: '福州生活1区1号楼' }
-      ],
+      buildingList: null,
       data: {},
       formDataRules: {
         dormName: [{ required: true, message: '请输入宿舍名称' }],
@@ -157,14 +155,16 @@ export default {
   },
   watch: {
     peopleNum(val) {
-      if (this.isAdd && val <= 10) {
+      if (val <= 10) {
         this.changeFormatType()
       }
     }
   },
   created() {
+    this.getDimension()
     if (!this.id) {
       this.isAdd = true
+      this.formData.peopleNum = 6
       this.changeFormatType()
     } else {
       this.getDetail()
@@ -174,6 +174,12 @@ export default {
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
       console.log('handleExecutorClick')
+    },
+    // 获取楼栋维数据
+    getDimension() {
+      this.$api.getBuildingDimension().then(data => {
+        this.buildingList = data
+      })
     },
     // 选择楼栋内容
     onConfirm(obj) {
@@ -185,7 +191,7 @@ export default {
     changeFormatType() {
       if (this.formData.peopleNum) {
         const bedNameList = []
-        if (this.formData.bedFormatType === 2) {
+        if (this.formData.bedFormatType === 'NUM') {
           // 数字
           for (let i = 1; i <= this.formData.peopleNum; i++) {
             bedNameList.push(i)
@@ -200,13 +206,12 @@ export default {
       }
     },
     getDetail() {
-      this.$api.getDormDetail('24fb6bca59014f4b8362dde7e10aface').then(data => {
+      this.$api.getDormDetail(this.id).then(data => {
         this.formData = data
       })
     },
     // 保存
     onSubmit() {
-      console.log(this.formData)
       if (this.isAdd) {
         Toast.loading('新增宿舍中，请稍后...')
         this.$api.addDorm(this.formData).then(data => {

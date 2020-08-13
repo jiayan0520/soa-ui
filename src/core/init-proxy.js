@@ -15,33 +15,17 @@ export default function initProxy(store, router) {
 
   hijack(window.XMLHttpRequest, {
     open(method, url, async, user, password) {
-      // 针对ec谓词处理bug的特殊hack
-      // *** 找个时间把这个逻辑删掉
-      let _method
-      if (['DELETE', 'PUT'].includes(method)) {
-        _method = method
-        method = 'POST'
-      }
-
-      this.config = { method, url, async, user, password, _method }
-
+      this.config = { method, url, async, user, password }
       /* api代理 --- 匹配成功则返回false，拦截open方法 */
       let matched
       // 重写
       if (matched) {
         if (typeof matched === 'function') {
-          url = matched(_method || method, url)
+          url = matched(method, url)
         } else {
           url = matched + url
         }
         this.config.url = url
-        this.open(method, url, async, user, password)
-        return false
-      }
-      /* api代理 --- end */
-
-      // 如果谓词被重写，则重新open一个伪指代
-      if (_method) {
         this.open(method, url, async, user, password)
         return false
       }

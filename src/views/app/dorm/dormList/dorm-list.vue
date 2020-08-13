@@ -12,6 +12,7 @@
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
+      @changeRowCheckbox="changeRowCheckbox"
     >
       <template slot="top">
         <div
@@ -32,7 +33,8 @@
             type="info">清空宿舍</van-button>
           <van-button
             class="btn-op"
-            type="info">删除</van-button>
+            type="info"
+            @click="del">删除</van-button>
           <van-button
             class="btn-op"
             type="warning"
@@ -88,7 +90,7 @@
         slot-scope="slotProps">
         <div class="soa-list-item-content">
           <div class="item-row">
-            <span class>{{ slotProps.item.dormInfo }}</span>
+            <span class>{{ slotProps.item.buildName }}{{ slotProps.item.dormName }}</span>
             <span class="c-ml10">{{ slotProps.item.headName }}</span>
             <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
           </div>
@@ -119,6 +121,7 @@
 <script>
 import listLayout from '@/components/listLayout'
 import dormEdit from './dorm-edit'
+import { Dialog, Toast } from 'vant'
 export default {
   name: 'DormList',
   components: {
@@ -158,6 +161,8 @@ export default {
         isFull: null,
         searchValue: ''
       },
+      limit: 20, // 每页行数
+      page: 0, // 当前页码 total 总条数
       dataList: [],
       isCheckAll: false, // 列表选中全部
       showMore: false, // 更多操作
@@ -180,6 +185,14 @@ export default {
         item.isCheck = this.isCheckAll
       });
     },
+    // 行中的复选框变化了
+    changeRowCheckbox(val) {
+      if (!val) {
+        this.isCheckAll = false
+      } else {
+        this.isCheckAll = !this.dataList.some(item => item.isCheck === false) // 全部是选中
+      }
+    },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
@@ -190,46 +203,32 @@ export default {
           break
         case 'qc':
           break
+        case 'del': {
+          this.del(item.id)
+        }
       }
       this.showMore = false
     },
     onSearch() {
-      this.pgeIndex = 0
-      this.pageTotal = 9999
+      this.page = 0
       this.dataList = []
       this.loadData()
     },
     loadData() {
-      this.PageIndex++;
-      console.log(this.params)
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            isCheck: this.isCheckAll,
-            isShowMore: false,
-            id: this.dataList.length + 1,
-            dormInfo: '福大生活一区103栋108宿舍-A床',
-            headName: '李四四',
-            telephone: '18823412111',
-            dormType: '学生宿舍',
-            num: 6,
-            aNum: 5
-          });
-        }
+      this.page++;
+      this.$api.getDormList({
+        ...this.searchForm,
+        page: this.page,
+        limit: this.limit
+      }).then(data => {
         // 加载状态结束
         this.$refs.listLayoutDorm.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        this.dataList = this.dataList.concat(data.rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayoutDorm.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
+      })
     },
     // 新增
     add() {
@@ -241,6 +240,32 @@ export default {
       this.isShowEditPopup = false
       this.showMore = false
       this.onSearch()
+    },
+    del(id) {
+      let idList = id ? [id] : []
+      // 选中删除
+      if (!id) {
+        if (this.isCheckAll) {
+          console.log(1)
+        } else {
+          idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+        }
+      }
+      if (idList.length <= 0) {
+        Toast('请选中一条要删除的记录！');
+        return;
+      }
+      Dialog.confirm({
+        title: '确认删除？',
+        message: `此次选中${idList.length}条记录，删除的数据无法恢复`
+      }).then(() => {
+        // 单行删除
+        this.$api.deleteDorm({ ids: idList.join(',') }).then(res => {
+          Toast(`删除成功，此次共删除${idList.length}条记录！`);
+        }).catch(error => {
+          Toast('删除失败！' + error);
+        })
+      })
     }
   }
 }

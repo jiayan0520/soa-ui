@@ -54,8 +54,19 @@ export function put(url, data, timeout = TIMEOUT, opt = {}) {
   // const autoRefresh = !!store.getters.refreshTimerId;
   return service({
     url: url,
-    method: 'post',
+    method: 'put',
     data: data || {},
+    timeout: timeout,
+    withCredentials: true,
+    ...opt
+  });
+}
+export function del(url, data, timeout = TIMEOUT, opt = {}) {
+  // const autoRefresh = !!store.getters.refreshTimerId;
+  return service({
+    url: url,
+    method: 'delete',
+    params: data,
     timeout: timeout,
     withCredentials: true,
     ...opt

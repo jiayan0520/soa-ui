@@ -164,6 +164,7 @@ export default {
     // 行复选框点击
     changeRowCheckbox(item) {
       item.isCheck = !item.isCheck
+      this.$emit('changeRowCheckbox', item.isCheck)
       this.$forceUpdate()
     },
     // 更多操作

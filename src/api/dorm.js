@@ -1,11 +1,11 @@
-import { post, get, put } from './request'
+import { post, get, put, del } from './request'
 
 // 前缀
 const prefix = `/prod-api/dormmodule`
 
 // 宿舍列表
 export function getDormList(params) {
-  return get(`${prefix}/dorm`, params)
+  return get(`${prefix}/dorm/list`, params)
 }
 // 获取宿舍详情
 export function getDormDetail(params) {
@@ -18,4 +18,12 @@ export function addDorm(params) {
 // 修改宿舍
 export function updateDorm(params) {
   return put(`${prefix}/dorm`, params)
+}
+// 删除宿舍
+export function deleteDorm(params) {
+  return del(`${prefix}/dorm`, params)
+}
+// 楼栋维数据
+export function getBuildingDimension() {
+  return get(`${prefix}/building`)
 }
