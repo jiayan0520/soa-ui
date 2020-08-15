@@ -87,7 +87,7 @@ export default {
       tab: ['我发布的', '我收到的'],
       tab1: ['未完成', '已完成', '所有'],
       limit: 20, // 每页行数
-      page: 1 // 当前页码 total 总条数
+      page: 0 // 当前页码 total 总条数
     }
   },
   computed: {
@@ -119,6 +119,7 @@ export default {
         });
     },
     onSearch(searchValue) {
+      this.page = 0;
       this.dataList = []
       this.$refs.listLayout.loading = true
       this.$refs.listLayout.finished = false
@@ -129,6 +130,7 @@ export default {
       return computeDiffTime(deadlineTime)
     },
     onLoad() {
+      this.page++
       const stateTypeMap = {
         0: 'NUFINISHED',
         1: 'FINISHED',
@@ -137,11 +139,11 @@ export default {
       const parms = {
         type: this.active + 1,
         content: this.searchValue,
-        state: stateTypeMap[this.active1],
         page: this.page,
         limit: this.limit,
         userId: this.$store.getters['core/user'].userId
       }
+      stateTypeMap[this.active1] && (parms.state = stateTypeMap[this.active1])
       // 异步更新数据
       this.$api.getTaskList(parms).then((data) => {
         this.dataList = (data && data.rows) || [];
