@@ -81,7 +81,6 @@ export default {
         limit: this.limit
       }
       this.$api.getTaskExamineList(params).then((res) => {
-        console.log('任务审核列表数据' + res);
         this.dataList = (res && res.rows) || [];
         const total = (res && res.total) || 0;
         // 加载状态结束

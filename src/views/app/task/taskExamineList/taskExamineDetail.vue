@@ -50,7 +50,9 @@
           :download="item.fileName.split('/').pop()">{{ item.fileName.split('/').pop() }}</a>
       </template>
     </custom-cell>
-    <div class="soa-task-examine-detail__btn">
+    <div
+      v-if="params.state!=='PASS'"
+      class="soa-task-examine-detail__btn">
       <van-button
         type="info"
         icon="checked"
@@ -72,18 +74,18 @@
       <van-form ref="examineForm">
         <template v-if="isCheck">
           <van-field
-            v-model="examineQuery.score"
+            v-model="examineForm.score"
             :rules="[{ required: true, message: '请填写质量分' }]"
             type="digit"
             label="质量分" />
           <van-field
-            v-model="examineQuery.content"
+            v-model="examineForm.content"
             type="textarea"
             label="评语"/>
         </template>
         <van-field
           v-else
-          v-model="examineQuery.content"
+          v-model="examineForm.content"
           type="textarea"
           label="原因" />
       </van-form>
@@ -108,7 +110,7 @@ export default {
       isCheck: false,
       number: 0,
       params: {},
-      examineQuery: {
+      examineForm: {
         score: '',
         content: ''
       }
@@ -143,9 +145,13 @@ export default {
     handleConfirm(action, done) {
       if (action === 'confirm') {
         this.$refs.examineForm.validate().then((valid) => {
-          this.examineQuery.auditUserId = this.$store.getters['core/user'].userId
-          this.examineQuery.state = this.isCheck ? 'PASS' : 'FAILED'
-          this.$api.saveTaskExamine(this.examineQuery).then((res) => {
+          const parms = {
+            auditUserId: this.$store.getters['core/user'].userId,
+            state: this.isCheck ? 'PASS' : 'FAILED',
+            taskPerformId: this.$route.query.id,
+            ...this.examineForm
+          }
+          this.$api.saveTaskExamine(parms).then((res) => {
             this.getNextPage(done)
           }).catch(() => { done(false) })
         }).catch(() => { done(false) })
@@ -157,16 +163,26 @@ export default {
       const params = {
         type: 'WAITING',
         page: 1,
-        limit: 1
+        limit: 2
       }
-      this.$api.getTaskExamineList({ params }).then((res) => {
-        if (res.length) {
-          this.$router.replace({
-            query: { id: res[0].taskPerformId }
+      this.$api.getTaskExamineList(params).then((res) => {
+        let taskId = ''
+        const rows = res.rows
+        for (let i = 0; i < rows.length; i++) {
+          if (rows[i].taskPerformId !== this.$route.query.id) {
+            taskId = rows[i].taskPerformId
+            break;
+          }
+        }
+        if (taskId) {
+          this.$router.push({
+            query: { id: taskId }
           })
           this.getData(this.$route.query.id)
-          done()
+        } else {
+          this.$router.replace('/task-examine-list');
         }
+        done()
         this.show = false
       })
     }
