@@ -108,7 +108,7 @@
             <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
           </div>
           <div class="item-row flex-between c-light">
-            {{ slotProps.item.dormType }}
+            {{ dormTypeEnum[slotProps.item.dormType].label }}
             <div>
               <span>人数：{{ slotProps.item.dormData.userNum }}/{{ slotProps.item.dormData.totalNum }}</span>
               <span
@@ -151,6 +151,7 @@ import baseList from '../mixins/base-list'
 import dormEdit from './dorm-edit'
 import dormDetail from './dorm-detail'
 import { Dialog, Toast } from 'vant'
+import { dormTypeEnum } from '../utils/dorm-enum'
 export default {
   name: 'DormList',
   components: {
@@ -160,6 +161,7 @@ export default {
   mixins: [baseList],
   data() {
     return {
+      dormTypeEnum,
       actionName: 2,
       totalList: [
         { lable: '宿舍树', filed: 'total_num', value: 200 },
@@ -192,12 +194,13 @@ export default {
       },
       moreOpList: [
         { value: 'edit', label: '编辑' },
-        { value: 'ts', label: '清空宿舍' },
+        { value: 'clear', label: '清空宿舍' },
         { value: 'del', label: '删除' }
       ]
     }
   },
   created() {
+    console.log(this.dormTypeEnum)
   },
   methods: {
     // 点击更多操作按钮了
@@ -208,13 +211,33 @@ export default {
           this.rowId = item.id
           this.isShowEditPopup = true
           break
-        case 'qc':
+        case 'clear':
+          this.clearDorm(item.id)
           break
         case 'del': {
           this.del(item.id)
         }
       }
       this.showMore = false
+    },
+    // 清空宿舍
+    clearDorm(id) {
+      let idList = []
+      if (id) {
+        idList = [id]
+      } else {
+        idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+      }
+      Dialog.confirm({
+        title: '确认删除？',
+        message: `此次选中${idList.length}条记录，删除的数据无法恢复`
+      }).then(() => {
+        this.$api.clearDorm({ dormId: idList.join(',') }).then(res => {
+
+        }).catch(error => {
+          Toast('删除失败！' + error);
+        })
+      })
     },
     loadData() {
       this.page++;

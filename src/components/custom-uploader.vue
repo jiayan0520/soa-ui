@@ -32,7 +32,7 @@ export default {
     // 已有的附件列表
     annexList: {
       type: Array,
-      default: null
+      default: () => []
     },
     // 是否只读
     readOnly: {
@@ -56,6 +56,7 @@ export default {
     };
   },
   mounted() {
+    this.fileList = this.annexList || []
     if (!this.value) {
       this.onChangeFunc(uuid32())
     }
@@ -87,7 +88,7 @@ export default {
         return;
       }
       console.log(file)
-      this.$api.deleteFile(file.aid).then(() => {
+      this.$api.deleteFile([file.aid]).then(() => {
         this.fileList.splice(this.fileList.indexOf(file), 1);
       }).catch(() => {
         Toast('删除失败')

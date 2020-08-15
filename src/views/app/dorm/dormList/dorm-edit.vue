@@ -35,8 +35,11 @@
           <van-radio-group
             v-model="formData.dormType"
             direction="horizontal">
-            <van-radio name="ALLSTUDENT">学生宿舍</van-radio>
-            <van-radio name="ALLTEACHER">教师宿舍</van-radio>
+            <van-radio
+              v-for="key in Object.keys(dormTypeEnum)"
+              :key="key"
+              :name="key"
+            >{{ dormTypeEnum[key].label }}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
@@ -58,8 +61,11 @@
             direction="horizontal"
             @change="changeFormatType"
           >
-            <van-radio name="LETTER">字母</van-radio>
-            <van-radio name="NUM">数字</van-radio>
+            <van-radio
+              v-for="key in Object.keys(bedFormatTypeEnum)"
+              :key="key"
+              :name="key"
+            >{{ bedFormatTypeEnum[key].label }}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
@@ -108,6 +114,7 @@
 
 <script>
 import { Toast } from 'vant';
+import { dormTypeEnum, bedFormatTypeEnum } from '../utils/dorm-enum'
 export default {
   name: 'DormEdit',
   props: {
@@ -118,6 +125,8 @@ export default {
   },
   data() {
     return {
+      bedFormatTypeEnum, // 床位类型枚举
+      dormTypeEnum, // 宿舍类型枚举
       isAdd: false, // 是否是新增
       isShowSelect: false, // 下拉选择楼栋
       formData: {

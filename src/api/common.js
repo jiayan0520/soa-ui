@@ -1,4 +1,4 @@
-import { uploadFile, post, del } from './request'
+import { uploadFile, post } from './request'
 // 前缀
 const prefix = `/prod-api/common`
 // 上传附件，保存到附件表
@@ -11,7 +11,7 @@ function annex(params) {
 }
 // 删除附件
 function deleteFile(params) {
-  return del(`${prefix}/annex/${params}`)
+  return post(`${prefix}/annex/delete`, params)
 }
 export {
   upload,

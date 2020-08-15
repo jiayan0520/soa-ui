@@ -23,6 +23,10 @@ export function updateDorm(params) {
 export function deleteDorm(params) {
   return del(`${prefix}/dorm/${params}`)
 }
+// 清空宿舍
+export function clearDorm(params) {
+  return post(`${prefix}/dorm/clearDorm`, params)
+}
 // 楼栋维数据
 export function getBuildingDimension() {
   return get(`${prefix}/building/getBuildingList`)
