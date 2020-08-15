@@ -21,9 +21,29 @@ export function updateDorm(params) {
 }
 // 删除宿舍
 export function deleteDorm(params) {
-  return del(`${prefix}/dorm`, params)
+  return del(`${prefix}/dorm/${params}`)
 }
 // 楼栋维数据
 export function getBuildingDimension() {
   return get(`${prefix}/building`)
+}
+// 楼栋列表
+export function getBuildingList(params) {
+  return get(`${prefix}/building/list`, params)
+}
+// 新增楼栋
+export function addBuilding(params) {
+  return post(`${prefix}/building`, params)
+}
+// 修改楼栋
+export function updateBuilding(params) {
+  return put(`${prefix}/building`, params)
+}
+// 删除楼栋
+export function deleteBuilding(params) {
+  return del(`${prefix}/building/${params}`)
+}
+// 获取楼栋详情
+export function getBuildingDetail(params) {
+  return get(`${prefix}/building/${params}`)
 }

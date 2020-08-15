@@ -205,6 +205,7 @@ export default {
         this.formData.bedNames = bedNameList.join(',')
       }
     },
+    // 获取详情
     getDetail() {
       this.$api.getDormDetail(this.id).then(data => {
         this.formData = data

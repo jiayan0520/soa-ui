@@ -31,7 +31,11 @@
         name="uploader"
         label="楼栋照片">
         <template #input>
-          <van-uploader v-model="formData.mainPicId" />
+          3424
+          <van-uploader
+            :max-count="1"
+            v-model="formData.annexIds"
+            multiple />
         </template>
       </van-field>
       <van-field
@@ -44,7 +48,7 @@
       />
       <van-field
         :required="true"
-        v-model="formData.remark"
+        v-model="formData.desc"
         type="textarea"
         placeholder="楼栋简介"
         label="简介"
@@ -68,6 +72,7 @@
 
 <script>
 import addressSelect from '@/components/address-select'
+import { Toast } from 'vant';
 export default {
   name: 'BuildingEdit',
   components: {
@@ -81,22 +86,56 @@ export default {
   },
   data() {
     return {
+      isAdd: false,
       formData: {
         buildingName: null,
-        remark: null,
+        desc: null,
         addr: null,
         latitude: null,
         longitude: null,
-        mainPicId: null, // 楼栋照片
+        annexIds: null, // 楼栋照片
         buildingManagerIds: null, // 楼栋管理员
         maintenanceWorkerIds: null // 楼栋维修员
       },
       isShowAddressPopup: false
     }
   },
+  created() {
+    if (!this.id) {
+      this.isAdd = true
+    } else {
+      this.getDetail()
+    }
+  },
   methods: {
+    // 保存
     onSubmit() {
-      console.log('')
+      if (this.isAdd) {
+        Toast.loading('新增楼栋中，请稍后...')
+        this.$api.addBuilding(this.formData).then(data => {
+          Toast.clear()
+          Toast('新增楼栋成功')
+          this.$emit('close', true)
+        })
+      } else {
+        Toast.loading('修改楼栋中，请稍后...')
+        this.$api.updateBuilding(this.formData).then(data => {
+          Toast.clear()
+          Toast('修改楼栋成功')
+          this.$emit('close', true)
+        })
+      }
+    },
+    // 获取详情
+    getDetail() {
+      this.$api.getBuildingDetail(this.id).then(data => {
+        this.formData = data.map(item => {
+          return {
+            ...item,
+            annexIdsList: []
+          }
+        })
+      })
     },
     handleExecutorClick() {
       this.$router.push('/task-add-executor');

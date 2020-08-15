@@ -46,6 +46,19 @@
             type="warning"
             @click="isShowBar = false">取消管理</van-button>
         </div>
+        <van-tabs
+          v-model="actionName"
+          @click="tabClick">
+          <van-tab
+            :name="1"
+            title="床位列表" />
+          <van-tab
+            :name="2"
+            title="宿舍列表" />
+          <van-tab
+            :name="3"
+            title="楼栋列表" />
+        </van-tabs>
         <form
           v-if="isShowSearch"
           action="/">
@@ -123,14 +136,13 @@
 </template>
 
 <script>
-import listLayout from '@/components/listLayout'
+import baseList from '../mixins/base-list'
 export default {
   name: 'BedList',
-  components: {
-    listLayout
-  },
+  mixins: [baseList],
   data() {
     return {
+      actionName: 1,
       totalList: [
         { lable: '可容纳', filed: 'total_num', value: 200 },
         { lable: '已容纳', filed: 'total_num', value: 200 },
@@ -142,8 +154,6 @@ export default {
         { lable: '已容纳老师', filed: 'total_num', value: 20 },
         { lable: '请假中', filed: 'total_num', value: 200 }
       ], // 统计信息
-      isShowBar: false, // 是否展示checkbox框
-      isShowSearch: false, // 是否展示搜索弹框
       statusList: [
         { text: '全部状态', value: null },
         { text: '正常', value: 1 },
@@ -172,12 +182,6 @@ export default {
         dormType: null,
         searchValue: ''
       },
-      dataList: [],
-      page: 0, // 前端分页页码
-      limit: 10,
-      pageTotal: 9999, // 总页数
-      isCheckAll: false, // 列表选中全部
-      showMore: false, // 更多操作
       moreOpList: [
         { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
@@ -192,26 +196,11 @@ export default {
     },
     system() {
       return this.$store.getters['core/system']
-    },
-    params() {
-      return {
-        ...this.searchForm,
-        page: this.page,
-        limit: this.limit
-      }
     }
   },
   created() {
-    console.log(this.user, this.system)
   },
   methods: {
-    // 复选框选择所有
-    changeCheckAll() {
-      this.isCheckAll = !this.isCheckAll
-      this.dataList.forEach((item, index) => {
-        item.isCheck = this.isCheckAll
-      });
-    },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
@@ -224,12 +213,6 @@ export default {
           break
       }
       this.showMore = false
-    },
-    onSearch() {
-      this.page = 0
-      this.pageTotal = 9999
-      this.dataList = []
-      this.loadData()
     },
     loadData() {
       this.page++;

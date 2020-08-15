@@ -1,7 +1,7 @@
 <template>
   <div class="dorm-list">
     <list-layout
-      ref="listLayoutDorm"
+      ref="listLayout"
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
@@ -40,6 +40,19 @@
             type="warning"
             @click="isShowBar = false">取消管理</van-button>
         </div>
+        <van-tabs
+          v-model="actionName"
+          @click="tabClick">
+          <van-tab
+            :name="1"
+            title="床位列表" />
+          <van-tab
+            :name="2"
+            title="宿舍列表" />
+          <van-tab
+            :name="3"
+            title="楼栋列表" />
+        </van-tabs>
         <form
           v-if="isShowSearch"
           action="/">
@@ -119,17 +132,18 @@
 </template>
 
 <script>
-import listLayout from '@/components/listLayout'
+import baseList from '../mixins/base-list'
 import dormEdit from './dorm-edit'
 import { Dialog, Toast } from 'vant'
 export default {
   name: 'DormList',
   components: {
-    listLayout,
     dormEdit
   },
+  mixins: [baseList],
   data() {
     return {
+      actionName: 2,
       totalList: [
         { lable: '宿舍树', filed: 'total_num', value: 200 },
         { lable: '未分配满', filed: 'total_num', value: 200 },
@@ -137,8 +151,6 @@ export default {
         { lable: '已分配满', filed: 'total_num', value: 200 },
         { lable: '老师', filed: 'total_num', value: 200 }
       ], // 统计信息
-      isShowBar: false, // 是否展示checkbox框
-      isShowSearch: false, // 是否展示搜索弹框
       statusList: [
         { text: '激活状态', value: null },
         { text: '全部激活', value: 1 },
@@ -161,38 +173,16 @@ export default {
         isFull: null,
         searchValue: ''
       },
-      limit: 20, // 每页行数
-      page: 0, // 当前页码 total 总条数
-      dataList: [],
-      isCheckAll: false, // 列表选中全部
-      showMore: false, // 更多操作
       moreOpList: [
         { value: 'edit', label: '编辑' },
         { value: 'ts', label: '清空宿舍' },
         { value: 'del', label: '删除' }
-      ],
-      isShowEditPopup: false, // 是否展示宿舍编辑弹框
-      rowId: null // 当前编辑的id
+      ]
     }
   },
   created() {
   },
   methods: {
-    // 复选框选择所有
-    changeCheckAll() {
-      this.isCheckAll = !this.isCheckAll
-      this.dataList.forEach((item, index) => {
-        item.isCheck = this.isCheckAll
-      });
-    },
-    // 行中的复选框变化了
-    changeRowCheckbox(val) {
-      if (!val) {
-        this.isCheckAll = false
-      } else {
-        this.isCheckAll = !this.dataList.some(item => item.isCheck === false) // 全部是选中
-      }
-    },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
@@ -209,11 +199,6 @@ export default {
       }
       this.showMore = false
     },
-    onSearch() {
-      this.page = 0
-      this.dataList = []
-      this.loadData()
-    },
     loadData() {
       this.page++;
       this.$api.getDormList({
@@ -222,11 +207,11 @@ export default {
         limit: this.limit
       }).then(data => {
         // 加载状态结束
-        this.$refs.listLayoutDorm.loading = false
+        this.$refs.listLayout.loading = false
         this.dataList = this.dataList.concat(data.rows)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {
-          this.$refs.listLayoutDorm.finished = true
+          this.$refs.listLayout.finished = true
         }
       })
     },
@@ -260,7 +245,7 @@ export default {
         message: `此次选中${idList.length}条记录，删除的数据无法恢复`
       }).then(() => {
         // 单行删除
-        this.$api.deleteDorm({ ids: idList.join(',') }).then(res => {
+        this.$api.deleteDorm(idList.join(',')).then(res => {
           Toast(`删除成功，此次共删除${idList.length}条记录！`);
         }).catch(error => {
           Toast('删除失败！' + error);

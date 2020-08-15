@@ -1,8 +1,21 @@
 export default [
+  // 宿舍列表
   {
-    path: '/dorm',
-    name: 'dorm',
-    component: () => import('@/views/app/dorm')
+    path: '/dorm/dormList',
+    name: 'dormList',
+    component: () => import('@/views/app/dorm/dormList')
+  },
+  // 楼栋列表
+  {
+    path: '/dorm/buildingList',
+    name: 'buildingList',
+    component: () => import('@/views/app/dorm/buildingList')
+  },
+  // 床位列表
+  {
+    path: '/dorm/bedList',
+    name: 'bedList',
+    component: () => import('@/views/app/dorm/bedList')
   },
   // 床位详情页
   {

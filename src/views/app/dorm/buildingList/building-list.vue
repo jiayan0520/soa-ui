@@ -1,7 +1,7 @@
 <template>
   <div class="building-list">
     <list-layout
-      ref="listLayoutBuilding"
+      ref="listLayout"
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
@@ -39,6 +39,19 @@
             type="warning"
             @click="isShowBar = false">取消管理</van-button>
         </div>
+        <van-tabs
+          v-model="actionName"
+          @click="tabClick">
+          <van-tab
+            :name="1"
+            title="床位列表" />
+          <van-tab
+            :name="2"
+            title="宿舍列表" />
+          <van-tab
+            :name="3"
+            title="楼栋列表" />
+        </van-tabs>
         <form
           v-if="isShowSearch"
           action="/">
@@ -82,43 +95,39 @@
           <div class="soa-list-total">
             <div class="total-item">
               <span class="lable">可容纳：</span>
-              <span class="val">200人</span>
-            </div>
-            <div class="total-item">
-              <span class="lable">可容纳：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.totalData.bedTotal }}人</span>
             </div>
             <div class="total-item">
               <span class="lable">已容纳：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.totalData.userTotal }}人</span>
             </div>
             <div class="total-item">
               <span class="lable">宿舍数：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.totalData.dormNum }}间</span>
             </div>
             <div class="total-item">
               <span class="lable">可容纳学生：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.studentTotalData.bedTotal }}人</span>
             </div>
             <div class="total-item">
               <span class="lable">已容纳学生：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.studentTotalData.userTotal }}人</span>
             </div>
             <div class="total-item">
               <span class="lable">学生：</span>
-              <span class="val">200间</span>
+              <span class="val">{{ slotProps.item.studentTotalData.dormNum }}间</span>
             </div>
             <div class="total-item">
               <span class="lable">可容纳老师：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.teacherTotalData.bedTotal }}人</span>
             </div>
             <div class="total-item">
               <span class="lable">已容纳老师：</span>
-              <span class="val">200人</span>
+              <span class="val">{{ slotProps.item.teacherTotalData.userTotal }}人</span>
             </div>
             <div class="total-item">
               <span class="lable">老师：</span>
-              <span class="val">200间</span>
+              <span class="val">{{ slotProps.item.teacherTotalData.dormNum }}间</span>
             </div>
           </div>
         </div>
@@ -129,24 +138,23 @@
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <building-edit />
+      <building-edit :id="rowId" />
     </van-popup>
   </div>
 </template>
 
 <script>
-import listLayout from '@/components/listLayout'
+import baseList from '../mixins/base-list'
 import buildingEdit from './building-edit'
 export default {
   name: 'BuildingList',
   components: {
-    listLayout,
     buildingEdit
   },
+  mixins: [baseList],
   data() {
     return {
-      isShowBar: false, // 是否展示checkbox框
-      isShowSearch: false, // 是否展示搜索弹框
+      actionName: 3,
       isFullList: [
         { text: '是否住满', value: null },
         { text: '全住满', value: 1 },
@@ -156,41 +164,17 @@ export default {
         isFull: null,
         searchValue: ''
       },
-      dataList: [],
-      pageIndex: 0, // 前端分页页码
-      pageSize: 10,
-      pageTotal: 9999, // 总页数
-      isCheckAll: false, // 列表选中全部
-      showMore: false, // 更多操作
       moreOpList: [
         { value: 'edit', label: '编辑' },
         { value: 'ts', label: '清空宿舍' },
         { value: 'del', label: '删除' }
-      ],
-      isShowEditPopup: false, // 是否展示宿舍编辑弹框
-      rowId: null // 当前编辑的id
-    }
-  },
-  computed: {
-    params() {
-      return {
-        ...this.searchForm,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
-      }
+      ]
     }
   },
   created() {
     this.loadData()
   },
   methods: {
-    // 复选框选择所有
-    changeCheckAll() {
-      this.isCheckAll = !this.isCheckAll
-      this.dataList.forEach((item, index) => {
-        item.isCheck = this.isCheckAll
-      });
-    },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
@@ -204,40 +188,21 @@ export default {
       }
       this.showMore = false
     },
-    onSearch() {
-      this.pgeIndex = 0
-      this.pageTotal = 9999
-      this.dataList = []
-      this.loadData()
-    },
     loadData() {
-      this.PageIndex++;
-      console.log(this.params)
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            isCheck: false,
-            isShowMore: false,
-            id: dataList.length + 1,
-            buildingName: '福大生活一区103栋',
-            headName: '李幸福',
-            telephone: '18233422111'
-          });
-        }
+      this.page++;
+      this.$api.getBuildingList({
+        ...this.searchForm,
+        page: this.page,
+        limit: this.limit
+      }).then(data => {
         // 加载状态结束
-        this.$refs.listLayoutBuilding.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        this.$refs.listLayout.loading = false
+        this.dataList = this.dataList.concat(data.rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
-          this.$refs.listLayoutBuilding.finished = true
+        if (this.dataList.length >= data.total) {
+          this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
+      })
     },
     // 新增
     add() {

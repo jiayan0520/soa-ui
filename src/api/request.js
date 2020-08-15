@@ -22,11 +22,8 @@ service.interceptors.response.use(response => {
   if (resData.code >= 300) {
     return Promise.reject(resData.msg)
   }
-  if (resData.rows && resData.total) {
-    resData.data = {
-      rows: resData.rows,
-      total: resData.total
-    }
+  if (Object.prototype.hasOwnProperty.call(resData, 'rows') && Object.prototype.hasOwnProperty.call(resData, 'total')) {
+    resData.data = resData
   }
   return resData.data
 }, error => {
