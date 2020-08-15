@@ -6,12 +6,12 @@
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍床位列表'"
-      detail-url="/dorm/bedDetail"
       op-label="管理"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
+      @handleRowClick="handleRowClick"
     >
       <template slot="top">
         <div
@@ -132,13 +132,29 @@
         </div>
       </template>
     </list-layout>
+    <van-popup
+      v-if="isShowDetailPopup"
+      v-model="isShowDetailPopup"
+      :style="{ height: '100%' }"
+      closeable
+      class="soa-popup"
+      position="bottom"
+    >
+      <bed-detail
+        :id="rowId"
+        @close="closePopup" />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import baseList from '../mixins/base-list'
+import bedDetail from './bed-detail'
 export default {
   name: 'BedList',
+  components: {
+    bedDetail
+  },
   mixins: [baseList],
   data() {
     return {

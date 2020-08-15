@@ -275,3 +275,27 @@ a {
         }
     }
 }
+// 宿舍列表通用样式
+.dorm-list {
+    height: 100%;
+    @media only screen and (max-width: 414px) {
+        .tool-bar {
+            .btn-op {
+                padding: 0 10px;
+            }
+        }
+    }
+    @media only screen and (max-width: 375px) {
+        .tool-bar {
+            .btn-op {
+                padding: 0 6px;
+            }
+        }
+    }
+}
+// 弹框，留底部的的导航条
+.soa-popup {
+    > div {
+        margin-bottom: 52px;
+    }
+}

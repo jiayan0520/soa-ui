@@ -3,6 +3,7 @@
     <router-view class="app-router"/>
     <van-tabbar
       v-model="active"
+      class="soa-bottom-bar"
     >
       <van-tabbar-item
         replace
@@ -49,7 +50,8 @@ body {
     // overflow: hidden;
   }
   .soa-bottom-bar {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    // border-top: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 1000000;
   }
 }
 </style>

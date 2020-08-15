@@ -8,6 +8,7 @@ export default {
       isShowBar: false, // 是否展示checkbox框
       isShowSearch: false, // 是否展示搜索弹框
       isShowEditPopup: false, // 是否展示宿舍编辑弹框
+      isShowDetailPopup: false, // 是否展示宿舍详情弹框
       rowId: null, // 当前编辑的id
       limit: 20, // 每页行数
       page: 0, // 当前页码 total 总条数
@@ -50,6 +51,20 @@ export default {
         this.isCheckAll = false
       } else {
         this.isCheckAll = !this.dataList.some(item => item.isCheck === false) // 全部是选中
+      }
+    },
+    // 行点击弹详情框
+    handleRowClick(item) {
+      this.rowId = item.id
+      this.isShowDetailPopup = true
+    },
+    // 关闭弹框
+    closePopup(isload) {
+      this.isShowEditPopup = false
+      this.isShowDetailPopup = false
+      this.showMore = false
+      if (isload) {
+        this.onSearch()
       }
     }
   }

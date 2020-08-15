@@ -6,13 +6,13 @@
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍楼列表'"
-      detail-url="/dorm/building/detail"
       op-label="管理"
       class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
+      @handleRowClick="handleRowClick"
     >
       <template slot="top">
         <div
@@ -134,11 +134,28 @@
       </template>
     </list-layout>
     <van-popup
+      v-if="isShowEditPopup"
       v-model="isShowEditPopup"
       :style="{ height: '100%' }"
       closeable
-      position="bottom">
-      <building-edit :id="rowId" />
+      class="soa-popup"
+      position="bottom"
+    >
+      <building-edit
+        :id="rowId"
+        @close="closePopup" />
+    </van-popup>
+    <van-popup
+      v-if="isShowDetailPopup"
+      v-model="isShowDetailPopup"
+      :style="{ height: '100%' }"
+      closeable
+      class="soa-popup"
+      position="bottom"
+    >
+      <building-detail
+        :id="rowId"
+        @close="closePopup" />
     </van-popup>
   </div>
 </template>
@@ -146,10 +163,12 @@
 <script>
 import baseList from '../mixins/base-list'
 import buildingEdit from './building-edit'
+import buildingDetail from './building-detail'
 export default {
   name: 'BuildingList',
   components: {
-    buildingEdit
+    buildingEdit,
+    buildingDetail
   },
   mixins: [baseList],
   data() {

@@ -6,13 +6,13 @@
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍列表'"
-      detail-url="/dorm/dormDetail"
       op-label="管理"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
       @changeRowCheckbox="changeRowCheckbox"
+      @handleRowClick="handleRowClick"
     >
       <template slot="top">
         <div
@@ -103,15 +103,17 @@
         slot-scope="slotProps">
         <div class="soa-list-item-content">
           <div class="item-row">
-            <span class>{{ slotProps.item.buildName }}{{ slotProps.item.dormName }}</span>
+            <span class>{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}</span>
             <span class="c-ml10">{{ slotProps.item.headName }}</span>
             <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
           </div>
           <div class="item-row flex-between c-light">
             {{ slotProps.item.dormType }}
             <div>
-              <span>人数：{{ slotProps.item.num }}/{{ slotProps.item.num }}</span>
-              <span class="c-ml10 c-danger">部分激活:{{ slotProps.item.aNum }}/{{ slotProps.item.num }}</span>
+              <span>人数：{{ slotProps.item.dormData.userNum }}/{{ slotProps.item.dormData.totalNum }}</span>
+              <span
+                class="c-ml10 c-danger"
+              >部分激活:{{ slotProps.item.dormData.activationNum }}/{{ slotProps.item.dormData.leaveNum }}</span>
             </div>
           </div>
         </div>
@@ -122,9 +124,22 @@
       v-model="isShowEditPopup"
       :style="{ height: '100%' }"
       closeable
+      class="soa-popup"
       position="bottom"
     >
       <dorm-edit
+        :id="rowId"
+        @close="closePopup" />
+    </van-popup>
+    <van-popup
+      v-if="isShowDetailPopup"
+      v-model="isShowDetailPopup"
+      :style="{ height: '100%' }"
+      closeable
+      class="soa-popup"
+      position="bottom"
+    >
+      <dorm-detail
         :id="rowId"
         @close="closePopup" />
     </van-popup>
@@ -134,11 +149,13 @@
 <script>
 import baseList from '../mixins/base-list'
 import dormEdit from './dorm-edit'
+import dormDetail from './dorm-detail'
 import { Dialog, Toast } from 'vant'
 export default {
   name: 'DormList',
   components: {
-    dormEdit
+    dormEdit,
+    dormDetail
   },
   mixins: [baseList],
   data() {
@@ -220,12 +237,6 @@ export default {
       this.isShowEditPopup = true
       this.rowId = null
     },
-    // 关闭弹框
-    closePopup(isload) {
-      this.isShowEditPopup = false
-      this.showMore = false
-      this.onSearch()
-    },
     del(id) {
       let idList = id ? [id] : []
       // 选中删除
@@ -247,6 +258,7 @@ export default {
         // 单行删除
         this.$api.deleteDorm(idList.join(',')).then(res => {
           Toast(`删除成功，此次共删除${idList.length}条记录！`);
+          this.onSearch()
         }).catch(error => {
           Toast('删除失败！' + error);
         })
@@ -255,23 +267,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.dorm-list {
-  height: 100%;
-  @media only screen and (max-width: 414px) {
-    .tool-bar {
-      .btn-op {
-        padding: 0 10px;
-      }
-    }
-  }
-  @media only screen and (max-width: 375px) {
-    .tool-bar {
-      .btn-op {
-        padding: 0 6px;
-      }
-    }
-  }
-}
-</style>

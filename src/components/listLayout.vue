@@ -45,7 +45,7 @@
             </div>
             <div
               class="soa-list-item-main"
-              @click.stop="handleClick(item)">
+              @click.stop="handleRowClick(item)">
               <slot
                 :item="item"
                 :index="index"
@@ -178,15 +178,16 @@ export default {
       this.showMoreIndex = -1
     },
     // 点击行进入详情页
-    handleClick(item) {
+    handleRowClick(item) {
       if (this.detailUrl) {
-        console.log('handleClick', item, this.detailUrl)
+        console.log('handleRowClick', item, this.detailUrl)
         const id = item.id || item.taskPerformId
         this.$router.push({
           path: this.detailUrl,
           query: { id }
         })
       }
+      this.$emit('handleRowClick', item)
     },
     // 管理操作按钮
     handleOperator() {

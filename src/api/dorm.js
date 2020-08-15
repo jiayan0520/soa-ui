@@ -25,7 +25,7 @@ export function deleteDorm(params) {
 }
 // 楼栋维数据
 export function getBuildingDimension() {
-  return get(`${prefix}/building`)
+  return get(`${prefix}/building/getBuildingList`)
 }
 // 楼栋列表
 export function getBuildingList(params) {

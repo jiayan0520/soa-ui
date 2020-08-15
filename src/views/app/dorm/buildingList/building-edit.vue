@@ -31,15 +31,15 @@
         name="uploader"
         label="楼栋照片">
         <template #input>
-          3424
-          <van-uploader
+          <custom-uploader
+            v-model="formData.annexId"
             :max-count="1"
-            v-model="formData.annexIds"
-            multiple />
+            :annex-list="formData.annexList"
+            type="dorm" />
         </template>
       </van-field>
       <van-field
-        v-model="formData.addr"
+        v-model="formData.address"
         :readonly="true"
         label="楼栋位置"
         right-icon="arrow"
@@ -72,11 +72,13 @@
 
 <script>
 import addressSelect from '@/components/address-select'
+import customUploader from '@/components/custom-uploader'
 import { Toast } from 'vant';
 export default {
   name: 'BuildingEdit',
   components: {
-    addressSelect
+    addressSelect,
+    customUploader
   },
   props: {
     id: {
@@ -90,10 +92,11 @@ export default {
       formData: {
         buildingName: null,
         desc: null,
-        addr: null,
+        address: null,
         latitude: null,
         longitude: null,
-        annexIds: null, // 楼栋照片
+        annexId: null, // 楼栋照片
+        annexList: [],
         buildingManagerIds: null, // 楼栋管理员
         maintenanceWorkerIds: null // 楼栋维修员
       },
@@ -116,6 +119,8 @@ export default {
           Toast.clear()
           Toast('新增楼栋成功')
           this.$emit('close', true)
+        }).catch(err => {
+          Toast('新增楼栋失败' + err)
         })
       } else {
         Toast.loading('修改楼栋中，请稍后...')
@@ -123,18 +128,29 @@ export default {
           Toast.clear()
           Toast('修改楼栋成功')
           this.$emit('close', true)
+        }).catch(err => {
+          Toast('修改楼栋失败' + err)
         })
       }
     },
     // 获取详情
     getDetail() {
       this.$api.getBuildingDetail(this.id).then(data => {
-        this.formData = data.map(item => {
-          return {
-            ...item,
-            annexIdsList: []
-          }
-        })
+        this.formData = {
+          id: data.id,
+          buildingName: data.buildingName,
+          desc: data.desc,
+          address: data.address,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          annexId: data.annexId, // 楼栋照片
+          annexList: [],
+          buildingManagerIds: data.buildingManagerIds, // 楼栋管理员
+          buildingManagers: data.buildingManagers,
+          maintenanceWorkerIds: data.maintenanceWorkerIds, // 楼栋维修员
+          maintenanceWorkers: data.maintenanceWorkers
+        }
+        console.log(this.formData)
       })
     },
     handleExecutorClick() {
