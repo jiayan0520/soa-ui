@@ -103,7 +103,7 @@ export default {
     handleClick() {
       this.$dd.biz.contact.complexPicker({
         title: '选择' + this.title,
-        corpId: 'ding2121e6f85c89c1f9f2c783f7214b6d69',
+        corpId: this.$store.getters['core/system'].corpId,
         multiple: this.multiple,
         limitTips: '超出了最大人数',
         maxUsers: this.maxUsers,
@@ -113,7 +113,7 @@ export default {
         disabledDepartments: this.disabledDepts,
         requiredUsers: [],
         requiredDepartments: [],
-        appId: '841409507',
+        appId: this.$store.getters['core/system'].appId,
         permissionType: 'xxx',
         responseUserOnly: this.userOnly,
         startWithDepartmentId: this.fromCurrentDept,
