@@ -1,4 +1,5 @@
 import listLayout from '@/components/listLayout'
+import { Dialog, Toast } from 'vant'
 export default {
   components: {
     listLayout
@@ -66,6 +67,30 @@ export default {
       if (isload) {
         this.onSearch()
       }
+    },
+    // 获取需要操作的idlist
+    getOpIdList(id, opLabel, method) {
+      let idList = []
+      if (id) {
+        idList = [id]
+      } else {
+        idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+      }
+      if (idList.length <= 0) {
+        Toast(`请选中一条要${opLabel}的记录！`);
+        return;
+      }
+      Dialog.confirm({
+        title: `确认${opLabel}？`,
+        message: `此次选中${idList.length}条记录，${opLabel}的数据无法恢复`
+      }).then(() => {
+        this.$api[method]({ dormId: idList.join(',') }).then(res => {
+          Toast(`${opLabel}成功，此次共删除${idList.length}条记录！`);
+          this.onSearch()
+        }).catch(error => {
+          Toast(`${opLabel}失败！` + error);
+        })
+      })
     }
   }
 }

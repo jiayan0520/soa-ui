@@ -3,8 +3,10 @@ import * as $dd from 'dingtalk-jsapi';
 /**
  * 将调用钉钉的接口先进行签名
  */
-export default async function initDdSign() {
-  await api.getAppInfo({ url: 'http://yuheng.asuscomm.com:3000/' }).then(res => {
+export default async function initDdSign(store, router) {
+  const system = store.getters['core/system']
+  console.log(1111111111111, system.ddSingUrl)
+  await api.getAppInfo({ url: system.ddSingUrl }).then(res => {
     console.log('【框架日志】钉钉签名');
     const { agentId, corpId, timeStamp, nonceStr, signature } = res
     $dd.config({
@@ -28,7 +30,7 @@ export default async function initDdSign() {
         'biz.map.locate'
       ] // 必填，需要使用的jsapi列表，注意：不要带dd。
     });
-    $dd.error(function(error) {
+    $dd.error(function (error) {
       console.log('jsapi err' + JSON.stringify(error));
       /**
        {

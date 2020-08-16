@@ -150,7 +150,6 @@
 import baseList from '../mixins/base-list'
 import dormEdit from './dorm-edit'
 import dormDetail from './dorm-detail'
-import { Dialog, Toast } from 'vant'
 import { dormTypeEnum } from '../utils/dorm-enum'
 export default {
   name: 'DormList',
@@ -222,22 +221,7 @@ export default {
     },
     // 清空宿舍
     clearDorm(id) {
-      let idList = []
-      if (id) {
-        idList = [id]
-      } else {
-        idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
-      }
-      Dialog.confirm({
-        title: '确认删除？',
-        message: `此次选中${idList.length}条记录，删除的数据无法恢复`
-      }).then(() => {
-        this.$api.clearDorm({ dormId: idList.join(',') }).then(res => {
-
-        }).catch(error => {
-          Toast('删除失败！' + error);
-        })
-      })
+      this.getOpIdList(id, '清空宿舍', 'clearDorm')
     },
     loadData() {
       this.page++;
@@ -261,31 +245,7 @@ export default {
       this.rowId = null
     },
     del(id) {
-      let idList = id ? [id] : []
-      // 选中删除
-      if (!id) {
-        if (this.isCheckAll) {
-          console.log(1)
-        } else {
-          idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
-        }
-      }
-      if (idList.length <= 0) {
-        Toast('请选中一条要删除的记录！');
-        return;
-      }
-      Dialog.confirm({
-        title: '确认删除？',
-        message: `此次选中${idList.length}条记录，删除的数据无法恢复`
-      }).then(() => {
-        // 单行删除
-        this.$api.deleteDorm(idList.join(',')).then(res => {
-          Toast(`删除成功，此次共删除${idList.length}条记录！`);
-          this.onSearch()
-        }).catch(error => {
-          Toast('删除失败！' + error);
-        })
-      })
+      this.getOpIdList(id, '删除', 'deleteDorm')
     }
   }
 }
