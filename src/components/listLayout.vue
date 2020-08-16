@@ -180,7 +180,6 @@ export default {
     // 点击行进入详情页
     handleRowClick(item) {
       if (this.detailUrl) {
-        console.log('handleRowClick', item, this.detailUrl)
         const id = item.id || item.taskPerformId
         this.$router.push({
           path: this.detailUrl,
@@ -232,6 +231,9 @@ export default {
       display: flex;
       align-items: center;
       margin: 0 6px;
+    }
+    .van-dropdown-menu__bar{
+      background-color: unset;
     }
   }
   .van-pull-refresh {

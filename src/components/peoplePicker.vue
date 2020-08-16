@@ -5,7 +5,7 @@
     :label="title"
     class="soa-people-picker"
     right-icon="add"
-    placeholder=""
+    placeholder
     @click="handleClick"
   />
 </template>
@@ -73,6 +73,9 @@ export default {
     };
   },
   computed: {
+    system() {
+      return this.$store.getters['core/system']
+    },
     // 用于界面展示的人员名称字符串
     choosedPerson() {
       if (!this.multiple && this.userOnly) {
@@ -103,7 +106,7 @@ export default {
     handleClick() {
       this.$dd.biz.contact.complexPicker({
         title: '选择' + this.title,
-        corpId: 'ding2121e6f85c89c1f9f2c783f7214b6d69',
+        corpId: this.system.corpId,
         multiple: this.multiple,
         limitTips: '超出了最大人数',
         maxUsers: this.maxUsers,
@@ -132,7 +135,7 @@ export default {
           this.$emit('complexPickerParent', this.people, this.department);
         },
 
-        onFail: function(err) {
+        onFail: function (err) {
           // Toast(JSON.stringify(err))
           console.error(err);
         }
@@ -143,11 +146,11 @@ export default {
 </script>
 <style lang="scss">
 @import "@/assets/style/var.scss";
-@import '@/assets/mixins/mixins.scss';
+@import "@/assets/mixins/mixins.scss";
 
 @include b(people-picker) {
-  & .van-field__right-icon{
-    color: $--color-info
+  & .van-field__right-icon {
+    color: $--color-info;
   }
 }
 </style>

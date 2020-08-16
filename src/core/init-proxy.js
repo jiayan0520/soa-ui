@@ -10,6 +10,7 @@ export default function initProxy(store, router) {
   const token = store.getters['core/token']
   const logout = async (msg, xhr) => {
     console.log('【框架日志】401捕获', xhr)
+    await store.dispatch('core/reset')
     await store.dispatch('core/auth', { msg: `${msg}，请重新登录` })
   }
 

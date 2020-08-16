@@ -65,10 +65,8 @@ export default {
     // 双向绑定附件标识
     onChangeFunc(value) {
       this.$emit('change', value);
-      console.log(this.value, value)
     },
     afterRead(file) {
-      console.log(this.value)
       // 上传
       this.$api.upload(file).then((data) => {
         data.annexId = this.value
