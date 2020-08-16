@@ -70,11 +70,11 @@ export default {
     return {
       isMove: true, // 判断是否手动移动地图or点击地址项导致地图移动
       // 高德地图配置
-      amapKey: 'ed887f7742d62d49594788c8bb125720',
+      amapKey: 'ce690184d1a7632aa2eaf4d051ca65bf',
       amapApi: 'https://restapi.amap.com/',
       cityCode: null, // 所在城市编码
       map: null, // 地图对象
-      latlng: null, // 地图中心经纬度
+      latlng: [119.3, 26.08333], // 地图中心经纬度
       arounds: [], // 周边搜索
       searchValue: null, // 搜索值
       address: null
@@ -103,40 +103,29 @@ export default {
       forbidClick: true,
       message: '定位中'
     })
-    AMap.plugin('AMap.Geolocation', () => {
-      var geolocation = new AMap.Geolocation({
-        enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-        timeout: 10000, // 超过10秒后停止定位，默认：5s
-        buttonPosition: 'RB', // 定位按钮的停靠位置
-        buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-        zoomToAccuracy: true // 定位成功后是否自动调整地图视野到定位点
-      })
-      this.map.addControl(geolocation)
-      geolocation.getCurrentPosition()
-      AMap.event.addListener(geolocation, 'complete', (result) => {
-        Toast.clear()
-        this.isMove = false
-        const { lng, lat } = result.position
-        this.latlng = { lng, lat }
-        this.getCurCity()
-        this.getCityAround()
-      })
-      AMap.event.addListener(geolocation, 'error', (result) => {
-        Toast.clear()
-        console.log(result.message)
-        Dialog({ message: '定位当前位置失败:' + result.message })
-      })
-      // geolocation.getCurrentPosition((status, result) => {
-      //   if (status === 'complete') {
-      //     let { lng, lat } = result.position
-      //     this.latlng = { lng, lat }
-      //     this.getCurCity()
-      //     this.getCityAround()
-      //   } else {
-      //     this.$message.error('定位当前位置失败:' + result.message)
-      //   }
-      // })
-    })
+    if (this.$dd.env.platform !== 'notInDingTalk' && (this.$dd.ios || this.$dd.android)) {
+      // alert('请用钉钉打开！');
+      this.$dd.device.geolocation.get({
+        targetAccuracy: 2, // 期望定位精度半径(单位米)
+        coordinate: 1, // 1：获取高德坐标；
+        withReGeocode: false,//是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
+        useCache: true, //默认是true，如果需要频繁获取地理位置，请设置false
+        onSuccess: function (result) {
+          alert('获取定位信息:' + result.longitude + result.latitude + result.address)
+          Toast.clear()
+          this.isMove = false
+          const longitude = result.longitude
+          const latitude = result.latitude
+          this.latlng = { longitude, latitude }
+          this.getCurCity()
+          this.getCityAround()
+        },
+        onFail: function (err) { }
+      });
+    } else {
+      this.getCurLatlng(true)
+      Toast.clear()
+    }
     this.map.on('moveend', (e) => {
       if (this.isMove) {
         this.latlng = this.map.getCenter()
@@ -204,6 +193,7 @@ export default {
     },
     // 获取当前城市
     getCurCity() {
+      console.log(222222, this.latlng)
       const { lng, lat } = this.latlng
       this.$jsonp(`${this.amapApi}v3/geocode/regeo`, { key: this.amapKey, location: lng + ',' + lat }).then(json => {
         // Success.
@@ -217,8 +207,10 @@ export default {
     },
     // 获取当前位置周边
     getCityAround() {
+      console.log(333, this.latlng)
       this.$jsonp(`${this.amapApi}v3/place/around`, { location: this.latlng.lng + ',' + this.latlng.lat, key: this.amapKey, radius: 5000, offset: 10, page: 1, extensions: 'all', types: '汽车服务|汽车销售|汽车维修|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|道路附属设施|地名地址信息|公共设施' }).then(json => {
         // Success.
+        console.log(4444, json)
         if (json && json.status === '1') {
           json.pois.forEach(n => {
             let address = ''
@@ -278,15 +270,7 @@ export default {
       this.address = item.address
     },
     confirm() {
-      // if (this.latlng) {
-      //   this.latlng.lng = this.latlng.lng && (this.latlng.lng - 0).toFixed(this.decimalCount)
-      //   this.latlng.lat = this.latlng.lat && (this.latlng.lat - 0).toFixed(this.decimalCount)
-      //   this.$emit('changeLatlng', this.latlng, this.latlng.lat, this.mapYID)
-      //   this.$emit('changeLatlng', this.latlng, this.latlng.lng, this.mapXID)
-      // }
-      // this.data._result = this.address
-      // this.data._resultText = this.address
-      // this.source.isShowPopup = false
+      this.$emit('confirm', this.latlng, this.address)
     }
   }
 };

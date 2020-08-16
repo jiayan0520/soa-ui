@@ -11,14 +11,46 @@ export default {
       isShowEditPopup: false, // 是否展示宿舍编辑弹框
       isShowDetailPopup: false, // 是否展示宿舍详情弹框
       rowId: null, // 当前编辑的id
-      limit: 20, // 每页行数
-      page: 0, // 当前页码 total 总条数
+      pageSize: 20, // 每页行数
+      pageNum: 0, // 当前页码 total 总条数
       dataList: [],
       isCheckAll: false, // 列表选中全部
       showMore: false // 更多操作
     }
   },
+  computed: {
+    searchParams() {
+      return {
+        ...this.searchForm,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      }
+    }
+  },
+  created() {
+
+  },
+  mounted() {
+    // if (window.history && window.history.pushState) {
+    //   history.pushState(null, null, document.URL);
+    //   window.addEventListener('popstate', this.popstate, false)
+    // }
+  },
   methods: {
+    popstate(evt) {
+      console.log(1111, this.searchForm.isFull)
+      // const state = evt.state
+      // const keys = Object.keys(this.searchForm)
+      // keys.forEach(element => {
+      //   this.searchForm[element] = state[element] || this.searchForm[element]
+      // })
+      // this.pageNum = state.pageNum || this.pageNum
+      // this.pageSize = state.pageSize || this.pageSize
+      // this.searchForm.isFull = 0
+      // console.log(222, this.searchForm.isFull)
+      this.onSearch()
+      this.$forceUpdate()
+    },
     onSearch() {
       this.page = 0
       this.dataList = []
@@ -26,7 +58,6 @@ export default {
     },
     // tab便签点击切换路由
     tabClick(value) {
-      console.log(value)
       switch (value) {
         case 1:
           this.$router.push('/dorm/bedList')
@@ -92,5 +123,16 @@ export default {
         })
       })
     }
+    // 新增
+    // add() {
+    //   this.$router.push(this.editUrl)
+    //   // var qs = [] // url参数
+    //   // 只添加参数时，默认还是当前页面html
+    //   // history.pushState(this.searchParams, '', '?' + qs.join('&'))
+    //   window.history.pushState(this.searchParams, 'newTitle', '');
+    // }
   }
+  // destroyed() {
+  //   window.removeEventListener('popstate', this.popstate, false);
+  // }
 }

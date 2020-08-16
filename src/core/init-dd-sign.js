@@ -5,7 +5,6 @@ import * as $dd from 'dingtalk-jsapi';
  */
 export default async function initDdSign(store, router) {
   const system = store.getters['core/system']
-  console.log(1111111111111, system.ddSingUrl)
   await api.getAppInfo({ url: system.ddSingUrl }).then(res => {
     console.log('【框架日志】钉钉签名');
     const { agentId, corpId, timeStamp, nonceStr, signature } = res
@@ -27,7 +26,8 @@ export default async function initDdSign(store, router) {
         'biz.customContact.multipleChoose',
         'device.base.getInterface',
         'device.base.getUUID',
-        'biz.map.locate'
+        'biz.map.locate',
+        'device.geolocation.get'
       ] // 必填，需要使用的jsapi列表，注意：不要带dd。
     });
     $dd.error(function (error) {

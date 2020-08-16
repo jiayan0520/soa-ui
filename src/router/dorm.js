@@ -35,6 +35,12 @@ export default [
     name: 'buildingDetail',
     component: () => import('@/views/app/dorm/buildingList/building-detail')
   },
+  // 楼栋编辑页
+  {
+    path: '/dorm/building/edit',
+    name: 'buildingEdit',
+    component: () => import('@/views/app/dorm/buildingList/building-edit')
+  },
   // 未分配人员
   {
     path: '/dorm/unallocated',

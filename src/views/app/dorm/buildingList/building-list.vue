@@ -6,13 +6,13 @@
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍楼列表'"
+      :detail-url="detailUrl"
       op-label="管理"
       class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
-      @handleRowClick="handleRowClick"
     >
       <template slot="top">
         <div
@@ -145,34 +145,22 @@
         :id="rowId"
         @close="closePopup" />
     </van-popup>
-    <van-popup
-      v-if="isShowDetailPopup"
-      v-model="isShowDetailPopup"
-      :style="{ height: '100%' }"
-      closeable
-      class="soa-popup"
-      position="bottom"
-    >
-      <building-detail
-        :id="rowId"
-        @close="closePopup" />
-    </van-popup>
   </div>
 </template>
 
 <script>
 import baseList from '../mixins/base-list'
 import buildingEdit from './building-edit'
-import buildingDetail from './building-detail'
 export default {
   name: 'BuildingList',
   components: {
-    buildingEdit,
-    buildingDetail
+    buildingEdit
   },
   mixins: [baseList],
   data() {
     return {
+      detailUrl: '/dorm/building/detail',
+      editUrl: '/dorm/building/edit',
       actionName: 3,
       isFullList: [
         { text: '是否住满', value: null },
@@ -181,7 +169,7 @@ export default {
       ],
       searchForm: {
         isFull: null,
-        searchValue: ''
+        searchValue: null
       },
       moreOpList: [
         { value: 'edit', label: '编辑' },
@@ -189,9 +177,6 @@ export default {
         { value: 'del', label: '删除' }
       ]
     }
-  },
-  created() {
-    this.loadData()
   },
   methods: {
     // 点击更多操作按钮了
@@ -208,12 +193,8 @@ export default {
       this.showMore = false
     },
     loadData() {
-      this.page++;
-      this.$api.getBuildingList({
-        ...this.searchForm,
-        page: this.page,
-        limit: this.limit
-      }).then(data => {
+      this.pageNum++;
+      this.$api.getBuildingList(this.searchParams).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
         this.dataList = this.dataList.concat(data.rows)
@@ -223,10 +204,10 @@ export default {
         }
       })
     },
-    // 新增
     add() {
-      this.rowId = null
-      this.isShowEditPopup = true
+      this.$router.push(this.editUrl)
+      // this.rowId = null
+      // this.isShowEditPopup = true
     }
   }
 }

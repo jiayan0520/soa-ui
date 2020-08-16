@@ -12,21 +12,36 @@
         placeholder="请输入楼栋名称"
       />
       <van-field
-        v-model="formData.buildingManagerIds"
         :readonly="true"
         label="楼管"
         right-icon="add"
         placeholder
-        @click="handleExecutorClick"
-      />
+        @click="choiceUser('楼管')">
+        <template #input>
+          <div
+            v-for="(item,index) in formData.buildingManagers"
+            :key="index">
+            {{ item.realName }}
+            <span class="c-info">{{ item.phone }}</span>
+          </div>
+        </template>
+      </van-field>
       <van-field
-        v-model="formData.maintenanceWorkerIds"
         :readonly="true"
         label="维修人员"
         right-icon="add"
         placeholder
-        @click="handleExecutorClick"
-      />
+        @click="choiceUser('维修人员')"
+      >
+        <template #input>
+          <div
+            v-for="(item,index) in formData.maintenanceWorkers"
+            :key="index">
+            {{ item.realName }}
+            <span class="c-info">{{ item.phone }}</span>
+          </div>
+        </template>
+      </van-field>
       <van-field
         name="uploader"
         label="楼栋照片">
@@ -35,14 +50,15 @@
             v-model="formData.annexId"
             :max-count="1"
             :annex-list="formData.annexList"
-            type="dorm" />
+            type="dorm"
+          />
         </template>
       </van-field>
       <van-field
         v-model="formData.address"
         :readonly="true"
         label="楼栋位置"
-        right-icon="arrow"
+        right-icon="location"
         placeholder="请选择"
         @click="isShowAddressPopup=true"
       />
@@ -65,7 +81,23 @@
       v-model="isShowAddressPopup"
       position="bottom"
       style="min-height: 20% ">
-      <address-select @close="isShowAddressPopup=false" />
+      <address-select
+        @close="isShowAddressPopup=false"
+        @confirm="addressConfirm" />
+    </van-popup>
+    <van-popup
+      v-if="isShowUserOutPopup"
+      v-model="isShowUserOutPopup"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom"
+    >
+      <user-out
+        :title="userOutTitle"
+        :ids="formData.buildingManagerIds"
+        @close="isShowUserOutPopup=false"
+        @sure="sureChoiceUser"
+      />
     </van-popup>
   </div>
 </template>
@@ -73,12 +105,14 @@
 <script>
 import addressSelect from '@/components/address-select'
 import customUploader from '@/components/custom-uploader'
+import userOut from '../components/user-out'
 import { Toast } from 'vant';
 export default {
   name: 'BuildingEdit',
   components: {
     addressSelect,
-    customUploader
+    customUploader,
+    userOut
   },
   props: {
     id: {
@@ -100,7 +134,9 @@ export default {
         buildingManagerIds: null, // 楼栋管理员
         maintenanceWorkerIds: null // 楼栋维修员
       },
-      isShowAddressPopup: false
+      isShowAddressPopup: false,
+      isShowUserOutPopup: false,
+      userOutTitle: null
     }
   },
   created() {
@@ -153,9 +189,76 @@ export default {
         console.log(this.formData)
       })
     },
-    handleExecutorClick() {
-      this.$router.push('/task-add-executor');
-      console.log('handleExecutorClick')
+    // 选择管理员，维修人员
+    choiceUser(title) {
+      this.isShowUserOutPopup = true
+      this.userOutTitle = title
+    },
+    // 选中管理员，维修人员
+    sureChoiceUser(list) {
+      if (this.userOutTitle === '楼管') {
+        this.formData.buildingManagers = list
+        this.formData.buildingManagerIds = list.map(item => { return item.id }).join(',')
+        this.isShowUserOutPopup = false
+      } else {
+        this.formData.maintenanceWorkers = list
+        this.formData.maintenanceWorkerIds = list.map(item => { return item.id }).join(',')
+        this.isShowUserOutPopup = false
+      }
+    },
+    ddlocation() {
+      Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '定位中'
+      })
+      const self = this
+      this.$dd.device.geolocation.get({
+        targetAccuracy: 2, // 期望定位精度半径(单位米)
+        coordinate: 1, // 1：获取高德坐标；
+        withReGeocode: false, // 是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
+        useCache: true, // 默认是true，如果需要频繁获取地理位置，请设置false
+        onSuccess: function (result) {
+          alert('获取定位信息:' + JSON.stringify(result.address))
+          self.formData.address = result.address
+          self.formData.longitude = result.longitude
+          self.formData.latitude = result.latitude
+          Toast.clear()
+          /* 高德坐标 result 结构
+          {
+              longitude : Number,
+              latitude : Number,
+              accuracy : Number,
+              address : String,
+              province : String,
+              city : String,
+              district : String,
+              road : String,
+              netType : String,
+              operatorType : String,
+              errorMessage : String,
+              errorCode : Number,
+              isWifiEnabled : Boolean,
+              isGpsEnabled : Boolean,
+              isFromMock : Boolean,
+              provider : wifi|lbs|gps,
+              isMobileEnabled : Boolean
+          }
+          */
+        },
+        onFail: function (err) {
+          console.log('定位失败:')
+          alert(JSON.stringify(err))
+          Toast.clear()
+        }
+      });
+    },
+    // 经纬度确认
+    addressConfirm(latlng, address) {
+      this.formData.latitude = latlng.lat
+      this.formData.longitude = latlng.lng
+      this.formData.address = address
+      this.isShowAddressPopup = false
     }
   }
 }
@@ -164,5 +267,8 @@ export default {
 <style lang="scss">
 .building-edit {
   padding: 10px;
+  .van-field__control--custom {
+    display: block;
+  }
 }
 </style>

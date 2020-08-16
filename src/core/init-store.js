@@ -83,7 +83,7 @@ export default function initStore(store, router, cycle) {
         router.matcher = new router.constructor(router.options).matcher
       },
       // 引导：用户信息，权限信息，等等，整个框架在鉴权成功后只会执行***一次***
-      async boot({ getters, commit }) {
+      async boot({ getters, commit, dispatch }) {
         if (getters.authorized === true) return
         const token = getters.token.get()
         // 鉴权标记和用户是否存在逻辑是独立的，这样方便外部勾子预设用户信息
@@ -95,6 +95,9 @@ export default function initStore(store, router, cycle) {
             console.log('【框架日志】用户信息初始化完成：', user)
           } catch (e) {
             console.error('【框架日志】获取用户信息失败，请联系管理员', e)
+            // 直接注销
+            dispatch('reset')
+            dispatch('auth', { msg: `获取用户信息失败，请重新登录` })
           }
         }
 
