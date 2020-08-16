@@ -22,11 +22,6 @@ export default new Router({
       component: () => import('@/views/message/index')
     },
     {
-      path: '/author',
-      name: 'author',
-      component: () => import('@/views/author/index')
-    },
-    {
       path: '/exception-401',
       name: 'exception-401',
       component: () => import('@/views/exception-401')

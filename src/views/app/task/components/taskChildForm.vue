@@ -25,12 +25,11 @@
         name="请输入任务内容"
         placeholder="请输入任务内容"
       />
-      <people-picker
+      <user-picker
         v-model="form.executor"
         :disabled-users="[userId]"
-        :user-only="false"
-        title="执行人"
-        @complexPickerParent="handlePicker"/>
+        :user-only="true"
+        title="执行人"/>
       <van-field
         :readonly="true"
         label="是否提醒"
@@ -101,7 +100,7 @@
 
 <script>
 import DatePicker from 'vue2-datepicker'
-import peoplePicker from '@/components/peoplePicker'
+import userPicker from '@/components/userPicker'
 import customSheet from '@/components/customSheet'
 import { Notify } from 'vant'
 import { criticalActions, infoActions, weightActions } from '../addTask/enum'
@@ -110,7 +109,7 @@ export default {
   name: 'TaskChild',
   components: {
     DatePicker,
-    peoplePicker,
+    userPicker,
     customSheet
   },
   props: {
@@ -175,14 +174,6 @@ export default {
         this.form.done = this.form.done || 0;
         this.$emit('input', this.form);
       }
-    },
-    handlePicker(people, departments) {
-      people.forEach(item => {
-        item.userId = item.emplId
-        item.userName = item.name
-      });
-      this.form.executor = [].concat(people)
-      console.log('handlePicker', people, departments)
     },
     // 子任务截止时间不能超过主任务的截止时间
     bindChildDeadlineChange(e) {
