@@ -4,7 +4,7 @@ import * as $dd from 'dingtalk-jsapi';
  * 将调用钉钉的接口先进行签名
  */
 export default async function initDdSign() {
-  await api.getAppInfo().then(res => {
+  await api.getAppInfo({ url: 'http://yuheng.asuscomm.com:3000/' }).then(res => {
     console.log('【框架日志】钉钉签名');
     const { agentId, corpId, timeStamp, nonceStr, signature } = res
     $dd.config({
@@ -27,6 +27,16 @@ export default async function initDdSign() {
         'device.base.getUUID',
         'biz.map.locate'
       ] // 必填，需要使用的jsapi列表，注意：不要带dd。
+    });
+    $dd.error(function(error) {
+      console.log('jsapi err' + JSON.stringify(error));
+      /**
+       {
+          errorMessage:"错误信息",// errorMessage 信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
+          errorCode: "错误码"
+       }
+      **/
+      // alert('dd error: ' + JSON.stringify(error));
     });
   }).catch(err => {
     console.log(err);
