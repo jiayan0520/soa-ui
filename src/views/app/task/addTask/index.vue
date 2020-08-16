@@ -208,7 +208,7 @@ export default {
       }).catch((e) => { throw e })
     },
     onSubmit() {
-      Toast.loading('任务创建中，请稍后...')
+      Toast.loading({ message: '任务创建中，请稍后...', duration: 0 })
       this.uploadParentTask().then(() => {
         this.subTask().then(() => {
           this.addTask()

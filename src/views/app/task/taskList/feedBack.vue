@@ -115,7 +115,7 @@ export default {
       }).catch((e) => { throw e })
     },
     feedSubmit() {
-      Toast.loading('提交中，请稍后...')
+      Toast.loading({ message: '提交中，请稍后...', duration: 0 })
       this.handleData().then(() => {
         this.$api.saveTaskFeedbackInfo(this.form).then(() => {
           Toast.clear()
