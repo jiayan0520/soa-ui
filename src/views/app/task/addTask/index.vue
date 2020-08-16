@@ -18,12 +18,11 @@
         name="请输入任务内容"
         placeholder="请输入任务内容"
       />
-      <people-picker
+      <user-picker
         v-model="form.executor"
         :disabled-users="[userId]"
         :user-only="true"
-        title="执行人"
-        @complexPickerParent="handlePicker"/>
+        title="执行人"/>
       <van-field
         :readonly="true"
         label="是否提醒"
@@ -67,12 +66,11 @@
         v-model="form.difficulty"
         :actions="weightActions"
         label="任务权重"/>
-      <people-picker
+      <user-picker
         v-model="form.reader"
         :disabled-users="[userId]"
         :user-only="true"
-        title="可公开查阅人"
-        @complexPickerParent="handleReaderPicker"/>
+        title="可公开查阅人"/>
       <van-field
         :readonly="true"
         label="附件"
@@ -102,7 +100,7 @@
 
 <script>
 import DatePicker from 'vue2-datepicker'
-import peoplePicker from '@/components/peoplePicker'
+import userPicker from '@/components/userPicker'
 import customSheet from '@/components/customSheet'
 import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
@@ -113,7 +111,7 @@ export default {
   name: 'AddTask',
   components: {
     DatePicker,
-    peoplePicker,
+    userPicker,
     customSheet,
     childTaskList
   },
@@ -222,21 +220,6 @@ export default {
         Toast.clear()
         Toast('任务创建失败-上传父任务附件失败')
       })
-    },
-
-    handlePicker(people, departments) {
-      people.forEach(item => {
-        item.userId = item.emplId
-        item.userName = item.name
-      });
-      this.form.executor = [].concat(people)
-    },
-    handleReaderPicker(people, departments) {
-      people.forEach(item => {
-        item.userId = item.emplId
-        item.userName = item.name
-      });
-      this.form.reader = [].concat(people)
     }
   }
 }
