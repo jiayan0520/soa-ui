@@ -57,7 +57,7 @@ export default {
       dataList: [],
       tab: ['待审核', '已审核'],
       moreOpList: [],
-      page: 1, // 当前页码
+      page: 0, // 当前页码
       limit: 20 // 每页请求数量
     }
   },
@@ -102,7 +102,8 @@ export default {
      @include base-between
   }
   @include e(status){
-    padding-right: 30px
+    width:60px;
+    padding-right: 20px
   }
 }
 </style>
