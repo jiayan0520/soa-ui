@@ -1,13 +1,14 @@
 <template>
   <div class="building-edit">
     <van-form
+      v-if="isLoad"
       class="building-edit-form soa-custom-form"
       @submit="onSubmit">
       <van-field
         v-model="formData.buildingName"
         :rules="[{ required: true, message: '请输入楼栋名称' }]"
         :required="true"
-        maxlength="50"
+        :maxlength="50"
         label="楼栋名称"
         placeholder="请输入楼栋名称"
       />
@@ -64,6 +65,8 @@
       />
       <van-field
         :required="true"
+        :rules="[{ required: true, message: '请输入楼栋简介' }]"
+        :maxlength="500"
         v-model="formData.desc"
         type="textarea"
         placeholder="楼栋简介"
@@ -122,6 +125,7 @@ export default {
   },
   data() {
     return {
+      isLoad: false,
       isAdd: false,
       formData: {
         buildingName: null,
@@ -142,6 +146,7 @@ export default {
   created() {
     if (!this.id) {
       this.isAdd = true
+      this.isLoad = true
     } else {
       this.getDetail()
     }
@@ -179,13 +184,14 @@ export default {
           address: data.address,
           latitude: data.latitude,
           longitude: data.longitude,
-          annexId: data.annexId, // 楼栋照片
+          annexId: data.annexId || null, // 楼栋照片
           annexList: [],
           buildingManagerIds: data.buildingManagerIds, // 楼栋管理员
           buildingManagers: data.buildingManagers,
           maintenanceWorkerIds: data.maintenanceWorkerIds, // 楼栋维修员
           maintenanceWorkers: data.maintenanceWorkers
         }
+        this.isLoad = true
         console.log(this.formData)
       })
     },
@@ -199,7 +205,7 @@ export default {
       if (this.userOutTitle === '楼管') {
         this.formData.buildingManagers = list
         this.formData.buildingManagerIds = list.map(item => { return item.id }).join(',')
-        this.isShowUserOutPopup = false
+        this.isShowUserOutPopup || false
       } else {
         this.formData.maintenanceWorkers = list
         this.formData.maintenanceWorkerIds = list.map(item => { return item.id }).join(',')

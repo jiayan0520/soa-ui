@@ -52,7 +52,7 @@ export default {
       this.$forceUpdate()
     },
     onSearch() {
-      this.page = 0
+      this.pageNum = 0
       this.dataList = []
       this.loadData()
     },
@@ -69,6 +69,14 @@ export default {
           this.$router.push('/dorm/buildingList')
           break
       }
+    },
+    // 取消管理
+    cancalManage() {
+      this.isCheckAll = false
+      this.dataList.forEach((item, index) => {
+        item.isCheck = this.isCheckAll
+      });
+      this.isShowBar = false
     },
     // 复选框选择所有
     changeCheckAll() {
@@ -100,28 +108,50 @@ export default {
       }
     },
     // 获取需要操作的idlist
-    getOpIdList(id, opLabel, method) {
+    handleIdList(id, opLabel, method) {
       let idList = []
       if (id) {
         idList = [id]
       } else {
-        idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+        if (!this.isCheckAll) {
+          idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+          if (idList.length <= 0) {
+            Toast(`请选中一条要${opLabel}的记录！`);
+            return;
+          }
+        }
       }
-      if (idList.length <= 0) {
-        Toast(`请选中一条要${opLabel}的记录！`);
-        return;
-      }
-      Dialog.confirm({
-        title: `确认${opLabel}？`,
-        message: `此次选中${idList.length}条记录，${opLabel}的数据无法恢复`
-      }).then(() => {
-        this.$api[method]({ dormId: idList.join(',') }).then(res => {
-          Toast(`${opLabel}成功，此次共删除${idList.length}条记录！`);
-          this.onSearch()
-        }).catch(error => {
-          Toast(`${opLabel}失败！` + error);
+      // 全部删除？ 需要做二次确认
+      if (this.isCheckAll) {
+        Dialog.confirm({
+          title: `确定全部${opLabel}？`,
+          message: `全部${opLabel}，${opLabel}的数据无法恢复，请慎重！`
+        }).then(() => {
+          Dialog.confirm({
+            title: `二次确认，全部${opLabel}？`,
+            message: `全部${opLabel}，${opLabel}的数据无法恢复，请慎重！`
+          }).then(() => {
+            this.$api[method]({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(res => {
+              Toast(`全部${opLabel}成功`);
+              this.onSearch()
+            }).catch(error => {
+              Toast(`${opLabel}失败！` + error);
+            })
+          })
         })
-      })
+      } else {
+        Dialog.confirm({
+          title: `确认${opLabel}？`,
+          message: `此次选中${idList.length}条记录，${opLabel}的数据无法恢复`
+        }).then(() => {
+          this.$api[method]({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(res => {
+            Toast(`${opLabel}成功，此次共操作${idList.length}条记录！`);
+            this.onSearch()
+          }).catch(error => {
+            Toast(`${opLabel}失败！` + error);
+          })
+        })
+      }
     }
     // 新增
     // add() {

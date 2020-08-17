@@ -30,7 +30,8 @@
             @click="add">新增</van-button>
           <van-button
             class="btn-op"
-            type="info">清空宿舍</van-button>
+            type="info"
+            @click="clearDorm">清空宿舍</van-button>
           <van-button
             class="btn-op"
             type="info"
@@ -38,7 +39,7 @@
           <van-button
             class="btn-op"
             type="warning"
-            @click="isShowBar = false">取消管理</van-button>
+            @click="cancalManage">取消管理</van-button>
         </div>
         <van-tabs
           v-model="actionName"
@@ -57,7 +58,7 @@
           v-if="isShowSearch"
           action="/">
           <van-search
-            v-model="searchForm.searchValue"
+            v-model="searchForm.dormNameOrBuildingName"
             show-action
             placeholder="宿舍号/宿舍楼"
             @search="onSearch"
@@ -69,22 +70,28 @@
           class="search-bar">
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.status"
-              :options="statusList" />
+              v-model="searchForm.dormActivationStatusEnum"
+              :options="statusList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.dormType"
-              :options="dormTypeList" />
+              v-model="searchForm.dormTypeEnum"
+              :options="dormTypeList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.isFull"
-              :options="isFullList" />
+              v-model="searchForm.fullTypeEnum"
+              :options="isFullList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-icon
             name="search"
-            @click="isShowSearch = true" />
+            @click="switchSearch(true)" />
         </div>
       </template>
       <template slot="refresh-top">
@@ -94,7 +101,7 @@
             :key="index"
             class="total-item">
             <span class="lable">{{ item.lable }}：</span>
-            <span class="val">{{ item.value }}人</span>
+            <span class="val">{{ item.value }}间</span>
           </div>
         </div>
       </template>
@@ -112,8 +119,13 @@
             <div>
               <span>人数：{{ slotProps.item.dormData.userNum }}/{{ slotProps.item.dormData.totalNum }}</span>
               <span
-                class="c-ml10 c-danger"
-              >部分激活:{{ slotProps.item.dormData.activationNum }}/{{ slotProps.item.dormData.leaveNum }}</span>
+                :class="slotProps.item.dormData.numLable"
+                class="c-ml10">
+                {{ slotProps.item.dormData.numLable }}
+                <span
+                  v-if="slotProps.item.dormData.numLable!=='未分配'"
+                >:{{ slotProps.item.dormData.activationNum }}/{{ slotProps.item.dormData.leaveNum }}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -163,33 +175,33 @@ export default {
       dormTypeEnum,
       actionName: 2,
       totalList: [
-        { lable: '宿舍树', filed: 'total_num', value: 200 },
-        { lable: '未分配满', filed: 'total_num', value: 200 },
-        { lable: '学生', filed: 'total_num', value: 200 },
-        { lable: '已分配满', filed: 'total_num', value: 200 },
-        { lable: '老师', filed: 'total_num', value: 200 }
+        { lable: '宿舍数', filed: 'total', value: 0 },
+        { lable: '未分配满', filed: 'noBeFullNum', value: 0 },
+        { lable: '学生', filed: 'studentDormNum', value: 0 },
+        { lable: '已分配满', filed: 'fullNum', value: 0 },
+        { lable: '老师', filed: 'teacherDormNum', value: 0 }
       ], // 统计信息
       statusList: [
-        { text: '激活状态', value: null },
-        { text: '全部激活', value: 1 },
-        { text: '部分激活', value: 2 },
-        { text: '全未激活', value: 3 }
+        { text: '激活状态', value: 'ALL' },
+        { text: '全部激活', value: 'ALL_ACTIVTED' },
+        { text: '部分激活', value: 'PART_ACTIVTED' },
+        { text: '全未激活', value: 'NO_ACTIVTED' }
       ],
       dormTypeList: [
-        { text: '宿舍类型', value: null },
-        { text: '学生宿舍', value: 1 },
-        { text: '老师宿舍', value: 2 }
+        { text: '宿舍类型', value: 'ALL' },
+        { text: '学生宿舍', value: 'ALLSTUDENT' },
+        { text: '教师宿舍', value: 'ALLTEACHER' }
       ],
       isFullList: [
-        { text: '是否住满', value: null },
-        { text: '全住满', value: 1 },
-        { text: '未住满', value: 0 }
+        { text: '是否住满', value: 'ALL' },
+        { text: '全住满', value: 'BE_FULL' },
+        { text: '未住满', value: 'NO_BE_FULL' }
       ],
       searchForm: {
-        status: null,
-        dormType: null,
-        isFull: null,
-        searchValue: ''
+        dormActivationStatusEnum: 'ALL',
+        dormTypeEnum: 'ALL',
+        fullTypeEnum: 'ALL',
+        dormNameOrBuildingName: ''
       },
       moreOpList: [
         { value: 'edit', label: '编辑' },
@@ -199,7 +211,7 @@ export default {
     }
   },
   created() {
-    console.log(this.dormTypeEnum)
+    this.getDormTotalInfos()
   },
   methods: {
     // 点击更多操作按钮了
@@ -211,28 +223,65 @@ export default {
           this.isShowEditPopup = true
           break
         case 'clear':
-          this.clearDorm(item.id)
+          this.clearDorm(null, item.id)
           break
         case 'del': {
-          this.del(item.id)
+          this.del(null, item.id)
         }
       }
       this.showMore = false
     },
-    // 清空宿舍
-    clearDorm(id) {
-      this.getOpIdList(id, '清空宿舍', 'clearDorm')
+    // 切换到搜索框
+    switchSearch(flag) {
+      if (flag) {
+        // this.searchForm = {
+        //   dormActivationStatusEnum: 'ALL',
+        //   dormTypeEnum: 'ALL',
+        //   fullTypeEnum: 'ALL',
+        //   dormNameOrBuildingName: ''
+        // }
+        this.isShowSearch = flag
+      }
+    },
+    onSearch() {
+      this.pageNum = 0
+      this.dataList = []
+      this.getDormTotalInfos()
+      this.loadData()
+    },
+    getDormTotalInfos() {
+      this.$api.getDormTotalInfos(this.searchParams).then(data => {
+        const keys = Object.keys(data)
+        keys.forEach(key => {
+          const item = this.totalList.find(item => item.filed === key)
+          if (item) {
+            item.value = data[key]
+          }
+        })
+      })
     },
     loadData() {
-      this.page++;
-      this.$api.getDormList({
-        ...this.searchForm,
-        page: this.page,
-        limit: this.limit
-      }).then(data => {
+      this.pageNum++;
+      this.$api.getDormList(this.searchParams).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(data.rows)
+        const rows = data.rows
+        rows.forEach(item => {
+          if (item.dormData.userNum === 0) {
+            item.dormData.numLable = '未分配'
+            item.dormData.class = 'c-light'
+          } else if (item.dormData.activationNum === 0) {
+            item.dormData.numLable = '全未激活'
+            item.dormData.class = 'c-danger'
+          } else if (item.dormData.activationNum < item.dormData.leaveNum) {
+            item.dormData.numLable = '部分激活'
+            item.dormData.class = 'c-danger'
+          } else if (item.dormData.activationNum === item.dormData.leaveNum) {
+            item.dormData.numLable = '全部激活'
+            item.dormData.class = 'c-info'
+          }
+        })
+        this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
@@ -244,8 +293,13 @@ export default {
       this.isShowEditPopup = true
       this.rowId = null
     },
-    del(id) {
-      this.getOpIdList(id, '删除', 'deleteDorm')
+    // 清空宿舍
+    clearDorm(obj, id) {
+      this.handleIdList(id, '清空宿舍', 'clearDorm')
+    },
+    // 删除
+    del(obj, id) {
+      this.handleIdList(id, '删除', 'deleteDorm')
     }
   }
 }

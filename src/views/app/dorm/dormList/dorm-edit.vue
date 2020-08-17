@@ -20,20 +20,17 @@
         label="宿舍名称"
         placeholder="请输入宿舍名称"
       />
-      <van-field
-        v-model="formData.dormManagerIds"
-        :readonly="true"
-        label="舍长"
-        right-icon="add"
-        placeholder
-        @click="handleExecutorClick"
+      <user-picker
+        v-model="form.dormManagerId"
+        :user-only="true"
+        title="舍长"
       />
       <van-field
         center
         label="宿舍类型">
         <template #input>
           <van-radio-group
-            v-model="formData.dormType"
+            v-model="formData.dormTypeEnum"
             direction="horizontal">
             <van-radio
               v-for="key in Object.keys(dormTypeEnum)"
@@ -57,7 +54,7 @@
         label="床位编号格式">
         <template #input>
           <van-radio-group
-            v-model="formData.bedFormatType"
+            v-model="formData.dormBedFormatTypeEnum"
             direction="horizontal"
             @change="changeFormatType"
           >
@@ -114,9 +111,13 @@
 
 <script>
 import { Toast } from 'vant';
+import userPicker from '@/components/userPicker'
 import { dormTypeEnum, bedFormatTypeEnum } from '../utils/dorm-enum'
 export default {
   name: 'DormEdit',
+  components: {
+    userPicker
+  },
   props: {
     id: {
       type: String,
@@ -133,10 +134,10 @@ export default {
         buildingId: null,
         buildingName: null,
         dormName: null,
-        dormManagerIds: null, // 舍长
-        dormType: 'ALLSTUDENT',
+        dormManagerId: null, // 舍长
+        dormTypeEnum: 'ALLSTUDENT',
         peopleNum: null,
-        bedFormatType: 'LETTER', // 床位编号格式
+        dormBedFormatTypeEnum: 'LETTER', // 床位编号格式
         bedIds: null,
         bedNames: null,
         singleFee: 600

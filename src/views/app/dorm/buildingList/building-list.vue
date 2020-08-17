@@ -11,6 +11,7 @@
       class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
+      @changeRowCheckbox="changeRowCheckbox"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
     >
@@ -30,14 +31,16 @@
             @click="add">新增</van-button>
           <van-button
             class="btn-op"
-            type="info">清空宿舍</van-button>
+            type="info"
+            @click="clearDorm">清空宿舍</van-button>
           <van-button
             class="btn-op"
-            type="info">删除</van-button>
+            type="info"
+            @click="del">删除</van-button>
           <van-button
             class="btn-op"
             type="warning"
-            @click="isShowBar = false">取消管理</van-button>
+            @click="cancalManage">取消管理</van-button>
         </div>
         <van-tabs
           v-model="actionName"
@@ -56,7 +59,7 @@
           v-if="isShowSearch"
           action="/">
           <van-search
-            v-model="searchForm.searchValue"
+            v-model="searchForm.buildingName"
             show-action
             placeholder="请输入宿舍楼名称"
             @search="onSearch"
@@ -68,12 +71,14 @@
           class="search-bar">
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.isFull"
-              :options="isFullList" />
+              v-model="searchForm.fullTypeEnum"
+              :options="isFullList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-icon
             name="search"
-            @click="isShowSearch = true" />
+            @click="switchSearch(true)" />
         </div>
       </template>
       <template
@@ -163,17 +168,17 @@ export default {
       editUrl: '/dorm/building/edit',
       actionName: 3,
       isFullList: [
-        { text: '是否住满', value: null },
-        { text: '全住满', value: 1 },
-        { text: '未住满', value: 0 }
+        { text: '是否住满', value: 'ALL' },
+        { text: '全住满', value: 'BE_FULL' },
+        { text: '未住满', value: 'NO_BE_FULL' }
       ],
       searchForm: {
-        isFull: null,
-        searchValue: null
+        fullTypeEnum: 'ALL',
+        buildingName: null
       },
       moreOpList: [
         { value: 'edit', label: '编辑' },
-        { value: 'ts', label: '清空宿舍' },
+        { value: 'clear', label: '清空宿舍' },
         { value: 'del', label: '删除' }
       ]
     }
@@ -182,15 +187,28 @@ export default {
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
-        // 编辑
         case 'edit':
           this.rowId = item.id
           this.isShowEditPopup = true
           break
-        case 'qc':
+        case 'clear':
+          this.clearDorm(null, item.id)
           break
+        case 'del': {
+          this.del(null, item.id)
+        }
       }
       this.showMore = false
+    },
+    // 切换到搜索框
+    switchSearch(flag) {
+      if (flag) {
+        // this.searchForm = {
+        //   fullTypeEnum: 'ALL',
+        //   buildingName: null
+        // }
+        this.isShowSearch = flag
+      }
     },
     loadData() {
       this.pageNum++;
@@ -208,6 +226,14 @@ export default {
       this.$router.push(this.editUrl)
       // this.rowId = null
       // this.isShowEditPopup = true
+    },
+    // 清空宿舍
+    clearDorm(obj, id) {
+      this.handleIdList(id, '清空宿舍', 'clearBuilding')
+    },
+    // 删除楼栋
+    del(obj, id) {
+      this.handleIdList(id, '删除', 'deleteBuilding')
     }
   }
 }

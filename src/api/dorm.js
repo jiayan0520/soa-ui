@@ -7,6 +7,10 @@ const prefix = `/prod-api/dormmodule`
 export function getDormList(params) {
   return get(`${prefix}/dorm/list`, params)
 }
+// 宿舍列表统计
+export function getDormTotalInfos(params) {
+  return get(`${prefix}/dorm/getDormInfos`, params)
+}
 // 获取宿舍详情
 export function getDormDetail(params) {
   return get(`${prefix}/dorm/${params}`)
@@ -21,9 +25,9 @@ export function updateDorm(params) {
 }
 // 删除宿舍
 export function deleteDorm(params) {
-  return del(`${prefix}/dorm/${params}`)
+  return del(`${prefix}/dorm/del/`, params)
 }
-// 清空宿舍
+// 宿舍列表清空宿舍
 export function clearDorm(params) {
   return post(`${prefix}/dorm/clearDorm`, params)
 }
@@ -45,7 +49,11 @@ export function updateBuilding(params) {
 }
 // 删除楼栋
 export function deleteBuilding(params) {
-  return del(`${prefix}/building/${params}`)
+  return del(`${prefix}/building/del/`, params)
+}
+// 楼栋列表清空宿舍
+export function clearBuilding(params) {
+  return post(`${prefix}/building/clearDorm`, params)
 }
 // 获取楼栋详情
 export function getBuildingDetail(params) {
