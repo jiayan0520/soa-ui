@@ -194,6 +194,7 @@ export default {
           console.group('钉钉选人与部门：');
           console.log(result);
           console.groupEnd();
+          this.getUserList(result.users)
           // 选择的人员
           // if (result.users.length > 0) {
           //   this.people = result.users;
@@ -205,14 +206,23 @@ export default {
         }
       });
     },
+    // 循环获取用户基础信息（主要需要手机号码）
+    getUserList(users) {
+      if (users) {
+        for (let i = 0; i < users.length; i++) {
+          this.$api.getUserInfo({ userId: users.emplId }).then(data => {
+            this.onSubmit({ realName: data.name, phone: data.mobile })
+          })
+        }
+      }
+    },
     handleRowClick(item) {
       this.rowId = item.id
       this.isShowEditPopup = true
     },
     // 保存
-    onSubmit() {
+    onSubmit(obj) {
       // if (this.formData.id) {
-
       // }
     },
     // 选择确定

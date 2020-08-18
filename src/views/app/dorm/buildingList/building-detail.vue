@@ -4,8 +4,8 @@
       :data="data"
       :field-list="fieldList" />
     <custom-cell
-      title="楼栋位置"
-      value="福州大学学生公寓1号楼（福州市闽侯县）" />
+      :value="data.address"
+      title="楼栋位置" />
     <custom-cell title="班级信息">
       <template slot="value">
         <div
@@ -20,50 +20,48 @@
       </template>
     </custom-cell>
     <custom-cell
-      title="简介"
-      value="本宿舍属于福大生活区1区，里面入住的大部分是石化学院的学生。宿舍建于2008年，最近一次宿舍翻新是2019年。" />
+      :value="data.desc"
+      title="简介" />
   </div>
 </template>
 
 <script>
 import customPanel from '@/components/customPanel'
 import customCell from '@/components/customCell'
+import { getQuery } from '@/utils'
 export default {
   name: 'BuildingDetail',
   components: {
     customCell,
     customPanel
   },
+  // props: {
+  //   id: {
+  //     type: String,
+  //     default: ''
+  //   }
+  // },
   data() {
     return {
-      data: {
-        buildingName: '福大生活1区1号楼-601',
-        managementList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        repairList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        annexList: [
-          { url: 'https://img.yzcdn.cn/vant/leaf.jpg' },
-          // Uploader 根据文件后缀来判断是否为图片文件
-          // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-          { url: 'https://cloud-image', isImage: true }
-        ]
-      },
+      id: null,
+      data: {},
       fieldList: [
         { prop: 'buildingName', label: '楼栋名称' },
         {
-          prop: 'managementList',
+          prop: 'buildingManagers',
           label: '楼管',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         },
         {
-          prop: 'repairList',
+          prop: 'maintenanceWorkers',
           label: '维修人员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         },
         {
           prop: 'annexList',
@@ -73,7 +71,25 @@ export default {
       ]
     }
   },
+  computed: {
+    userId() {
+      return this.$store.getters['core/user'].userId
+    }
+  },
+  created() {
+    this.id = getQuery('id')
+    this.getDetail()
+  },
   methods: {
+    // 获取详情
+    getDetail() {
+      this.$api.getBuildingDetail(this.id).then(data => {
+        data.annexList.forEach(item => {
+          item.url = '/prod-api' + item.fileName
+        });
+        this.data = data
+      })
+    }
   }
 }
 </script>

@@ -59,3 +59,8 @@ export function clearBuilding(params) {
 export function getBuildingDetail(params) {
   return get(`${prefix}/building/${params}`)
 }
+
+// 床位列表
+export function getBedList(params) {
+  return get(`${prefix}/bed/list`, params)
+}

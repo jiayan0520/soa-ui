@@ -21,8 +21,10 @@
         placeholder="请输入宿舍名称"
       />
       <user-picker
-        v-model="form.dormManagerId"
+        v-model="formData.dormManager"
         :user-only="true"
+        :multiple="false"
+        :max-users="1"
         title="舍长"
       />
       <van-field
@@ -80,6 +82,7 @@
           <van-field
             v-model="formData.singleFee"
             :rules="formDataRules.singleFee"
+            type="number"
             style="padding:0"
           />
           <span
@@ -135,6 +138,7 @@ export default {
         buildingName: null,
         dormName: null,
         dormManagerId: null, // 舍长
+        dormManager: { emplId: '', name: '' },
         dormTypeEnum: 'ALLSTUDENT',
         peopleNum: null,
         dormBedFormatTypeEnum: 'LETTER', // 床位编号格式
@@ -161,6 +165,9 @@ export default {
   computed: {
     peopleNum() {
       return this.formData.peopleNum
+    },
+    userId() {
+      return this.$store.getters['core/user'].userId
     }
   },
   watch: {
@@ -218,6 +225,7 @@ export default {
     // 获取详情
     getDetail() {
       this.$api.getDormDetail(this.id).then(data => {
+        data.dormManager = { emplId: data.dormManager.userId || '', name: data.dormManager.name || '' }
         this.formData = data
       })
     },
@@ -232,6 +240,7 @@ export default {
         })
       } else {
         Toast.loading('修改宿舍中，请稍后...')
+        this.formData.dormManagerId = this.formData.dormManager.emplId
         this.$api.updateDorm(this.formData).then(data => {
           Toast.clear()
           Toast('修改宿舍成功')
