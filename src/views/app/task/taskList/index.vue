@@ -15,10 +15,9 @@
     >
       <template slot="top">
         <van-search
-          v-model="searchValue"
-          show-action
+          v-model="content"
           label="任务内容"
-          placeholder="请输入搜索关键词"
+          placeholder="任务内容"
           @search="onSearch"
         />
         <van-tabs
@@ -42,7 +41,9 @@
         slot="item-content"
         slot-scope="slotProps">
         <div class="soa-list-item-content content">
-          <div>
+          <div
+            :style="infoStyle"
+            class="soa-task-list__info">
             <div class="c-ft16">{{ slotProps.item.title }}</div>
             <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
             <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
@@ -50,7 +51,7 @@
             <span :class="[`c-${computeTimes(slotProps.item.deadline).type}`]">{{ computeTimes(slotProps.item.deadline).value }}</span>
             <!-- <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div> -->
           </div>
-          <div :class="[taskStatus[slotProps.item.state].type]">{{ taskStatus[slotProps.item.state].label }}</div>
+          <div :class="[taskStatus[slotProps.item.state].type,'soa-task-list__status']">{{ taskStatus[slotProps.item.state].label }}</div>
         </div>
       </template>
     </list-layout>
@@ -82,7 +83,7 @@ export default {
       active: 0,
       active1: 0,
       isShowEditPopup: false,
-      searchValue: '',
+      content: '',
       dataList: [],
       tab: ['我发布的', '我收到的'],
       tab1: ['未完成', '已完成', '所有'],
@@ -94,11 +95,14 @@ export default {
     detailUrl() {
       return '/task-detail'
     },
+    infoStyle() {
+      return { width: ((document.body.clientWidth > 1024 ? 1024 : document.body.clientWidth) * 0.7) + 'px' }
+    },
     moreOpList() {
       const publishOp = [
-        // { value: 'edit', label: '编辑', allowStatus: { state: ['NUFINISHED'] }},
-        { value: 'delete', label: '删除' }
-        // { value: 'fail', label: '任务失败', allowStatus: { state: ['NUFINISHED'] }}
+        { value: 'edit', label: '编辑', allowStatus: { state: ['NUFINISHED'] }},
+        { value: 'delete', label: '删除' },
+        { value: 'fail', label: '任务失败', allowStatus: { state: ['NUFINISHED'] }}
       ]
       const reOp = [
         { value: 'submit', label: '提交', allowStatus: { state: ['NUFINISHED'] }}
@@ -118,7 +122,7 @@ export default {
           // on confirm
         });
     },
-    onSearch(searchValue) {
+    onSearch() {
       this.page = 0;
       this.dataList = []
       this.$refs.listLayout.loading = true
@@ -130,15 +134,15 @@ export default {
       return computeDiffTime(deadlineTime)
     },
     onLoad() {
-      this.page++
       const stateTypeMap = {
         0: 'NUFINISHED',
         1: 'FINISHED',
         2: ''
       }
+      console.log('this.$refs', this.$refs.listLayout.loading)
       const parms = {
         type: this.active + 1,
-        content: this.searchValue,
+        content: this.content,
         page: this.page,
         limit: this.limit,
         userId: this.$store.getters['core/user'].userId
@@ -150,6 +154,8 @@ export default {
         const total = (data && data.total) || 0;
         // 加载状态结束
         this.$refs.listLayout.loading = false
+        console.log('this.$refs.listLayout.loading', this.$refs.listLayout.loading)
+        this.page++
         // 数据全部加载完成
         if (this.dataList && (this.dataList.length >= total)) {
           this.$refs.listLayout.finished = true
@@ -204,6 +210,13 @@ export default {
   }
   & .content{
      @include base-between
+  }
+  @include e(info){
+    word-wrap:break-word;
+  }
+  @include e(status){
+    width: 13%;
+    text-align: center
   }
 }
 </style>

@@ -10,7 +10,6 @@
     <template slot="top">
       <van-search
         v-model="searchValue"
-        show-action
         label="任务内容"
         placeholder="搜索"
         @search="onSearch"
@@ -28,7 +27,9 @@
       slot="item-content"
       slot-scope="slotProps">
       <div class="soa-list-item-content content">
-        <div>
+        <div
+          :style="infoStyle"
+          class="soa-task-examine-list__info">
           <div class="c-ft16">{{ slotProps.item.title }}</div>
           <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
           <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
@@ -61,8 +62,13 @@ export default {
       limit: 20 // 每页请求数量
     }
   },
+  computed: {
+    infoStyle() {
+      return { width: ((document.body.clientWidth > 1024 ? 1024 : document.body.clientWidth) * 0.7) + 'px' }
+    }
+  },
   methods: {
-    onSearch(searchValue) {
+    onSearch() {
       this.page = 0;
       this.dataList = []
       this.$refs.listLayout.loading = true
@@ -78,7 +84,8 @@ export default {
       const params = {
         type: this.active ? 'AUDITED' : 'WAITING',
         page: this.page,
-        limit: this.limit
+        limit: this.limit,
+        content: this.searchValue
       }
       this.$api.getTaskExamineList(params).then((res) => {
         this.dataList = (res && res.rows) || [];
@@ -101,9 +108,12 @@ export default {
   & .content{
      @include base-between
   }
+  @include e(info){
+    word-wrap:break-word;
+  }
   @include e(status){
-    width:60px;
-    padding-right: 20px
+    width: 60px;
+    text-align: center
   }
 }
 </style>
