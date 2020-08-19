@@ -194,9 +194,9 @@ export default {
         case 'clear':
           this.clearDorm(null, item.id)
           break
-        case 'del': {
+        case 'del':
           this.del(null, item.id)
-        }
+          break
       }
       this.showMore = false
     },

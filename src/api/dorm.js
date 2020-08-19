@@ -64,3 +64,11 @@ export function getBuildingDetail(params) {
 export function getBedList(params) {
   return get(`${prefix}/bed/list`, params)
 }
+// 退舍
+export function outBed(params) {
+  return post(`${prefix}/bed/checkOut`, params)
+}
+// 删除
+export function deleteBed(params) {
+  return del(`${prefix}/bed`, params)
+}

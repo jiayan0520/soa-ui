@@ -201,7 +201,7 @@ export default {
       moreOpList: [
         { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
-        { value: 'ts', label: '退舍' },
+        { value: 'out', label: '退舍' },
         { value: 'del', label: '删除' }
       ]
     }
@@ -223,9 +223,11 @@ export default {
         case 'qc': {
           break
         }
-        case '1':
+        case 'out':
+          this.outBed(null, item.id)
           break
-        default:
+        case 'del':
+          this.del(null, item.id)
           break
       }
       this.showMore = false
@@ -258,6 +260,14 @@ export default {
         //     this.$refs.cardList.finished = true;
         //   }
       }, 1000)
+    },
+    // 退宿舍
+    outBed(obj, id) {
+      this.handleIdList(id, '退舍', 'outBed')
+    },
+    // 删除
+    del(obj, id) {
+      this.handleIdList(id, '删除', 'deleteBed')
     }
   }
 }

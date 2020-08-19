@@ -32,7 +32,7 @@
         label="宿舍类型">
         <template #input>
           <van-radio-group
-            v-model="formData.dormTypeEnum"
+            v-model="formData.dormType"
             direction="horizontal">
             <van-radio
               v-for="key in Object.keys(dormTypeEnum)"
@@ -56,7 +56,7 @@
         label="床位编号格式">
         <template #input>
           <van-radio-group
-            v-model="formData.dormBedFormatTypeEnum"
+            v-model="formData.bedFormatType"
             direction="horizontal"
             @change="changeFormatType"
           >
@@ -139,9 +139,9 @@ export default {
         dormName: null,
         dormManagerId: null, // 舍长
         dormManager: { emplId: '', name: '' },
-        dormTypeEnum: 'ALLSTUDENT',
+        dormType: 'ALLSTUDENT',
         peopleNum: null,
-        dormBedFormatTypeEnum: 'LETTER', // 床位编号格式
+        bedFormatType: 'LETTER', // 床位编号格式
         bedIds: null,
         bedNames: null,
         singleFee: 600
@@ -225,7 +225,12 @@ export default {
     // 获取详情
     getDetail() {
       this.$api.getDormDetail(this.id).then(data => {
-        data.dormManager = { emplId: data.dormManager.userId || '', name: data.dormManager.name || '' }
+        if (data.dormManager) {
+          data.dormManager = { emplId: data.dormManager.userId, name: data.dormManager.name }
+        } else {
+          data.dormManager = { emplId: '', name: '' }
+        }
+
         this.formData = data
       })
     },

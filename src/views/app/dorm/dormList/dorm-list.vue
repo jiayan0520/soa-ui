@@ -62,7 +62,7 @@
             show-action
             placeholder="宿舍号/宿舍楼"
             @search="onSearch"
-            @cancel="isShowSearch=false"
+            @cancel="cancelSearch"
           />
         </form>
         <div
@@ -70,21 +70,21 @@
           class="search-bar">
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.dormActivationStatusEnum"
+              v-model="searchForm.status"
               :options="statusList"
               @change="onSearch"
             />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.dormTypeEnum"
+              v-model="searchForm.dormType"
               :options="dormTypeList"
               @change="onSearch"
             />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.fullTypeEnum"
+              v-model="searchForm.fullType"
               :options="isFullList"
               @change="onSearch"
             />
@@ -117,7 +117,7 @@
             >{{ slotProps.item.dormManager&&slotProps.item.dormManager.mobile }}</span>
           </div>
           <div class="item-row flex-between c-light">
-            {{ dormTypeEnum[slotProps.item.dormType].label }}
+            {{ dormTypeEnum[slotProps.item.dormType]?dormTypeEnum[slotProps.item.dormType].label:slotProps.item.dormType }}
             <div>
               <span>人数：{{ slotProps.item.dormData.userNum }}/{{ slotProps.item.dormData.totalNum }}</span>
               <span
@@ -126,7 +126,7 @@
                 {{ slotProps.item.dormData.numLable }}
                 <span
                   v-if="slotProps.item.dormData.numLable!=='未分配'"
-                >:{{ slotProps.item.dormData.activationNum }}/{{ slotProps.item.dormData.leaveNum }}</span>
+                >:{{ slotProps.item.dormData.activationNum }}/{{ slotProps.item.dormData.userNum }}</span>
               </span>
             </div>
           </div>
@@ -165,6 +165,7 @@ import baseList from '../mixins/base-list'
 import dormEdit from './dorm-edit'
 import dormDetail from './dorm-detail'
 import { dormTypeEnum } from '../utils/dorm-enum'
+import { Toast } from 'vant'
 export default {
   name: 'DormList',
   components: {
@@ -200,9 +201,9 @@ export default {
         { text: '未住满', value: 'NO_BE_FULL' }
       ],
       searchForm: {
-        dormActivationStatusEnum: 'ALL',
-        dormTypeEnum: 'ALL',
-        fullTypeEnum: 'ALL',
+        status: 'ALL',
+        dormType: 'ALL',
+        fullType: 'ALL',
         dormNameOrBuildingName: ''
       },
       moreOpList: [
@@ -221,15 +222,23 @@ export default {
       switch (val) {
         // 编辑
         case 'edit':
+          if (item.dormData.userNum > 0) {
+            Toast('已有床位绑定用户，不可修改！')
+            return
+          }
           this.rowId = item.id
           this.isShowEditPopup = true
           break
         case 'clear':
           this.clearDorm(null, item.id)
           break
-        case 'del': {
+        case 'del':
+          if (item.dormData.userNum > 0) {
+            Toast('已有床位绑定用户，不可删除！')
+            return
+          }
           this.del(null, item.id)
-        }
+          break
       }
       this.showMore = false
     },
@@ -275,10 +284,10 @@ export default {
           } else if (item.dormData.activationNum === 0) {
             item.dormData.numLable = '全未激活'
             item.dormData.class = 'c-danger'
-          } else if (item.dormData.activationNum < item.dormData.leaveNum) {
+          } else if (item.dormData.activationNum < item.dormData.userNum) {
             item.dormData.numLable = '部分激活'
             item.dormData.class = 'c-danger'
-          } else if (item.dormData.activationNum === item.dormData.leaveNum) {
+          } else if (item.dormData.activationNum === item.dormData.userNum) {
             item.dormData.numLable = '全部激活'
             item.dormData.class = 'c-info'
           }

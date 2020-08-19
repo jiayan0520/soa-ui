@@ -56,6 +56,10 @@ export default {
       this.dataList = []
       this.loadData()
     },
+    cancelSearch() {
+      this.isShowSearch = false
+      this.onSearch()
+    },
     // tab便签点击切换路由
     tabClick(value) {
       switch (value) {

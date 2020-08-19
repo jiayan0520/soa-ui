@@ -6,6 +6,7 @@
       <h3>{{ title }}</h3>
       <van-button
         v-if="opLabel"
+        class="btn-op"
         type="warning"
         @click="handleOperator">{{ opLabel }}</van-button>
       <slot name="tool-bar-left" />
@@ -220,20 +221,21 @@ export default {
     h3 {
       margin: 0;
     }
-    // border-bottom: 1px solid #f5f5f5;
   }
   .search-bar {
     z-index: 10;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #f5f5f5;
+    background-color: #fff;
     .van-icon {
       display: flex;
       align-items: center;
       margin: 0 6px;
     }
-    .van-dropdown-menu__bar{
-      background-color: unset;
+    .van-dropdown-menu__bar {
+      background-color: transparent;
+      box-shadow: unset;
     }
   }
   .van-pull-refresh {

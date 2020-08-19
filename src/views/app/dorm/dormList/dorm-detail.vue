@@ -92,6 +92,7 @@
 <script>
 import customPanel from '@/components/customPanel'
 import dormCheck from '../components/check-common'
+import { dormTypeEnum } from '../utils/dorm-enum'
 export default {
   name: 'DormDetail',
   components: {
@@ -120,7 +121,7 @@ export default {
           { name: '请假人数：', num: 1, class: 'c-danger' }
         ],
         dormType: '学生宿舍',
-        cost: '900',
+        singleFee: '900',
         peopleInfos: [
           { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
           { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
@@ -135,12 +136,12 @@ export default {
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
         {
-          prop: 'headList',
+          prop: 'dormManager',
           label: '舍长',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'name' },
+            { prop: 'mobile', class: 'c-info' }]
         },
         {
           prop: 'containList',
@@ -151,7 +152,7 @@ export default {
             { prop: 'num', class: 'c-info', unit: '人' }]
         },
         { prop: 'dormType', label: '宿舍类型' },
-        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
+        { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
       ],
       moreOpList: [
         { value: '1', label: '设为舍长' },
@@ -176,16 +177,16 @@ export default {
       this.$api.getDormDetail(this.id).then(data => {
         this.data = {
           dormName: data.buildingName + '-' + data.dormName,
-          headList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
+          dormManager: [data.dormManager],
           containList: [
-            { name: '可容纳人数：', num: 1 },
-            { name: '已容纳人数：', num: 1 },
-            { name: '需激活人数：', num: 1 },
-            { name: '已激活人数：', num: 1, class: 'c-info' },
-            { name: '请假人数：', num: 1, class: 'c-danger' }
+            { name: '可容纳人数：', num: data.dormData.totalNum },
+            { name: '已容纳人数：', num: data.dormData.userNum },
+            { name: '需激活人数：', num: data.dormData.userNum - data.dormData.activationNum },
+            { name: '已激活人数：', num: data.dormData.activationNum, class: 'c-info' },
+            { name: '请假人数：', num: data.dormData.leaveNum, class: 'c-danger' }
           ],
-          dormType: '学生宿舍',
-          cost: '900',
+          dormType: dormTypeEnum[data.dormType].label,
+          singleFee: data.singleFee,
           peopleInfos: [
             { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
             { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
