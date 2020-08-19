@@ -71,6 +71,8 @@ import listLayout from '@/components/listLayout'
 import addTask from '../addTask/index'
 import { taskStatus } from '../components/taskEnum'
 import { computeDiffTime } from '@/utils/index.js'
+import dayjs from 'dayjs';
+import { Toast } from 'vant';
 export default {
   name: 'TaskList',
   components: {
@@ -113,7 +115,7 @@ export default {
   methods: {
     // 任务结算
     onSubmit() {
-      const nowDate = this.format();
+      const nowDate = dayjs(new Date()).format('YYYY-MM-DD');
       this.$dialog.confirm({
         title: '提示',
         message: '今天是' + nowDate + '，确定任务结算？'
@@ -172,9 +174,17 @@ export default {
           this.isShowEditPopup = true
           break
         case 'delete':
-          this.deleteTask()
-          break
-        case 'fail':
+          this.$dialog.confirm({
+            title: '提示',
+            message: `请确认要删除任务【${item.title}】，删除后数据将无法恢复`
+          }).then(() => {
+            this.$api.deleteTask(item.id).then(() => {
+              Toast('任务删除成功');
+              this.onSearch()
+            })
+          }).catch(error => {
+            Toast('任务删除失败，请稍后尝试');
+          })
           break
         case 'submit':
           this.$router.push({
@@ -183,15 +193,6 @@ export default {
           })
           break
       }
-    },
-    // 删除任务
-    deleteTask() {},
-    // 日期转换
-    format() {
-      var days = new Date();
-      var month = (days.getMonth() + 1) < 10 ? '0' + (days.getMonth() + 1) : (days.getMonth() + 1);
-      var strDate = (days.getDate() < 10 ? '0' + days.getDate() : days.getDate());
-      return days.getFullYear() + '年' + month + '月' + strDate + '日';
     }
   }
 }
