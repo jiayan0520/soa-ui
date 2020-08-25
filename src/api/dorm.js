@@ -5,7 +5,7 @@ const prefix = `/prod-api/dormmodule`
 
 // 宿舍列表
 export function getDormList(params) {
-  return get(`${prefix}/dorm/list`, params)
+  return post(`${prefix}/dorm/list`, params)
 }
 // 宿舍列表统计
 export function getDormTotalInfos(params) {
@@ -37,7 +37,7 @@ export function getBuildingDimension() {
 }
 // 楼栋列表
 export function getBuildingList(params) {
-  return get(`${prefix}/building/list`, params)
+  return post(`${prefix}/building/list`, params)
 }
 // 新增楼栋
 export function addBuilding(params) {
@@ -60,9 +60,26 @@ export function getBuildingDetail(params) {
   return get(`${prefix}/building/${params}`)
 }
 
+// 站外用户列表
+export function getUserOutList(params) {
+  return post(`${prefix}/userOut/list`, params)
+}
+// 新增站外用户
+export function addUserOut(params) {
+  return post(`${prefix}/userOut`, params)
+}
+// 修改站外用户
+export function updateUserOut(params) {
+  return put(`${prefix}/userOut`, params)
+}
+// 删除
+export function deleteUserOut(params) {
+  return del(`${prefix}/userOut`, params)
+}
+
 // 床位列表
 export function getBedList(params) {
-  return get(`${prefix}/bed/list`, params)
+  return post(`${prefix}/bed/list`, params)
 }
 // 退舍
 export function outBed(params) {

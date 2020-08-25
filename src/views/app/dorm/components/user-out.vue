@@ -30,7 +30,8 @@
             @click="addDD">新增站内用户</van-button>
           <van-button
             class="btn-op"
-            type="info">删除</van-button>
+            type="info"
+            @click="del">删除</van-button>
         </div>
         <form action="/">
           <van-search
@@ -51,7 +52,7 @@
           <div class="index-column">序号</div>
           <div>名字</div>
           <div>电话号码</div>
-          <div>是否是站内用户</div>
+          <div>是否站内用户</div>
         </div>
       </template>
       <template
@@ -61,24 +62,24 @@
           <div class="index-column">{{ slotProps.item.rowNum }}</div>
           <div>{{ slotProps.item.realName }}</div>
           <div>{{ slotProps.item.phone }}</div>
-          <div>{{ slotProps.item.type }}</div>
+          <div>{{ slotProps.item.isSoaUser }}</div>
         </div>
       </template>
     </list-layout>
     <van-popup
       v-if="isShowEditPopup"
       v-model="isShowEditPopup"
-      :style="{ height: '100%' }"
+      :style="{ height: '50%' }"
       closeable
       class="soa-popup"
       position="bottom"
     >
       <van-form
         class="building-edit-form soa-custom-form"
-        @submit="onSubmit">
+        @submit="onSubmit(null)">
         <van-field
           v-model="formData.realName"
-          :rules="[{ required: true, message: '请输入姓名' }]"
+          :rules="formDataRules.realName"
           :required="true"
           maxlength="50"
           label="姓名"
@@ -86,12 +87,19 @@
         />
         <van-field
           v-model="formData.phone"
-          :rules="[{ required: true, message: '请输入电话号码' }]"
+          :rules="formDataRules.phone"
           :required="true"
           maxlength="50"
           label="电话号码"
           placeholder="请输入电话号码"
         />
+        <van-divider />
+        <div class="soa-btn-box">
+          <van-button
+            block
+            type="info"
+            native-type="submit">提交</van-button>
+        </div>
       </van-form>
     </van-popup>
   </div>
@@ -99,15 +107,17 @@
 
 <script>
 import baseList from '../mixins/base-list'
+import { outUserTypeEnum } from '../utils/dorm-enum'
+import { checkMask } from '@/utils'
 export default {
   name: 'UserOutList',
   components: {
   },
   mixins: [baseList],
   props: {
-    title: {
+    type: {
       type: String,
-      default: '选择维修人员'
+      default: 'DORM_MANAGER'
     },
     // 已选中的人
     ids: {
@@ -118,12 +128,25 @@ export default {
   data() {
     return {
       searchForm: {
-        searchValue: null
+        searchValue: null,
+        roleType: this.type
       },
       formData: {
         realName: null,
         phone: null
-      }
+      },
+      formDataRules: {
+        realName: [{ required: true, message: '请输入姓名' }],
+        phone: [
+          { required: true, message: '请输入手机号码' },
+          { validator: (value) => {
+            if (value) {
+              return checkMask(value, /^1[3|4|5|6|7|8|9]\d{9}$/);
+            }
+          }, message: '手机号码格式不正确' }
+        ]
+      },
+      title: ''
     }
   },
   computed: {
@@ -131,42 +154,28 @@ export default {
       return this.$store.getters['core/system']
     }
   },
+  created() {
+    this.title = outUserTypeEnum[this.type].label
+  },
   methods: {
     loadData() {
-      console.log(1111111111)
-      this.pageNum++;
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            isCheck: this.ids && this.ids.includes(this.dataList.length + 1),
-            isShowMore: false,
-            id: this.dataList.length + 1,
-            rowNum: this.dataList.length + 1,
-            realName: '张三峰',
-            phone: '18233422111',
-            type: '是'
-          });
-        }
+      console.log(this.ids)
+      // 不分页，方便回填
+      this.$api.getUserOutList(this.searchForm).then(data => {
+        data.rows.forEach((row, index) => {
+          row.rowNum = index + 1
+          row.isCheck = this.ids && this.ids.includes(row.id)
+          row.isSoaUser = row.soaUserId ? '是' : '否'
+        })
+        console.log(data.rows)
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        this.dataList = data.rows
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
-      }, 1000)
-      // this.$api.getBuildingList(this.searchParams).then(data => {
-      //   // 加载状态结束
-      //   this.$refs.listLayout.loading = false
-      //   this.dataList = this.dataList.concat(data.rows)
-      //   // 数据全部加载完成
-      //   if (this.dataList.length >= data.total) {
-      //     this.$refs.listLayout.finished = true
-      //   }
-      // })
+      })
     },
     add() {
       this.rowId = null
@@ -217,13 +226,33 @@ export default {
       }
     },
     handleRowClick(item) {
-      this.rowId = item.id
+      this.formData = JSON.parse(JSON.stringify(item))
       this.isShowEditPopup = true
     },
     // 保存
     onSubmit(obj) {
-      // if (this.formData.id) {
-      // }
+      let params = {}
+      if (obj) {
+        params = obj
+      } else {
+        params = this.formData
+      }
+      console.log(obj, params)
+      if (params.id) {
+        this.$api.updateUserOut({ ...params }).then(data => {
+          this.loadData()
+          this.isShowEditPopup = false
+        })
+      } else {
+        this.$api.addUserOut({ roleType: this.type, ...params }).then(data => {
+          this.loadData()
+          this.isShowEditPopup = false
+        })
+      }
+    },
+    // 删除
+    del(obj, id) {
+      this.handleIdList(id, '删除', 'deleteUserOut')
     },
     // 选择确定
     sure() {
@@ -260,7 +289,7 @@ export default {
       width: 100%;
     }
     &.rank-title {
-      padding: 10px 20px 10px 10px;
+      padding: 10px;
       border-bottom: #f5f5f5;
     }
   }

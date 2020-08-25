@@ -64,3 +64,18 @@ export function getQuery(strName) {
   }
   return ''
 }
+
+/**
+ * 正则表达式 判断字符串是否 符合
+ * @method checkMask
+ * @param {string} str
+ * @param {string} pat
+ * @returns {bool} 结果
+ */
+export function checkMask(str, pat) {
+  if (str === '') {
+    return true;
+  }
+  var pattern = new RegExp(pat, 'gi')
+  if (pattern.test(str)) { return true; } else { return false; }
+}

@@ -232,34 +232,51 @@ export default {
       }
       this.showMore = false
     },
+    onSearch() {
+      this.pageNum = 0
+      this.dataList = []
+      this.getDormTotalInfos()
+      this.loadData()
+    },
+    getDormTotalInfos() {
+      this.$api.getDormTotalInfos(this.searchParams).then(data => {
+        const keys = Object.keys(data)
+        keys.forEach(key => {
+          const item = this.totalList.find(item => item.filed === key)
+          if (item) {
+            item.value = data[key]
+          }
+        })
+      })
+    },
     loadData() {
       this.pageNum++;
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            isCheck: this.isCheckAll,
-            isShowMore: false,
-            id: this.dataList.length + 1,
-            userName: '张三峰',
-            telephone: '18233422111',
-            banji: '石油化工学院-2019级化工一班',
-            dormInfo: '福大生活一区103栋108宿舍-A床'
-          });
-        }
+      this.$api.getBedList(this.searchParams).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        const rows = data.rows
+        rows.forEach(item => {
+          // if (item.dormData.userNum === 0) {
+          //   item.dormData.numLable = '未分配'
+          //   item.dormData.class = 'c-light'
+          // } else if (item.dormData.activationNum === 0) {
+          //   item.dormData.numLable = '全未激活'
+          //   item.dormData.class = 'c-danger'
+          // } else if (item.dormData.activationNum < item.dormData.userNum) {
+          //   item.dormData.numLable = '部分激活'
+          //   item.dormData.class = 'c-danger'
+          // } else if (item.dormData.activationNum === item.dormData.userNum) {
+          //   item.dormData.numLable = '全部激活'
+          //   item.dormData.class = 'c-info'
+          // }
+        })
+        this.dataList = this.dataList.concat(rows)
+        console.log(222, this.dataList)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.limit) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
+      })
     },
     // 退宿舍
     outBed(obj, id) {

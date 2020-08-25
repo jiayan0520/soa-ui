@@ -171,7 +171,6 @@ export default {
     // 更多操作
     bindMoreClick(index) {
       this.showMoreIndex = this.showMoreIndex === index ? -1 : index
-      console.log(this.showMoreIndex)
     },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {

@@ -292,7 +292,6 @@ export default {
             item.dormData.class = 'c-info'
           }
         })
-        console.log(rows)
         this.dataList = this.dataList.concat(rows)
         console.log(222, this.dataList)
         // 数据全部加载完成

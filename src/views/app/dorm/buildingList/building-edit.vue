@@ -17,7 +17,8 @@
         label="楼管"
         right-icon="add"
         placeholder
-        @click="choiceUser('楼管')">
+        @click="choiceUser('DORM_MANAGER')"
+      >
         <template #input>
           <div
             v-for="(item,index) in formData.buildingManagers"
@@ -32,7 +33,7 @@
         label="维修人员"
         right-icon="add"
         placeholder
-        @click="choiceUser('维修人员')"
+        @click="choiceUser('MAINTENANCE_WORKER')"
       >
         <template #input>
           <div
@@ -96,8 +97,8 @@
       position="bottom"
     >
       <user-out
-        :title="userOutTitle"
-        :ids="formData.buildingManagerIds"
+        :type="outUserType"
+        :ids="currentOutUserIds"
         @close="isShowUserOutPopup=false"
         @sure="sureChoiceUser"
       />
@@ -140,7 +141,8 @@ export default {
       },
       isShowAddressPopup: false,
       isShowUserOutPopup: false,
-      userOutTitle: null
+      outUserType: null,
+      currentOutUserIds: null
     }
   },
   created() {
@@ -155,11 +157,12 @@ export default {
     // 保存
     onSubmit() {
       if (this.isAdd) {
-        Toast.loading('新增楼栋中，请稍后...')
+        Toast.loading('新楼栋中，请稍后...')
         this.$api.addBuilding(this.formData).then(data => {
           Toast.clear()
           Toast('新增楼栋成功')
           this.$emit('close', true)
+          this.$router.push('/dorm/buildingList')
         }).catch(err => {
           Toast('新增楼栋失败' + err)
         })
@@ -168,6 +171,7 @@ export default {
         this.$api.updateBuilding(this.formData).then(data => {
           Toast.clear()
           Toast('修改楼栋成功')
+          this.$router.push('/dorm/buildingList')
           this.$emit('close', true)
         }).catch(err => {
           Toast('修改楼栋失败' + err)
@@ -196,21 +200,25 @@ export default {
       })
     },
     // 选择管理员，维修人员
-    choiceUser(title) {
+    choiceUser(type) {
       this.isShowUserOutPopup = true
-      this.userOutTitle = title
+      this.outUserType = type
     },
     // 选中管理员，维修人员
     sureChoiceUser(list) {
-      if (this.userOutTitle === '楼管') {
+      this.currentOutUserIds = null
+      if (this.outUserType === 'DORM_MANAGER') {
         this.formData.buildingManagers = list
         this.formData.buildingManagerIds = list.map(item => { return item.id }).join(',')
-        this.isShowUserOutPopup || false
+        this.currentOutUserIds = this.formData.buildingManagerIds
+        this.isShowUserOutPopup = false
       } else {
         this.formData.maintenanceWorkers = list
         this.formData.maintenanceWorkerIds = list.map(item => { return item.id }).join(',')
+        this.currentOutUserIds = this.formData.maintenanceWorkerIds
         this.isShowUserOutPopup = false
       }
+      this.$forceUpdate()
     },
     ddlocation() {
       Toast.loading({
@@ -230,27 +238,6 @@ export default {
           self.formData.longitude = result.longitude
           self.formData.latitude = result.latitude
           Toast.clear()
-          /* 高德坐标 result 结构
-          {
-              longitude : Number,
-              latitude : Number,
-              accuracy : Number,
-              address : String,
-              province : String,
-              city : String,
-              district : String,
-              road : String,
-              netType : String,
-              operatorType : String,
-              errorMessage : String,
-              errorCode : Number,
-              isWifiEnabled : Boolean,
-              isGpsEnabled : Boolean,
-              isFromMock : Boolean,
-              provider : wifi|lbs|gps,
-              isMobileEnabled : Boolean
-          }
-          */
         },
         onFail: function (err) {
           console.log('定位失败:')

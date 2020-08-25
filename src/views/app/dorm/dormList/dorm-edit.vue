@@ -132,6 +132,7 @@ export default {
       bedFormatTypeEnum, // 床位类型枚举
       dormTypeEnum, // 宿舍类型枚举
       isAdd: false, // 是否是新增
+      loading: true,
       isShowSelect: false, // 下拉选择楼栋
       formData: {
         buildingId: null,
@@ -158,7 +159,13 @@ export default {
           }, message: '床位数不能超过10' }
         ],
         bedFormatType: [{ required: true, message: '请输入床位号用、隔开' }],
-        singleFee: [{ required: true, message: '请输入每人每年费用' }]
+        singleFee: [{ required: true, message: '请输入每人每年费用' },
+          { validator: (value) => {
+            if (value) {
+              return value <= 10000
+            }
+          }, message: '每人每年费用不能超过10000' }
+        ]
       }
     }
   },
@@ -172,7 +179,8 @@ export default {
   },
   watch: {
     peopleNum(val) {
-      if (val <= 10) {
+      if (val <= 10 && !this.loading) {
+        console.log(111111111111)
         this.changeFormatType()
       }
     }
@@ -181,6 +189,7 @@ export default {
     this.getDimension()
     if (!this.id) {
       this.isAdd = true
+      this.loading = false
       this.formData.peopleNum = 6
       this.changeFormatType()
     } else {
@@ -230,8 +239,10 @@ export default {
         } else {
           data.dormManager = { emplId: '', name: '' }
         }
-
         this.formData = data
+        this.$nextTick(() => {
+          this.loading = false
+        })
       })
     },
     // 保存
