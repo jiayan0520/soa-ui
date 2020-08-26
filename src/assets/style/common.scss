@@ -300,7 +300,11 @@ a {
     }
 }
 
+// vant部分样式
 .van-popup__close-icon--top-right {
     top: 5px;
     right: 5px;
+}
+.van-uploader__wrapper--disabled {
+    opacity: 1;
 }

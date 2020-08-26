@@ -9,7 +9,7 @@ export function getDormList(params) {
 }
 // 宿舍列表统计
 export function getDormTotalInfos(params) {
-  return get(`${prefix}/dorm/getDormInfos`, params)
+  return post(`${prefix}/dorm/getDormInfos`, params)
 }
 // 获取宿舍详情
 export function getDormDetail(params) {
@@ -80,6 +80,10 @@ export function deleteUserOut(params) {
 // 床位列表
 export function getBedList(params) {
   return post(`${prefix}/bed/list`, params)
+}
+// 获取床位统计数据
+export function getBedTotal(params) {
+  return post(`${prefix}/bed/getDormInfos`, params)
 }
 // 退舍
 export function outBed(params) {

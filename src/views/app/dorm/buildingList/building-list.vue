@@ -87,13 +87,18 @@
         <div class="building-item-content">
           <div class="flex-between">
             <img
-              class="soa-avatar"
-              src="../../../../assets/images/timg.jpg" >
+              :src="slotProps.item.fileUrl"
+              class="soa-avatar" >
             <div class="soa-list-item-content">
               <div>{{ slotProps.item.buildingName }}</div>
-              <div class="c-light">
-                <span>{{ slotProps.item.headName }}</span>
-                <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
+              <div
+                v-for="(item,index) in slotProps.item.buildingManagers "
+                v-show="slotProps.item.buildingManagers"
+                :key="index"
+                class="c-light"
+              >
+                <span>{{ item.realName }}</span>
+                <span class="c-ml10 c-info">{{ item.phone }}</span>
               </div>
             </div>
           </div>
@@ -183,6 +188,11 @@ export default {
       ]
     }
   },
+  computed: {
+    tcBaseUrl() {
+      return this.$store.getters['core/system'].tcBaseUrl
+    }
+  },
   methods: {
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
@@ -213,9 +223,15 @@ export default {
     loadData() {
       this.pageNum++;
       this.$api.getBuildingList(this.searchParams).then(data => {
+        const rows = data.rows
+        rows.forEach(item => {
+          if (item.annexList && item.annexList.length > 0) {
+            item.fileUrl = this.tcBaseUrl + item.annexList[0].fileName
+          }
+        });
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(data.rows)
+        this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
@@ -246,6 +262,8 @@ export default {
     flex-direction: column;
     .soa-list-total {
       background: #fff;
+      padding: 0;
+      margin-top: 5px;
       .total-item {
         .lable {
           width: 60%;

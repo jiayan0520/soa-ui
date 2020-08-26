@@ -6,7 +6,7 @@
       @submit="onSubmit">
       <van-field
         v-model="formData.buildingName"
-        :rules="[{ required: true, message: '请输入楼栋名称' }]"
+        :rules="formDataRules.buildingName"
         :required="true"
         :maxlength="50"
         label="楼栋名称"
@@ -45,6 +45,8 @@
         </template>
       </van-field>
       <van-field
+        :required="true"
+        :rules="formDataRules.annexId"
         name="uploader"
         label="楼栋照片">
         <template #input>
@@ -57,6 +59,8 @@
         </template>
       </van-field>
       <van-field
+        :required="true"
+        :rules="formDataRules.address"
         v-model="formData.address"
         :readonly="true"
         label="楼栋位置"
@@ -66,7 +70,7 @@
       />
       <van-field
         :required="true"
-        :rules="[{ required: true, message: '请输入楼栋简介' }]"
+        :rules="formDataRules.desc"
         :maxlength="500"
         v-model="formData.desc"
         type="textarea"
@@ -139,6 +143,12 @@ export default {
         buildingManagerIds: null, // 楼栋管理员
         maintenanceWorkerIds: null // 楼栋维修员
       },
+      formDataRules: {
+        buildingName: [{ required: true, message: '请输入楼栋名称' }],
+        desc: [{ required: true, message: '请输入楼栋简介' }],
+        annexId: [{ required: true, message: '请上传楼栋照片' }],
+        address: [{ required: true, message: '请输入楼栋位置' }]
+      },
       isShowAddressPopup: false,
       isShowUserOutPopup: false,
       outUserType: null,
@@ -189,7 +199,7 @@ export default {
           latitude: data.latitude,
           longitude: data.longitude,
           annexId: data.annexId || null, // 楼栋照片
-          annexList: [],
+          annexList: data.annexList || [],
           buildingManagerIds: data.buildingManagerIds, // 楼栋管理员
           buildingManagers: data.buildingManagers,
           maintenanceWorkerIds: data.maintenanceWorkerIds, // 楼栋维修员

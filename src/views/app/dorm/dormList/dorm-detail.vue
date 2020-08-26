@@ -1,5 +1,7 @@
 <template>
-  <div class="dorm-detail">
+  <div
+    v-if="!loading"
+    class="dorm-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -107,32 +109,11 @@ export default {
   },
   data() {
     return {
+      loading: true,
       activeNames: [],
       showMoreIndex: -1, // 显示更多的行index
       showCheckPopup: false,
-      data: {
-        dormName: '福大生活1区1号楼-601',
-        headList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        containList: [
-          { name: '可容纳人数：', num: 1 },
-          { name: '已容纳人数：', num: 1 },
-          { name: '需激活人数：', num: 1 },
-          { name: '已激活人数：', num: 1, class: 'c-info' },
-          { name: '请假人数：', num: 1, class: 'c-danger' }
-        ],
-        dormType: '学生宿舍',
-        singleFee: '900',
-        peopleInfos: [
-          { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
-          { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
-          { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' }
-        ],
-        checkInfos: [
-          { checkResult: '阳台混乱', grade: -10, time: '2020年6月28日 20:01' },
-          { checkResult: '宿舍脏乱', grade: -20, time: '2020年6月28日 20:01' },
-          { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-        ]
-      },
+      data: {},
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
         {
@@ -177,11 +158,11 @@ export default {
       this.$api.getDormDetail(this.id).then(data => {
         this.data = {
           dormName: data.buildingName + '-' + data.dormName,
-          dormManager: [data.dormManager],
+          dormManager: data.dormManager || [],
           containList: [
             { name: '可容纳人数：', num: data.dormData.totalNum },
             { name: '已容纳人数：', num: data.dormData.userNum },
-            { name: '需激活人数：', num: data.dormData.userNum - data.dormData.activationNum },
+            { name: '需激活人数：', num: (data.dormData.userNum - data.dormData.activationNum) },
             { name: '已激活人数：', num: data.dormData.activationNum, class: 'c-info' },
             { name: '请假人数：', num: data.dormData.leaveNum, class: 'c-danger' }
           ],
@@ -198,6 +179,8 @@ export default {
             { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
           ]
         }
+        console.log(this.data)
+        this.loading = false
       })
     },
     // 更多操作

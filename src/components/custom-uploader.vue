@@ -55,8 +55,17 @@ export default {
       fileList: []
     };
   },
+  computed: {
+    tcBaseUrl() {
+      return this.$store.getters['core/system'].tcBaseUrl
+    }
+  },
   mounted() {
-    this.fileList = this.annexList || []
+    this.fileList = this.annexList.map(f => {
+      f.url = this.tcBaseUrl + f.fileName
+      return f
+    })
+    console.log(this.fileList)
     if (!this.value) {
       this.onChangeFunc(uuid32())
     }
@@ -86,7 +95,7 @@ export default {
         return;
       }
       console.log(file)
-      this.$api.deleteFile([file.aid]).then(() => {
+      this.$api.deleteFile([file.id]).then(() => {
         this.fileList.splice(this.fileList.indexOf(file), 1);
       }).catch(() => {
         Toast('删除失败')

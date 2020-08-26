@@ -12,6 +12,7 @@
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
       @handleRowClick="handleRowClick"
+      @showMoreOpItem="showMoreOpItem"
     >
       <template slot="top">
         <div
@@ -63,7 +64,7 @@
           v-if="isShowSearch"
           action="/">
           <van-search
-            v-model="searchForm.searchValue"
+            v-model="searchForm.searchData"
             show-action
             placeholder="姓名/班级/宿舍号/宿舍楼"
             @search="onSearch"
@@ -80,13 +81,13 @@
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.isHead"
-              :options="isHeadList" />
+              v-model="searchForm.isDormManager"
+              :options="isDormManagerList" />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
-              v-model="searchForm.isDivide"
-              :options="isDivideList" />
+              v-model="searchForm.isAlloted"
+              :options="isAllotedList" />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
@@ -117,17 +118,26 @@
           src="../../../../assets/images/timg.jpg" >
         <div class="soa-list-item-content">
           <div>
-            <span class="c-info">{{ slotProps.item.userName }}</span>
-            <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
-            <span>{{ slotProps.item.banji }}</span>
+            <div v-if="slotProps.item.users">
+              <span class="c-info">{{ slotProps.item.users.name }}</span>
+              <span class="c-info c-ml10">{{ slotProps.item.users.mobile }}</span>
+              <span>{{ slotProps.item.banji }}</span>
+            </div>
+            <div v-else>未分配</div>
           </div>
           <div class="c-light">
-            {{ slotProps.item.dormInfo }}
-            <span class="c-ml10">舍长</span>
+            {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}
+            <span
+              v-if="slotProps.item.isDormManager"
+              class="c-ml10"
+            >舍长</span>
           </div>
           <div class="flex-between">
-            <span>学生宿舍</span>
-            <span class="c-warm c-ml10">未激活</span>
+            <span class="c-light">学生宿舍</span>
+            <span
+              :class="slotProps.item.statusClass"
+              class="c-ml10"
+            >状态：{{ slotProps.item.statusText }}</span>
           </div>
         </div>
       </template>
@@ -160,43 +170,43 @@ export default {
     return {
       actionName: 1,
       totalList: [
-        { lable: '可容纳', filed: 'total_num', value: 200 },
-        { lable: '已容纳', filed: 'total_num', value: 200 },
-        { lable: '需激活', filed: 'total_num', value: 200 },
-        { lable: '可容纳学生', filed: 'total_num', value: 200 },
-        { lable: '已容纳学生', filed: 'total_num', value: 200 },
-        { lable: '未激活', filed: 'total_num', value: 200 },
-        { lable: '可容纳老师', filed: 'total_num', value: 20 },
-        { lable: '已容纳老师', filed: 'total_num', value: 20 },
-        { lable: '请假中', filed: 'total_num', value: 200 }
+        { lable: '可容纳', filed: 'total', value: 0 },
+        { lable: '已容纳', filed: 'allotedNum', value: 0 },
+        { lable: '需激活', filed: 'needActiveNum', value: 0 },
+        { lable: '可容纳学生', filed: 'studentTotalnum', value: 0 },
+        { lable: '已容纳学生', filed: 'studentAllotedNum', value: 0 },
+        { lable: '未激活', filed: 'noActiveNum', value: 0 },
+        { lable: '可容纳老师', filed: 'teacherTotalNum', value: 0 },
+        { lable: '已容纳老师', filed: 'teacherAllotedNum', value: 0 },
+        { lable: '请假中', filed: 'leaveNum', value: 0 }
       ], // 统计信息
       statusList: [
-        { text: '全部状态', value: null },
-        { text: '正常', value: 1 },
-        { text: '未激活', value: 2 },
-        { text: '请假中', value: 3 }
+        { text: '全部状态', value: 'ALL' },
+        { text: '正常', value: 'ACTIVATION', class: 'c-success' },
+        { text: '未激活', value: 'NOACTIVE', class: 'c-danger' },
+        { text: '请假中', value: 'LEAVE', class: 'c-info' }
       ],
-      isHeadList: [
+      isDormManagerList: [
         { text: '是否舍长', value: null },
-        { text: '是舍长', value: 1 },
-        { text: '非舍长', value: 0 }
+        { text: '是舍长', value: true },
+        { text: '非舍长', value: false }
       ],
-      isDivideList: [
+      isAllotedList: [
         { text: '是否分配', value: null },
-        { text: '已分配', value: 1 },
-        { text: '否分配', value: 0 }
+        { text: '已分配', value: true },
+        { text: '否分配', value: false }
       ],
       dormTypeList: [
-        { text: '宿舍类型', value: null },
-        { text: '学生宿舍', value: 1 },
-        { text: '教师宿舍', value: 2 }
+        { text: '宿舍类型', value: 'ALL' },
+        { text: '学生宿舍', value: 'ALLSTUDENT' },
+        { text: '教师宿舍', value: 'ALLTEACHER' }
       ],
       searchForm: {
-        status: null,
-        isHead: 1,
-        isDivide: null,
-        dormType: null,
-        searchValue: ''
+        status: 'ALL',
+        isDormManager: null,
+        isAlloted: null,
+        dormType: 'ALL',
+        searchData: ''
       },
       moreOpList: [
         { value: 'qc', label: '导出二维码' },
@@ -215,6 +225,7 @@ export default {
     }
   },
   created() {
+    this.getBedTotal()
   },
   methods: {
     // 点击更多操作按钮了
@@ -232,14 +243,31 @@ export default {
       }
       this.showMore = false
     },
+    // 列表中操作按钮根据每条数据来判断
+    showMoreOpItem(item, btn, callback) {
+      let isShow = true
+      switch (btn.value) {
+        case 'qc': {
+          break
+        }
+        case 'out':
+          if (!item.userId || item.status === 'NOACTIVE') {
+            isShow = false
+          }
+          break
+        case 'del':
+          break
+      }
+      callback(isShow)
+    },
     onSearch() {
       this.pageNum = 0
       this.dataList = []
       this.getDormTotalInfos()
       this.loadData()
     },
-    getDormTotalInfos() {
-      this.$api.getDormTotalInfos(this.searchParams).then(data => {
+    getBedTotal() {
+      this.$api.getBedTotal(this.searchParams).then(data => {
         const keys = Object.keys(data)
         keys.forEach(key => {
           const item = this.totalList.find(item => item.filed === key)
@@ -256,19 +284,11 @@ export default {
         this.$refs.listLayout.loading = false
         const rows = data.rows
         rows.forEach(item => {
-          // if (item.dormData.userNum === 0) {
-          //   item.dormData.numLable = '未分配'
-          //   item.dormData.class = 'c-light'
-          // } else if (item.dormData.activationNum === 0) {
-          //   item.dormData.numLable = '全未激活'
-          //   item.dormData.class = 'c-danger'
-          // } else if (item.dormData.activationNum < item.dormData.userNum) {
-          //   item.dormData.numLable = '部分激活'
-          //   item.dormData.class = 'c-danger'
-          // } else if (item.dormData.activationNum === item.dormData.userNum) {
-          //   item.dormData.numLable = '全部激活'
-          //   item.dormData.class = 'c-info'
-          // }
+          const status = this.statusList.find(status => status.value === item.status)
+          if (status) {
+            item.statusText = status.text
+            item.statusClass = status.class
+          }
         })
         this.dataList = this.dataList.concat(rows)
         console.log(222, this.dataList)

@@ -74,6 +74,9 @@ export default {
   computed: {
     userId() {
       return this.$store.getters['core/user'].userId
+    },
+    tcBaseUrl() {
+      return this.$store.getters['core/system'].tcBaseUrl
     }
   },
   created() {
@@ -85,7 +88,7 @@ export default {
     getDetail() {
       this.$api.getBuildingDetail(this.id).then(data => {
         data.annexList.forEach(item => {
-          item.url = '/prod-api' + item.fileName
+          item.url = this.tcBaseUrl + item.fileName
         });
         this.data = data
       })

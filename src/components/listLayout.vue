@@ -145,6 +145,11 @@ export default {
       allowStatus && Reflect.ownKeys(allowStatus).forEach(function (key) {
         if (!(item[key] && allowStatus[key].includes(item[key]))) { isShow = false }
       });
+      if (this.$listeners['showMoreOpItem']) {
+        this.$emit('showMoreOpItem', item, btn, (show) => {
+          isShow = show
+        })
+      }
       return isShow
     },
     // 下拉刷新
