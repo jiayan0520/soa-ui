@@ -11,35 +11,57 @@
         title="人员信息"
         name="1">
         <div
-          v-for="(item,index) in data.peopleInfos"
+          v-for="(item,index) in data.soaDormBeds"
           :key="index"
           class="soa-box-item people-item">
           <div>
-            <div class="flex-between">
+            <div
+              v-if="item.users"
+              class="flex-between user-info">
               <img
-                class="soa-avatar"
-                src="../../../../assets/images/timg.jpg" >
-              <span>{{ item.userName }}</span>
-              <span class="c-ml10">({{ item.className }})</span>
+                v-if="item.users.avatar"
+                :src="item.users.avatar"
+                class="soa-avatar" >
+              <div
+                v-else
+                class="soa-avatar">{{ item.users.name.substr(-2,2) }}</div>
+              <span>{{ item.users.name }}</span>
+              <span class="c-ml10">({{ item.users.className||'未找到班级信息' }})</span>
             </div>
+            <div
+              v-else
+              class="no-user-info">未分配</div>
             <div>
               {{ item.bedName }}
-              <span class="c-ml10">{{ item.statusName }}</span>
-              <span class="c-ml10 c-info">{{ item.telephone }}</span>
+              <span class="c-light">床位</span>
+              <span class="c-ml10 c-light">
+                状态：
+                <span :class="item.statusClass">{{ item.statusName }}</span>
+              </span>
+              <span
+                v-if="item.users"
+                class="c-ml10 c-info">{{ item.users.mobile }}</span>
             </div>
           </div>
-          <i
-            class="soa-icon soa-icon-gengduo"
-            @click.stop="bindMoreClick(index)" />
-          <ul
-            v-if="showMoreIndex === index"
-            class="soa-op__dropdown">
-            <li
-              v-for="btn in moreOpList"
-              :key="btn.index"
-              @click.stop="clickMoreBtn(btn.value)"
-            >{{ btn.label }}</li>
-          </ul>
+          <div class="soa-gengduo">
+            <van-dropdown-menu>
+              <van-dropdown-item>
+                <template slot="default">
+                  <div
+                    v-for="btn in moreOpList"
+                    :key="btn.index">
+                    <li
+                      v-if="showMoreOpItem(item,btn)"
+                      @click.stop="clickMoreBtn(btn.value,item)"
+                    >{{ btn.label }}</li>
+                  </div>
+                </template>
+                <template slot="title">
+                  <i class="soa-icon soa-icon-gengduo" />
+                </template>
+              </van-dropdown-item>
+            </van-dropdown-menu>
+          </div>
         </div>
       </van-collapse-item>
       <van-collapse-item
@@ -62,11 +84,11 @@
             <ul
               v-if="showMoreIndex === index"
               class="soa-op__dropdown">
-              <li
+              <div
                 v-for="btn in moreOpCheckList"
-                :key="btn.index"
-                @click.stop="clickMoreBtn(btn.value)"
-              >{{ btn.label }}</li>
+                :key="btn.index">
+                <li @click.stop="clickMoreBtn(btn.value,item)">{{ btn.label }}</li>
+              </div>
             </ul>
           </div>
         </div>
@@ -94,7 +116,7 @@
 <script>
 import customPanel from '@/components/customPanel'
 import dormCheck from '../components/check-common'
-import { dormTypeEnum } from '../utils/dorm-enum'
+import { dormTypeEnum, statusList } from '../utils/dorm-enum'
 export default {
   name: 'DormDetail',
   components: {
@@ -136,11 +158,11 @@ export default {
         { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
       ],
       moreOpList: [
-        { value: '1', label: '设为舍长' },
-        { value: '2', label: '退舍' },
-        { value: '3', label: '提醒' },
-        { value: '4', label: '分配' },
-        { value: '5', label: '生成二维码' },
+        { value: 'exp', label: '导出二维码' },
+        { value: 'manager', label: '设为舍长' },
+        { value: 'out', label: '退舍' },
+        { value: 'remind', label: '提醒' },
+        { value: 'allot', label: '分配' },
         { value: 'del', label: '删除' }
       ],
       moreOpCheckList: [
@@ -158,7 +180,7 @@ export default {
       this.$api.getDormDetail(this.id).then(data => {
         this.data = {
           dormName: data.buildingName + '-' + data.dormName,
-          dormManager: data.dormManager || [],
+          dormManager: data.dormManager ? [data.dormManager] : [],
           containList: [
             { name: '可容纳人数：', num: data.dormData.totalNum },
             { name: '已容纳人数：', num: data.dormData.userNum },
@@ -168,11 +190,12 @@ export default {
           ],
           dormType: dormTypeEnum[data.dormType].label,
           singleFee: data.singleFee,
-          peopleInfos: [
-            { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
-            { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' },
-            { headUrl: null, userName: '张三峰', className: '石油化工学院-2019级过控一班', bedName: '1床位', statusName: '正常', telephone: '182311211111' }
-          ],
+          soaDormBeds: data.soaDormBeds.map(bed => {
+            const statusObj = statusList.find(status => status.value === bed.status) || {}
+            bed.statusName = statusObj.text
+            bed.statusClass = statusObj.class
+            return bed
+          }),
           checkInfos: [
             { checkResult: '阳台混乱', grade: -10, time: '2020年6月28日 20:01' },
             { checkResult: '宿舍脏乱', grade: -20, time: '2020年6月28日 20:01' },
@@ -196,6 +219,39 @@ export default {
       }
       this.showMoreIndex = -1
     },
+    // 列表中操作按钮根据每条数据来判断
+    showMoreOpItem(item, btn, callback) {
+      let isShow = true
+      switch (btn.value) {
+        case 'qc': {
+          break
+        }
+        case 'allot':
+        case 'del':
+          if (item.userId) {
+            isShow = false
+          }
+          break
+        case 'manager':
+          isShow = false
+          if (item.userId && !item.isDormManager) {
+            isShow = true
+          }
+          break
+        case 'remind':
+          isShow = false
+          if (item.userId && item.status === 'NOACTIVE') {
+            isShow = true
+          }
+          break
+        case 'out':
+          if (!item.userId || item.status === 'NOACTIVE') {
+            isShow = false
+          }
+          break
+      }
+      return isShow
+    },
     // 新增床位检查
     clickCheckBtn() {
       this.showCheckPopup = true
@@ -218,6 +274,19 @@ export default {
     .soa-avatar {
       width: 32px;
       height: 32px;
+      background-color: #3296fa;
+      color: #fff;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .user-info {
+      font-size: 16px;
+    }
+    .no-user-info {
+      font-size: 16px;
+      color: #909399;
     }
   }
 }

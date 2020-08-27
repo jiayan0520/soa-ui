@@ -148,7 +148,7 @@ export default {
           title: `确认${opLabel}？`,
           message: `此次选中${idList.length}条记录，${opLabel}的数据无法恢复`
         }).then(() => {
-          this.$api[method]({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(res => {
+          this.$api[method]({ ids: idList.join(',') }).then(res => {
             Toast(`${opLabel}成功，此次共操作${idList.length}条记录！`);
             this.onSearch()
           }).catch(error => {

@@ -1,5 +1,7 @@
 <template>
-  <div class="bed-detail">
+  <div
+    v-if="!loading"
+    class="bed-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
@@ -56,38 +58,27 @@
 <script>
 import customPanel from '@/components/customPanel'
 import bedCheck from '../components/check-common'
+import { statusList } from '../utils/dorm-enum'
 export default {
   name: 'BedDetail',
   components: {
     bedCheck,
     customPanel
   },
+  props: {
+    id: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
+      loading: true,
       activeNames: [],
       showMoreIndex: -1, // 显示更多的行index
       showCheckPopup: false,
       showCheckDetailPopup: false, // 检查项详情，可编辑保存
-      data: {
-        dormName: '福大生活1区1号楼-601',
-        userName: '李荣浩',
-        bedName: '1号',
-        statusName: '正常',
-        sno: '12312312312',
-        telephone: '15874214741',
-        zzmm: '党员',
-        college: '石油化工学院-2019级过控一班',
-        place: '福建省福州市',
-        address: '福建省福州市闽侯县科技路一号',
-        instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
-        cost: '900',
-        bedCheckInfos: [
-          { checkResult: '桌面脏乱', grade: -10, time: '2020年6月28日 20:01' },
-          { checkResult: '被子没叠', grade: -20, time: '2020年6月28日 20:01' },
-          { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-        ]
-      },
+      data: {},
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'userName', label: '姓名' },
@@ -125,7 +116,38 @@ export default {
       ]
     }
   },
+  created() {
+    this.getDetail()
+  },
   methods: {
+    // 获取详情
+    getDetail() {
+      this.$api.getBedDetail(this.id).then(data => {
+        const statusObj = statusList.find(status => status.value === data.status)
+        this.data = {
+          dormName: data.buildingName + '-' + data.dormName,
+          userName: '李荣浩',
+          bedName: data.bedName,
+          statusName: statusObj ? statusObj.text : data.status,
+          sno: '12312312312',
+          telephone: '15874214741',
+          zzmm: '党员',
+          college: '石油化工学院-2019级过控一班',
+          place: '福建省福州市',
+          address: '福建省福州市闽侯县科技路一号',
+          instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
+          parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
+          cost: '900',
+          bedCheckInfos: [
+            { checkResult: '桌面脏乱', grade: -10, time: '2020年6月28日 20:01' },
+            { checkResult: '被子没叠', grade: -20, time: '2020年6月28日 20:01' },
+            { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
+          ]
+        }
+        console.log(this.data)
+        this.loading = false
+      })
+    },
     // 更多操作
     bindMoreClick(index) {
       this.showMoreIndex = this.showMoreIndex === index ? -1 : index

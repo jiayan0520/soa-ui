@@ -13,3 +13,11 @@ export const outUserTypeEnum = {
   DORM_MANAGER: { label: '楼管' },
   MAINTENANCE_WORKER: { label: '维修人员' }
 }
+
+// 站外用户类型
+export const statusList = [
+  { text: '全部状态', value: 'ALL' },
+  { text: '正常', value: 'ACTIVATION', class: 'c-success' },
+  { text: '未激活', value: 'NOACTIVE', class: 'c-danger' },
+  { text: '请假中', value: 'LEAVE', class: 'c-info' }
+]

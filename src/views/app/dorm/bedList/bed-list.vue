@@ -2,7 +2,7 @@
   <div class="bed-list">
     <list-layout
       ref="listLayout"
-      :more-op-list="moreOpList"
+      :more-op-list="rowMoreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍床位列表'"
@@ -77,22 +77,30 @@
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
               v-model="searchForm.status"
-              :options="statusList" />
+              :options="statusList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
               v-model="searchForm.isDormManager"
-              :options="isDormManagerList" />
+              :options="isDormManagerList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
               v-model="searchForm.isAlloted"
-              :options="isAllotedList" />
+              :options="isAllotedList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-dropdown-menu :overlay="false">
             <van-dropdown-item
               v-model="searchForm.dormType"
-              :options="dormTypeList" />
+              :options="dormTypeList"
+              @change="onSearch"
+            />
           </van-dropdown-menu>
           <van-icon
             name="search"
@@ -125,7 +133,9 @@
             </div>
             <div v-else>未分配</div>
           </div>
-          <div class="c-light">
+          <div
+            v-if="slotProps.item.soaDormDorm"
+            class="c-light">
             {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}
             <span
               v-if="slotProps.item.isDormManager"
@@ -160,6 +170,7 @@
 <script>
 import baseList from '../mixins/base-list'
 import bedDetail from './bed-detail'
+import { statusList } from '../utils/dorm-enum'
 export default {
   name: 'BedList',
   components: {
@@ -168,6 +179,7 @@ export default {
   mixins: [baseList],
   data() {
     return {
+      statusList,
       actionName: 1,
       totalList: [
         { lable: '可容纳', filed: 'total', value: 0 },
@@ -180,12 +192,6 @@ export default {
         { lable: '已容纳老师', filed: 'teacherAllotedNum', value: 0 },
         { lable: '请假中', filed: 'leaveNum', value: 0 }
       ], // 统计信息
-      statusList: [
-        { text: '全部状态', value: 'ALL' },
-        { text: '正常', value: 'ACTIVATION', class: 'c-success' },
-        { text: '未激活', value: 'NOACTIVE', class: 'c-danger' },
-        { text: '请假中', value: 'LEAVE', class: 'c-info' }
-      ],
       isDormManagerList: [
         { text: '是否舍长', value: null },
         { text: '是舍长', value: true },
@@ -194,7 +200,7 @@ export default {
       isAllotedList: [
         { text: '是否分配', value: null },
         { text: '已分配', value: true },
-        { text: '否分配', value: false }
+        { text: '未分配', value: false }
       ],
       dormTypeList: [
         { text: '宿舍类型', value: 'ALL' },
@@ -211,7 +217,13 @@ export default {
       moreOpList: [
         { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
+        { value: 'out', label: '退舍' }
+      ],
+      rowMoreOpList: [
+        { value: 'qc', label: '导出二维码' },
+        { value: 'remind', label: '提醒' },
         { value: 'out', label: '退舍' },
+        { value: 'allot', label: '分配' },
         { value: 'del', label: '删除' }
       ]
     }
@@ -237,6 +249,9 @@ export default {
         case 'out':
           this.outBed(null, item.id)
           break
+        case 'allot':
+          this.allotBed(item.id)
+          break
         case 'del':
           this.del(null, item.id)
           break
@@ -250,12 +265,17 @@ export default {
         case 'qc': {
           break
         }
+        case 'remind':
+        case 'allot':
+        case 'del':
+          if (item.userId) {
+            isShow = false
+          }
+          break
         case 'out':
           if (!item.userId || item.status === 'NOACTIVE') {
             isShow = false
           }
-          break
-        case 'del':
           break
       }
       callback(isShow)
@@ -263,7 +283,7 @@ export default {
     onSearch() {
       this.pageNum = 0
       this.dataList = []
-      this.getDormTotalInfos()
+      this.getBedTotal()
       this.loadData()
     },
     getBedTotal() {
@@ -305,6 +325,10 @@ export default {
     // 删除
     del(obj, id) {
       this.handleIdList(id, '删除', 'deleteBed')
+    },
+    // 分配宿舍
+    allotBed(id) {
+
     }
   }
 }
