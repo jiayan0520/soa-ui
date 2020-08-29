@@ -27,7 +27,8 @@ export default async function initDdSign(store, router) {
         'device.base.getInterface',
         'device.base.getUUID',
         'biz.map.locate',
-        'device.geolocation.get'
+        'device.geolocation.get',
+        'biz.ding.create'
       ] // 必填，需要使用的jsapi列表，注意：不要带dd。
     });
     $dd.error(function (error) {

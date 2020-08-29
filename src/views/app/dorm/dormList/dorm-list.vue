@@ -5,6 +5,7 @@
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
+      :detail-url="detailUrl"
       :title="isShowBar ? '':'宿舍列表'"
       op-label="管理"
       @search="onSearch"
@@ -12,7 +13,6 @@
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
       @changeRowCheckbox="changeRowCheckbox"
-      @handleRowClick="handleRowClick"
     >
       <template slot="top">
         <div
@@ -145,37 +145,24 @@
         :id="rowId"
         @close="closePopup" />
     </van-popup>
-    <van-popup
-      v-if="isShowDetailPopup"
-      v-model="isShowDetailPopup"
-      :style="{ height: '100%' }"
-      closeable
-      class="soa-popup"
-      position="bottom"
-    >
-      <dorm-detail
-        :id="rowId"
-        @close="closePopup" />
-    </van-popup>
   </div>
 </template>
 
 <script>
 import baseList from '../mixins/base-list'
 import dormEdit from './dorm-edit'
-import dormDetail from './dorm-detail'
 import { dormTypeEnum } from '../utils/dorm-enum'
 import { Toast } from 'vant'
 export default {
   name: 'DormList',
   components: {
-    dormEdit,
-    dormDetail
+    dormEdit
   },
   mixins: [baseList],
   data() {
     return {
       dormTypeEnum,
+      detailUrl: '/dorm/dormDetail',
       actionName: 2,
       totalList: [
         { lable: '宿舍数', filed: 'total', value: 0 },
@@ -293,7 +280,6 @@ export default {
           }
         })
         this.dataList = this.dataList.concat(rows)
-        console.log(222, this.dataList)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true

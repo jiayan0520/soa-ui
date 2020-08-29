@@ -101,3 +101,24 @@ export function allotBed(params) {
 export function getBedDetail(params) {
   return get(`${prefix}/bed/${params}`)
 }
+// 设为舍长
+export function setDromManager(params) {
+  return put(`${prefix}/dorm/setDromManager`, params)
+}
+
+// 获取检查指标
+export function getInspectionTypes(params) {
+  return get(`${prefix}/dorm/inspection/type`, params)
+}
+// 新增检查
+export function addResult(params) {
+  return post(`${prefix}/result`, params)
+}
+// 修改检查
+export function updateResult(params) {
+  return put(`${prefix}/result`, params)
+}
+// 调换申请列表
+export function getExchangeList(params) {
+  return post(`${prefix}/dromExchangeApplication/list`, params)
+}

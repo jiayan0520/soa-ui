@@ -13,7 +13,8 @@
         label="检查结果"
         right-icon="arrow"
         placeholder="请选择"
-        @click="isShowSelect=true"/>
+        @click="isShowSelect=true"
+      />
       <van-field
         name="uploader"
         label="现场照片">
@@ -72,6 +73,7 @@
 import customPanel from '@/components/customPanel'
 import DatePicker from 'vue2-datepicker'
 import dayjs from 'dayjs';
+import { Toast } from 'vant';
 export default {
   name: 'CheckCommon',
   components: {
@@ -81,12 +83,24 @@ export default {
   props: {
     id: {
       type: String,
-      default: ''
+      default: null
+    },
+    dormId: {
+      type: String,
+      default: null
+    },
+    bedId: {
+      type: String,
+      default: null
+    },
+    userId: {
+      type: String,
+      default: null
     },
     // 检查类型
     type: {
       type: String,
-      default: 'bed'
+      default: 'BED'
     },
     // 上面一些详情信息介绍字段
     fieldList: {
@@ -102,17 +116,19 @@ export default {
   data() {
     return {
       formData: {
+        dormId: this.dormId,
+        bedId: null,
+        userId: null,
+        inspectionType: this.type,
+        checkUserId: this.$store.getters['core/user'].userId,
         checkResult: null, // 检查结果
         checkResultText: null,
         annexIds: [], // 附件
         remark: null,
-        checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm')
+        checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
+        score: 0
       },
-      checkItemList: [
-        { value: -10, text: '被子没叠(-10)' },
-        { value: -5, text: '桌面混乱(-10)' },
-        { value: -20, text: '衣柜混乱(-20)' }
-      ],
+      checkItemList: [],
       minDate: '',
       isShowSelect: false
     }
@@ -123,7 +139,7 @@ export default {
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'bedName', label: '床位' }
       ]
-      if (this.type === 'dorm') {
+      if (this.type === 'DORM') {
         fieldList2 = [
           { prop: 'dormName', label: '宿舍名称' }
         ]
@@ -134,13 +150,40 @@ export default {
       return fieldList2
     }
   },
+  created() {
+    console.log(this.dormId)
+    this.getDimension()
+  },
   methods: {
+    getDimension() {
+      this.$api.getInspectionTypes().then(data => {
+        this.checkItemList = data.map(item => {
+          return {
+            value: item.score,
+            text: item.name + '(' + item.score + ')'
+          }
+        })
+      })
+    },
     onSubmit() {
-      console.log('')
+      if (this.isAdd) {
+        Toast.loading('新增检查中，请稍后...')
+        this.$api.addResult(this.formData).then(data => {
+          Toast.clear()
+          Toast('新增检查成功')
+          this.$emit('close', true)
+        })
+      } else {
+        Toast.loading('修改检查中，请稍后...')
+        this.$api.updateResult(this.formData).then(data => {
+          Toast.clear()
+          Toast('修改检查成功')
+          this.$emit('close', true)
+        })
+      }
     },
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
-      console.log('handleExecutorClick')
     },
     // 选择检查内容
     onConfirm(obj) {

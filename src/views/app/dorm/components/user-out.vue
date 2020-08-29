@@ -109,6 +109,7 @@
 import baseList from '../mixins/base-list'
 import { outUserTypeEnum } from '../utils/dorm-enum'
 import { checkMask } from '@/utils'
+import { complexPicker } from '@/utils/ddApi'
 export default {
   name: 'UserOutList',
   components: {
@@ -159,15 +160,12 @@ export default {
   },
   methods: {
     loadData() {
-      console.log(this.ids)
-      // 不分页，方便回填
       this.$api.getUserOutList(this.searchForm).then(data => {
         data.rows.forEach((row, index) => {
           row.rowNum = index + 1
           row.isCheck = this.ids && this.ids.includes(row.id)
           row.isSoaUser = row.soaUserId ? '是' : '否'
         })
-        console.log(data.rows)
         // 加载状态结束
         this.$refs.listLayout.loading = false
         this.dataList = data.rows
@@ -182,44 +180,15 @@ export default {
       this.isShowEditPopup = true
     },
     // 新增钉钉用户选人
-    addDD() {
-      this.$dd.biz.contact.complexPicker({
-        title: '选择' + this.title,
-        corpId: this.system.corpId,
-        multiple: true, // 是否多选
-        limitTips: '超出了最大人数',
-        maxUsers: 2, // 最大可选人数
-        pickedUsers: null, // 已选人员id数组，用于回显在选人页面
-        pickedDepartments: null, // 已选部门id数组，用于回显在选人页面
-        disabledUsers: null, // 不可选用户
-        disabledDepartments: null, // 不可选部门
-        requiredUsers: [],
-        requiredDepartments: [],
-        appId: '841409507',
-        permissionType: 'xxx',
-        responseUserOnly: true, // true：返回人员信息；false：返回人员和部门信息
-        startWithDepartmentId: 0, // 0 表示从企业最上层开始；-1 表示从自己所在部门开始
-        onSuccess: result => {
-          console.group('钉钉选人与部门：');
-          console.log(result);
-          console.groupEnd();
-          this.getUserList(result.users)
-          // 选择的人员
-          // if (result.users.length > 0) {
-          //   this.people = result.users;
-          // }
-        },
-        onFail: function (err) {
-          // Toast(JSON.stringify(err))
-          console.error(err);
-        }
-      });
+    async addDD() {
+      const result = await complexPicker(this.system, this.title, 2)
+      this.getUserList(result.users)
     },
     // 循环获取用户基础信息（主要需要手机号码）
     getUserList(users) {
       if (users) {
         for (let i = 0; i < users.length; i++) {
-          this.$api.getUserInfo({ userId: users.emplId }).then(data => {
+          this.$api.getUserInfo({ userId: users[i].emplId }).then(data => {
             this.onSubmit({ realName: data.name, phone: data.mobile })
           })
         }
@@ -292,6 +261,11 @@ export default {
       padding: 10px;
       border-bottom: #f5f5f5;
     }
+  }
+  // vant部分样式
+  & + .van-popup__close-icon--top-right {
+    top: 5px;
+    right: 5px;
   }
 }
 </style>

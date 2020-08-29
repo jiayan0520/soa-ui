@@ -13,8 +13,13 @@ function annex(params) {
 function deleteFile(params) {
   return post(`${prefix}/annex/delete`, params)
 }
+// 获取附件相关信息
+function getListByIds(params) {
+  return post(`${prefix}/annex/getListByIds`, params)
+}
 export {
   upload,
   annex,
-  deleteFile
+  deleteFile,
+  getListByIds
 }

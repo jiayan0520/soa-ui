@@ -53,10 +53,9 @@
                 name="item-content" />
               <div
                 v-if="moreOpList.length"
-                class="soa-gengduo">
-                <i
-                  class="soa-icon soa-icon-gengduo"
-                  @click.stop="bindMoreClick(index)" />
+                class="soa-gengduo"
+                @click.stop="bindMoreClick(index)">
+                <i class="soa-icon soa-icon-gengduo" />
                 <ul
                   v-if="showMoreIndex === index"
                   class="soa-op__dropdown">

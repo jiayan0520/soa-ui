@@ -209,8 +209,16 @@ a {
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: #323233;
-    // 宿舍检查模块，床位检查
-    &.check-item {
+}
+// 折叠框
+.soa-collapse-item {
+    .van-collapse-item__content {
+        .soa-box-item:last-child {
+            .soa-op__dropdown {
+                bottom: 20px;
+                top:unset;
+            }
+        }
     }
 }
 
@@ -301,11 +309,6 @@ a {
     }
 }
 
-// vant部分样式
-.van-popup__close-icon--top-right {
-    top: 5px;
-    right: 5px;
-}
 .van-uploader__wrapper--disabled {
     opacity: 1;
 }

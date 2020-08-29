@@ -11,7 +11,7 @@ export default {
       isShowEditPopup: false, // 是否展示宿舍编辑弹框
       isShowDetailPopup: false, // 是否展示宿舍详情弹框
       rowId: null, // 当前编辑的id
-      pageSize: 20, // 每页行数
+      pageSize: 5, // 每页行数
       pageNum: 0, // 当前页码 total 总条数
       dataList: [],
       isCheckAll: false, // 列表选中全部

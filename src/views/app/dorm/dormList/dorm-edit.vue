@@ -20,13 +20,13 @@
         label="宿舍名称"
         placeholder="请输入宿舍名称"
       />
-      <user-picker
+      <!-- <user-picker
         v-model="formData.dormManager"
         :user-only="true"
         :multiple="false"
         :max-users="1"
         title="舍长"
-      />
+      /> -->
       <van-field
         center
         label="宿舍类型">

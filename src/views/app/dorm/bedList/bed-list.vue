@@ -2,7 +2,7 @@
   <div class="bed-list">
     <list-layout
       ref="listLayout"
-      :more-op-list="rowMoreOpList"
+      :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍床位列表'"
@@ -36,9 +36,9 @@
               v-if="showMore"
               class="soa-op__dropdown op-more">
               <li
-                v-for="item in moreOpList"
+                v-for="item in mainMoreOpList"
                 :key="item.index"
-                @click.stop="clickMoreBtn(item.value)"
+                @click.stop="clickMainMoreBtn(item.value)"
               >{{ item.label }}</li>
             </ul>
           </div>
@@ -171,12 +171,13 @@
 import baseList from '../mixins/base-list'
 import bedDetail from './bed-detail'
 import { statusList } from '../utils/dorm-enum'
+import bedMoreOp from '../mixins/bed-more-op'
 export default {
   name: 'BedList',
   components: {
     bedDetail
   },
-  mixins: [baseList],
+  mixins: [baseList, bedMoreOp],
   data() {
     return {
       statusList,
@@ -214,76 +215,22 @@ export default {
         dormType: 'ALL',
         searchData: ''
       },
-      moreOpList: [
+      mainMoreOpList: [
         { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
         { value: 'out', label: '退舍' }
-      ],
-      rowMoreOpList: [
-        { value: 'qc', label: '导出二维码' },
-        { value: 'remind', label: '提醒' },
-        { value: 'out', label: '退舍' },
-        { value: 'allot', label: '分配' },
-        { value: 'del', label: '删除' }
+        // TODO { value: 'del', label: '删除' } 是否要床位的批量删除？
       ]
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.getters['core/user'] || {};
-    },
-    system() {
-      return this.$store.getters['core/system']
     }
   },
   created() {
     this.getBedTotal()
   },
   methods: {
-    // 点击更多操作按钮了
-    clickMoreBtn(val, item) {
-      switch (val) {
-        case 'qc': {
-          break
-        }
-        case 'out':
-          this.outBed(null, item.id)
-          break
-        case 'allot':
-          this.allotBed(item.id)
-          break
-        case 'del':
-          this.del(null, item.id)
-          break
-      }
-      this.showMore = false
-    },
-    // 列表中操作按钮根据每条数据来判断
-    showMoreOpItem(item, btn, callback) {
-      let isShow = true
-      switch (btn.value) {
-        case 'qc': {
-          break
-        }
-        case 'remind':
-        case 'allot':
-        case 'del':
-          if (item.userId) {
-            isShow = false
-          }
-          break
-        case 'out':
-          if (!item.userId || item.status === 'NOACTIVE') {
-            isShow = false
-          }
-          break
-      }
-      callback(isShow)
-    },
     onSearch() {
       this.pageNum = 0
       this.dataList = []
-      this.getBedTotal()
+      // this.getBedTotal()
       this.loadData()
     },
     getBedTotal() {
@@ -311,24 +258,23 @@ export default {
           }
         })
         this.dataList = this.dataList.concat(rows)
-        console.log(222, this.dataList)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
       })
     },
-    // 退宿舍
-    outBed(obj, id) {
-      this.handleIdList(id, '退舍', 'outBed')
-    },
-    // 删除
-    del(obj, id) {
-      this.handleIdList(id, '删除', 'deleteBed')
-    },
-    // 分配宿舍
-    allotBed(id) {
-
+    clickMainMoreBtn(val) {
+      switch (val) {
+        case 'qc':
+          break
+        case 'exp':
+          break
+        case 'out':
+          break
+        case 'del':
+          break
+      }
     }
   }
 }

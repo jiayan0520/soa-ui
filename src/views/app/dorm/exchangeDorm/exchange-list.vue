@@ -6,20 +6,20 @@
     title="调换审核"
     class="exchange-list"
     @search="onSearch"
-    @loadData="onLoad"
+    @loadData="loadData"
   >
     <template slot="top">
       <van-search
-        v-model="searchValue"
+        v-model="searchForm.searchKey"
         placeholder="姓名/学院名称/专业班级"
         @search="onSearch" />
       <van-tabs
         v-model="active"
-        @click="onSearch">
+        @click="changeTab">
         <van-tab
-          v-for="item in tab"
-          :key="item"
-          :title="item" />
+          v-for="item in tabList"
+          :key="item.value"
+          :title="item.text" />
       </van-tabs>
     </template>
     <template
@@ -42,48 +42,47 @@
 
 <script>
 import listLayout from '@/components/listLayout'
+import baseList from '../mixins/base-list'
 export default {
   name: 'ExchangeList',
   components: {
     listLayout
   },
+  mixins: [baseList],
   data() {
     return {
       active: 0,
-      searchValue: '',
-      dataList: [],
+      searchForm: {
+        searchKey: '',
+        status: 'LAUNCH'
+      },
       detailUrl: '/dorm/exchange/detail',
-      tab: ['未完成', '已完成', '未通过']
+      tabList: [
+        { value: 'LAUNCH', text: '未完成' },
+        { value: 'PASS', text: '审核通过' },
+        { value: 'NOPASS', text: '未通过' }
+      ]
     }
   },
   computed: {
   },
   methods: {
-    onSearch(searchValue) {
-      this.dataList = []
-      this.$refs.listLayout.loading = true
-      this.$refs.listLayout.finished = false
-      this.onLoad()
+    changeTab() {
+      this.searchForm.status = this.tabList[this.active].value
+      this.onSearch()
     },
-    onLoad() {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.dataList.push({
-            id: this.dataList.length + 1,
-            userName: '张三峰',
-            banji: '石油化工学院-2019级化工一班',
-            applyTm: '2020年06月20日 15时30分'
-          });
-        }
-
+    loadData() {
+      this.pageNum++;
+      this.$api.getExchangeList(this.searchParams).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
+        const rows = data.rows
+        this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
-      }, 1000);
+      })
     }
   }
 }

@@ -17,7 +17,7 @@
         label="楼管"
         right-icon="add"
         placeholder
-        @click="choiceUser('DORM_MANAGER')"
+        @click-right-icon="choiceUser('DORM_MANAGER')"
       >
         <template #input>
           <div
@@ -25,6 +25,9 @@
             :key="index">
             {{ item.realName }}
             <span class="c-info">{{ item.phone }}</span>
+            <van-icon
+              name="close"
+              @click="delManager(index)" />
           </div>
         </template>
       </van-field>
@@ -33,7 +36,7 @@
         label="维修人员"
         right-icon="add"
         placeholder
-        @click="choiceUser('MAINTENANCE_WORKER')"
+        @click-right-icon="choiceUser('MAINTENANCE_WORKER')"
       >
         <template #input>
           <div
@@ -41,6 +44,9 @@
             :key="index">
             {{ item.realName }}
             <span class="c-info">{{ item.phone }}</span>
+            <van-icon
+              name="close"
+              @click="deleteWorker(index)" />
           </div>
         </template>
       </van-field>
@@ -102,10 +108,8 @@
     >
       <user-out
         :type="outUserType"
-        :ids="currentOutUserIds"
         @close="isShowUserOutPopup=false"
-        @sure="sureChoiceUser"
-      />
+        @sure="sureChoiceUser" />
     </van-popup>
   </div>
 </template>
@@ -151,8 +155,7 @@ export default {
       },
       isShowAddressPopup: false,
       isShowUserOutPopup: false,
-      outUserType: null,
-      currentOutUserIds: null
+      outUserType: null
     }
   },
   created() {
@@ -172,7 +175,7 @@ export default {
           Toast.clear()
           Toast('新增楼栋成功')
           this.$emit('close', true)
-          this.$router.push('/dorm/buildingList')
+          // this.$router.push('/dorm/buildingList')
         }).catch(err => {
           Toast('新增楼栋失败' + err)
         })
@@ -181,7 +184,7 @@ export default {
         this.$api.updateBuilding(this.formData).then(data => {
           Toast.clear()
           Toast('修改楼栋成功')
-          this.$router.push('/dorm/buildingList')
+          // this.$router.push('/dorm/buildingList')
           this.$emit('close', true)
         }).catch(err => {
           Toast('修改楼栋失败' + err)
@@ -201,9 +204,9 @@ export default {
           annexId: data.annexId || null, // 楼栋照片
           annexList: data.annexList || [],
           buildingManagerIds: data.buildingManagerIds, // 楼栋管理员
-          buildingManagers: data.buildingManagers,
+          buildingManagers: data.buildingManagers || [],
           maintenanceWorkerIds: data.maintenanceWorkerIds, // 楼栋维修员
-          maintenanceWorkers: data.maintenanceWorkers
+          maintenanceWorkers: data.maintenanceWorkers || []
         }
         this.isLoad = true
         console.log(this.formData)
@@ -218,43 +221,33 @@ export default {
     sureChoiceUser(list) {
       this.currentOutUserIds = null
       if (this.outUserType === 'DORM_MANAGER') {
-        this.formData.buildingManagers = list
-        this.formData.buildingManagerIds = list.map(item => { return item.id }).join(',')
-        this.currentOutUserIds = this.formData.buildingManagerIds
+        list.forEach(item => {
+          if (this.formData.buildingManagers.findIndex(u => u.id === item.id) === -1) {
+            this.formData.buildingManagers.push(item)
+          }
+        })
+        this.formData.buildingManagerIds = this.formData.buildingManagers.map(item => { return item.id }).join(',')
         this.isShowUserOutPopup = false
       } else {
-        this.formData.maintenanceWorkers = list
-        this.formData.maintenanceWorkerIds = list.map(item => { return item.id }).join(',')
-        this.currentOutUserIds = this.formData.maintenanceWorkerIds
+        list.forEach(item => {
+          if (this.formData.maintenanceWorkers.findIndex(u => u.id === item.id) === -1) {
+            this.formData.maintenanceWorkers.push(item)
+          }
+        })
+        this.formData.maintenanceWorkerIds = this.formData.maintenanceWorkers.map(item => { return item.id }).join(',')
         this.isShowUserOutPopup = false
       }
       this.$forceUpdate()
     },
-    ddlocation() {
-      Toast.loading({
-        duration: 0, // 持续展示 toast
-        forbidClick: true,
-        message: '定位中'
-      })
-      const self = this
-      this.$dd.device.geolocation.get({
-        targetAccuracy: 2, // 期望定位精度半径(单位米)
-        coordinate: 1, // 1：获取高德坐标；
-        withReGeocode: false, // 是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
-        useCache: true, // 默认是true，如果需要频繁获取地理位置，请设置false
-        onSuccess: function (result) {
-          alert('获取定位信息:' + JSON.stringify(result.address))
-          self.formData.address = result.address
-          self.formData.longitude = result.longitude
-          self.formData.latitude = result.latitude
-          Toast.clear()
-        },
-        onFail: function (err) {
-          console.log('定位失败:')
-          alert(JSON.stringify(err))
-          Toast.clear()
-        }
-      });
+    // 删除楼栋管理员
+    delManager(index) {
+      this.formData.buildingManagers.splice(index, 1)
+      this.formData.buildingManagerIds = this.formData.buildingManagers.map(item => { return item.id }).join(',')
+    },
+    // 删除维修人员
+    deleteWorker(index) {
+      this.formData.maintenanceWorkers.splice(index, 1)
+      this.formData.maintenanceWorkerIds = this.formData.maintenanceWorkers.map(item => { return item.id }).join(',')
     },
     // 经纬度确认
     addressConfirm(latlng, address) {
