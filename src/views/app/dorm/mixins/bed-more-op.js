@@ -88,6 +88,7 @@ export default {
           }
           break
       }
+      callback(isShow)
       return isShow
     },
     // 提醒
