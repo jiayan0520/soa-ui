@@ -121,15 +121,22 @@
       <template
         slot="item-content"
         slot-scope="slotProps">
-        <img
-          class="soa-avatar"
-          src="../../../../assets/images/timg.jpg" >
+        <div v-if="slotProps.item.users">
+          <img
+            v-if="slotProps.item.users.avatar"
+            :src="slotProps.item.users.avatar"
+            class="soa-avatar"
+          >
+          <div
+            v-else
+            class="soa-avatar">{{ slotProps.item.users.name.substr(-2,2) }}</div>
+        </div>
         <div class="soa-list-item-content">
           <div>
             <div v-if="slotProps.item.users">
               <span class="c-info">{{ slotProps.item.users.name }}</span>
               <span class="c-info c-ml10">{{ slotProps.item.users.mobile }}</span>
-              <span>{{ slotProps.item.banji }}</span>
+              <span class="c-ml10">{{ slotProps.item.banji||'未找到班级信息' }}</span>
             </div>
             <div v-else>未分配</div>
           </div>
@@ -283,12 +290,5 @@ export default {
 <style lang="scss">
 .bed-list {
   height: 100%;
-  .soa-gengduo {
-    width: unset;
-    .op-more {
-      right: -15px;
-      top: 45px;
-    }
-  }
 }
 </style>

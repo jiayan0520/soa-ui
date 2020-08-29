@@ -248,12 +248,7 @@ export default {
     .soa-avatar {
       width: 32px;
       height: 32px;
-      background-color: #3296fa;
-      color: #fff;
       font-size: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     .user-info {
       font-size: 16px;
