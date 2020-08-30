@@ -6,12 +6,12 @@
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'宿舍床位列表'"
+      :detail-url="'/dorm/bedDetail'"
       op-label="管理"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
-      @handleRowClick="handleRowClick"
       @showMoreOpItem="showMoreOpItem"
     >
       <template slot="top">

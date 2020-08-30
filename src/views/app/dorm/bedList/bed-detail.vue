@@ -59,20 +59,22 @@
 import customPanel from '@/components/customPanel'
 import bedCheck from '../components/check-common'
 import { statusList } from '../utils/dorm-enum'
+import { getQuery } from '@/utils'
 export default {
   name: 'BedDetail',
   components: {
     bedCheck,
     customPanel
   },
-  props: {
-    id: {
-      type: String,
-      default: null
-    }
-  },
+  // props: {
+  //   id: {
+  //     type: String,
+  //     default: null
+  //   }
+  // },
   data() {
     return {
+      id: null,
       loading: true,
       activeNames: [],
       showMoreIndex: -1, // 显示更多的行index
@@ -117,6 +119,7 @@ export default {
     }
   },
   created() {
+    this.id = getQuery('id')
     this.getDetail()
   },
   methods: {

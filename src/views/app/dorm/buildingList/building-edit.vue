@@ -96,6 +96,7 @@
       position="bottom"
       style="min-height: 20% ">
       <address-select
+        :origin-data="addressOriginData"
         @close="isShowAddressPopup=false"
         @confirm="addressConfirm" />
     </van-popup>
@@ -134,6 +135,7 @@ export default {
   },
   data() {
     return {
+      addressOriginData: null,
       isLoad: false,
       isAdd: false,
       formData: {
@@ -208,8 +210,11 @@ export default {
           maintenanceWorkerIds: data.maintenanceWorkerIds, // 楼栋维修员
           maintenanceWorkers: data.maintenanceWorkers || []
         }
+        if (data.latitude && data.longitude && data.address) {
+          this.addressOriginData = { location: data.longitude + ',' + data.latitude, address: data.address }
+        }
+        this.center = []
         this.isLoad = true
-        console.log(this.formData)
       })
     },
     // 选择管理员，维修人员

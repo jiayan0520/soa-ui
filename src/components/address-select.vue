@@ -13,30 +13,35 @@
       <div
         id="container"
         style="width: 100%;height:100%" />
-    </div>
-    <div class="address-main">
-      <van-search
-        v-model="searchValue"
-        placeholder="请输入搜索关键词"
-        @input="searchConfirm" />
-      <ul class="address-list">
-        <li
-          v-for="(item, index) in arounds"
-          :key="index"
-          class="address-item"
-          @click="selectAddress(item)"
-        >
-          <van-icon
-            v-show="item.address === address"
-            class="tick-icon"
-            name="success"
-            size="20px"
-            color="#218aef"
-          />
-          <strong>{{ item.name }}</strong>
-          <p>{{ item.address }}</p>
-        </li>
-      </ul>
+      <div class="geolocation-con">
+        <div
+          class="amap-geo"
+          @click="getlocation" />
+      </div>
+      <div class="address-main">
+        <van-search
+          v-model="searchValue"
+          placeholder="请输入搜索关键词"
+          @input="searchConfirm" />
+        <ul class="address-list">
+          <li
+            v-for="(item, index) in arounds"
+            :key="index"
+            class="address-item"
+            @click="selectAddress(item)"
+          >
+            <van-icon
+              v-show="item.address === address"
+              class="tick-icon"
+              name="success"
+              size="20px"
+              color="#218aef"
+            />
+            <strong>{{ item.name }}</strong>
+            <p>{{ item.address }}</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -53,17 +58,14 @@ export default {
       type: Array,
       default: () => [119.3, 26.08333]
     },
-    mapXID: { // 经度
-      type: String,
-      default: 'LGTD'
-    },
-    mapYID: { // 纬度
-      type: String,
-      default: 'LTTD'
-    },
     decimalCount: { // 取几位小数
       type: Number,
       default: 6
+    },
+    // 修改的原已定位的数据
+    originData: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -97,34 +99,11 @@ export default {
       zoom: 11,
       center: this.center
     })
-    console.log(2222222222)
-    Toast.loading({
-      duration: 0, // 持续展示 toast
-      forbidClick: true,
-      message: '定位中'
-    })
-    if (this.$dd.env.platform !== 'notInDingTalk' && (this.$dd.ios || this.$dd.android)) {
-      // alert('请用钉钉打开！');
-      this.$dd.device.geolocation.get({
-        targetAccuracy: 2, // 期望定位精度半径(单位米)
-        coordinate: 1, // 1：获取高德坐标；
-        withReGeocode: false,//是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
-        useCache: true, //默认是true，如果需要频繁获取地理位置，请设置false
-        onSuccess: function (result) {
-          alert('获取定位信息:' + result.longitude + result.latitude + result.address)
-          Toast.clear()
-          this.isMove = false
-          const longitude = result.longitude
-          const latitude = result.latitude
-          this.latlng = { longitude, latitude }
-          this.getCurCity()
-          this.getCityAround()
-        },
-        onFail: function (err) { }
-      });
+    if (this.originData) {
+      this.arounds = [this.originData]
+      this.selectAddress(this.originData)
     } else {
-      this.getCurLatlng(true)
-      Toast.clear()
+      this.getlocation()
     }
     this.map.on('moveend', (e) => {
       if (this.isMove) {
@@ -138,6 +117,41 @@ export default {
     this.map.off('moveend')
   },
   methods: {
+    getlocation() {
+      Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '定位中'
+      })
+      if (this.$dd.env.platform !== 'notInDingTalk' && (this.$dd.ios || this.$dd.android)) {
+        const self = this
+        this.$dd.device.geolocation.get({
+          targetAccuracy: 2, // 期望定位精度半径(单位米)
+          coordinate: 1, // 1：获取高德坐标；
+          withReGeocode: false,//是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
+          useCache: true, //默认是true，如果需要频繁获取地理位置，请设置false
+          onSuccess: function (result) {
+            // alert('获取定位信息:' + result.longitude + ',' + result.latitude + ',' + result.address)
+            Toast.clear()
+            self.isMove = false
+            const longitude = result.longitude
+            const latitude = result.latitude
+            self.latlng = {
+              lng: longitude,
+              lat: latitude
+            }
+            self.getCurCity()
+            self.getCityAround()
+          },
+          onFail: function (err) {
+            alert('钉钉定位失败:' + err)
+          }
+        });
+      } else {
+        this.getCurLatlng(true)
+        Toast.clear()
+      }
+    },
     // 获取当前位置经纬度
     getCurLatlng(flag) {
       this.isMove = false
@@ -193,7 +207,6 @@ export default {
     },
     // 获取当前城市
     getCurCity() {
-      console.log(222222, this.latlng)
       const { lng, lat } = this.latlng
       this.$jsonp(`${this.amapApi}v3/geocode/regeo`, { key: this.amapKey, location: lng + ',' + lat }).then(json => {
         // Success.
@@ -209,8 +222,6 @@ export default {
     getCityAround() {
       console.log(333, this.latlng)
       this.$jsonp(`${this.amapApi}v3/place/around`, { location: this.latlng.lng + ',' + this.latlng.lat, key: this.amapKey, radius: 5000, offset: 10, page: 1, extensions: 'all', types: '汽车服务|汽车销售|汽车维修|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|道路附属设施|地名地址信息|公共设施' }).then(json => {
-        // Success.
-        console.log(4444, json)
         if (json && json.status === '1') {
           json.pois.forEach(n => {
             let address = ''
@@ -267,11 +278,15 @@ export default {
         lat: arr[1]
       }
       this.map.setCenter(arr)
+      this.map.setZoom(12)
       this.address = item.address
     },
     confirm() {
       this.$emit('confirm', this.latlng, this.address)
     }
+  },
+  destroyed() {
+    Toast.clear()
   }
 };
 </script>
@@ -335,6 +350,20 @@ export default {
       position: absolute;
       right: 10px;
       bottom: 10px;
+    }
+    .geolocation-con {
+      position: absolute;
+      z-index: 9999;
+      right: 10px;
+      bottom: 20px;
+      .amap-geo {
+        background: #fff url("../assets/images/loc_gray.png") 50% 50% no-repeat;
+        width: 35px;
+        height: 35px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        right: 4px;
+      }
     }
   }
   .address-main {

@@ -11,7 +11,7 @@ export default {
       isShowEditPopup: false, // 是否展示宿舍编辑弹框
       isShowDetailPopup: false, // 是否展示宿舍详情弹框
       rowId: null, // 当前编辑的id
-      pageSize: 5, // 每页行数
+      pageSize: 20, // 每页行数
       pageNum: 0, // 当前页码 total 总条数
       dataList: [],
       isCheckAll: false, // 列表选中全部
@@ -148,7 +148,7 @@ export default {
           title: `确认${opLabel}？`,
           message: `此次选中${idList.length}条记录，${opLabel}的数据无法恢复`
         }).then(() => {
-          this.$api[method]({ ids: idList.join(',') }).then(res => {
+          this.$api[method]({ ids: idList.join(','), isCheckAll: false }).then(res => {
             Toast(`${opLabel}成功，此次共操作${idList.length}条记录！`);
             this.onSearch()
           }).catch(error => {
