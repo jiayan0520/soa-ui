@@ -13,6 +13,7 @@
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
       @changeRowCheckbox="changeRowCheckbox"
+      @showMoreOpItem="showMoreOpItem"
     >
       <template slot="top">
         <div
@@ -228,6 +229,25 @@ export default {
           break
       }
       this.showMore = false
+    },
+    // 列表中操作按钮根据每条数据来判断
+    showMoreOpItem(item, btn, callback) {
+      let isShow = true
+      switch (btn.value) {
+        case 'edit':
+        case 'del':
+          if (item.dormData.userNum > 0) {
+            isShow = false
+          }
+          break
+        case 'clear':
+          if (item.dormData.userNum === 0) {
+            isShow = false
+          }
+          break
+      }
+      callback && callback(isShow)
+      return isShow
     },
     // 切换到搜索框
     switchSearch(flag) {

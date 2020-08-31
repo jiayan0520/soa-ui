@@ -5,6 +5,7 @@ export default {
   },
   data() {
     return {
+      isDetail: true,
       moreOpList: [
         { value: 'exp', label: '导出二维码' },
         { value: 'set', label: '设为舍长' },
@@ -37,7 +38,7 @@ export default {
         case 'set':
           // 设置舍长
           this.$api.setDromManager({ dormId: item.dormId, userId: item.userId }).then(res => {
-            this.getDetail()
+            this.loadAgain()
           })
           break
         case 'allot':
@@ -88,7 +89,7 @@ export default {
           }
           break
       }
-      callback(isShow)
+      callback && callback(isShow)
       return isShow
     },
     // 提醒
@@ -99,7 +100,7 @@ export default {
     async allotBed(bedId) {
       const result = await complexPicker(this.system, '学生', 1)
       this.$api.allotBed({ bedId: bedId, userId: result.users[0].emplId }).then(res => {
-        this.getDetail()
+        this.loadAgain()
       })
     },
     // 退宿舍
@@ -110,7 +111,7 @@ export default {
       }).then(() => {
         this.$api.outBed({ ids: id }).then(res => {
           Toast(`退舍成功！`);
-          this.getDetail()
+          this.loadAgain()
         }).catch(error => {
           Toast(`退舍失败！` + error);
         })
@@ -124,11 +125,18 @@ export default {
       }).then(() => {
         this.$api.deleteBed({ ids: id }).then(res => {
           Toast(`删除成功！`);
-          this.getDetail()
+          this.loadAgain()
         }).catch(error => {
           Toast(`删除失败！` + error);
         })
       })
+    },
+    loadAgain() {
+      if (this.isDetail) {
+        this.getDetail()
+      } else {
+        this.onSearch()
+      }
     }
   }
 }

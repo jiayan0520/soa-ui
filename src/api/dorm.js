@@ -91,7 +91,7 @@ export function outBed(params) {
 }
 // 删除
 export function deleteBed(params) {
-  return del(`${prefix}/bed/${params.ids}`)
+  return del(`${prefix}/bed/del`, params)
 }
 // 分配宿舍
 export function allotBed(params) {

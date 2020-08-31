@@ -27,7 +27,7 @@
           <van-button
             class="btn-op"
             type="info">提醒</van-button>
-          <div class="soa-gengduo">
+          <div class="soa-gengduo soa-gengduo__btn">
             <van-button
               class="btn-op"
               type="info"
@@ -231,6 +231,7 @@ export default {
     }
   },
   created() {
+    this.isDetail = false
     this.getBedTotal()
   },
   methods: {
@@ -278,8 +279,10 @@ export default {
         case 'exp':
           break
         case 'out':
+          this.handleIdList(null, '退舍', 'outBed')
           break
         case 'del':
+          this.handleIdList(null, '删除', 'deleteBed')
           break
       }
     }
@@ -290,5 +293,11 @@ export default {
 <style lang="scss">
 .bed-list {
   height: 100%;
+  .soa-gengduo__btn {
+    width: 80px;
+    .op-more {
+      top: 45px;
+    }
+  }
 }
 </style>
