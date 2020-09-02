@@ -65,35 +65,46 @@
         </div>
       </van-collapse-item>
       <van-collapse-item
-        :value="`最后一次检查：${data.checkInfos[0].time}`"
+        :value="`最后一次检查：${checkList.length>0&&checkList[0].checkTime}`"
+        :class="{'soa-collapse-overflow':activeNames.includes('2')}"
         title="宿舍检查信息"
         class="soa-collapse-item"
         name="2"
+        include
       >
-        <div
-          v-for="(item,index) in data.checkInfos"
-          :key="index"
-          class="check-item soa-box-item">
-          <div class="check-item-left">
-            <div class="time">{{ item.time }}</div>
-            <div class="c-info">结果：{{ item.checkResult }}</div>
-          </div>
-          <div class="check-item-grade">{{ item.grade }}</div>
+        <van-list
+          v-model="checkLoading"
+          :finished="checkFinished"
+          finished-text="没有更多了"
+          @load="getResultList"
+        >
           <div
-            class="soa-gengduo"
-            @click.stop="bindCheckMoreClick(index)">
-            <i class="soa-icon soa-icon-gengduo" />
-            <ul
-              v-if="showCheckMoreIndex === index"
-              class="soa-op__dropdown">
-              <div
-                v-for="btn in moreOpCheckList"
-                :key="btn.index">
-                <li @click.stop="clickCheckMoreBtn(btn.value,item)">{{ btn.label }}</li>
+            v-for="(item,index) in checkList"
+            :key="index"
+            class="check-item soa-box-item">
+            <div class="flex-between">
+              <div>
+                <div class="time">{{ item.checkTime }}</div>
+                <div class="c-info">结果：{{ item.inspectionResultsInfo }}</div>
               </div>
-            </ul>
+              <div>{{ item.score }}</div>
+            </div>
+            <div
+              class="soa-gengduo"
+              @click.stop="bindCheckMoreClick(index)">
+              <i class="soa-icon soa-icon-gengduo" />
+              <ul
+                v-if="showCheckMoreIndex === index"
+                class="soa-op__dropdown">
+                <div
+                  v-for="btn in moreOpCheckList"
+                  :key="btn.index">
+                  <li @click.stop="clickCheckMoreBtn(btn.value,item)">{{ btn.label }}</li>
+                </div>
+              </ul>
+            </div>
           </div>
-        </div>
+        </van-list>
       </van-collapse-item>
     </van-collapse>
     <div class="soa-btn-box">
@@ -104,14 +115,19 @@
     </div>
     <!--新建检查项-->
     <van-popup
+      v-if="showCheckPopup"
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
-      position="bottom">
+      position="bottom"
+    >
       <dorm-check
         :data="data"
         :dorm-id="id"
-        type="DORM" />
+        :id="currentCheckId"
+        type="DORM"
+        @close="closeCheckPopop"
+      />
     </van-popup>
   </div>
 </template>
@@ -120,7 +136,7 @@
 import customPanel from '@/components/customPanel'
 import dormCheck from '../components/check-common'
 import { dormTypeEnum, statusList } from '../utils/dorm-enum'
-// import { Dialog, Toast } from 'vant'
+import { Dialog, Toast } from 'vant'
 import { getQuery } from '@/utils'
 import bedMoreOp from '../mixins/bed-more-op'
 export default {
@@ -142,8 +158,6 @@ export default {
       loading: true,
       activeNames: [],
       showMoreIndex: -1, // 显示更多的行index
-      showCheckMoreIndex: -1, // 显示更多的行index
-      showCheckPopup: false,
       data: {},
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
@@ -166,10 +180,18 @@ export default {
         { prop: 'dormType', label: '宿舍类型' },
         { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
       ],
+      showCheckMoreIndex: -1, // 显示更多的行index
+      showCheckPopup: false,
       moreOpCheckList: [
         { value: 'edit', label: '编辑' },
         { value: 'del', label: '删除' }
-      ]
+      ],
+      checkLoading: false,
+      checkFinished: false,
+      pageNum: 0,
+      pageSize: 5,
+      checkList: [],
+      currentCheckId: null // 检查对象id
     }
   },
   computed: {
@@ -180,6 +202,7 @@ export default {
   created() {
     this.id = getQuery('id')
     this.getDetail()
+    this.againResultList()
   },
   methods: {
     // 获取详情
@@ -203,15 +226,35 @@ export default {
             bed.statusName = statusObj.text
             bed.statusClass = statusObj.class
             return bed
-          }),
-          checkInfos: [
-            { checkResult: '阳台混乱', grade: -10, time: '2020年6月28日 20:01' },
-            { checkResult: '宿舍脏乱', grade: -20, time: '2020年6月28日 20:01' },
-            { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-          ]
+          })
         }
         this.loading = false
       })
+    },
+    // 检查项新增修改，删除时重新刷
+    againResultList() {
+      this.checkList = []
+      this.pageNum = 0
+      this.checkLoading = true
+      this.getResultList()
+    },
+    // 获取宿舍检查列表
+    getResultList() {
+      if (this.checkLoading) {
+        this.showMoreIndex = -1
+        this.showCheckMoreIndex = -1
+        this.pageNum++
+        this.$api.getResultListByDormId({ dormId: this.id, pageNum: this.pageNum, pageSize: this.pageSize }).then(data => {
+          console.log(data.rows)
+          this.checkList = this.checkList.concat(data.rows)
+          // 加载状态结束
+          this.checkLoading = false
+          // 数据全部加载完成
+          if (this.checkList.length >= data.total) {
+            this.checkFinished = true
+          }
+        })
+      }
     },
     // 检查项更多操作
     bindCheckMoreClick(index) {
@@ -221,14 +264,36 @@ export default {
     // 检查项点击更多操作按钮了
     clickCheckMoreBtn(val, item) {
       switch (val) {
-        case 'qc':
+        case 'edit':
+          this.currentCheckId = item.id
+          this.showCheckPopup = true
+          break
+        case 'del':
+          Dialog.confirm({
+            title: `确认删除？`,
+            message: `确定删除该检查项，删除的数据无法恢复`
+          }).then(() => {
+            this.$api.deleteResult(item.id).then(res => {
+              Toast(`删除成功！`);
+              this.againResultList()
+            }).catch(error => {
+              Toast(`删除失败！` + error);
+            })
+          })
+
           break
       }
       this.showMoreIndex = -1
     },
     // 新增宿舍检查
     clickCheckBtn() {
+      this.currentCheckId = null
       this.showCheckPopup = true
+    },
+    // 关闭检查项的弹框
+    closeCheckPopop(flag) {
+      flag && this.againResultList()
+      this.showCheckPopup = false
     }
   }
 }

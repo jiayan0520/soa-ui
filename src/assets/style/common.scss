@@ -216,8 +216,15 @@ a {
         .soa-box-item:last-child {
             .soa-op__dropdown {
                 bottom: 20px;
-                top:unset;
+                top: unset;
             }
+        }
+    }
+    &.soa-collapse-overflow {
+        .van-collapse-item__content{
+            box-sizing: border-box;
+            overflow: auto;
+            height: 260px;
         }
     }
 }

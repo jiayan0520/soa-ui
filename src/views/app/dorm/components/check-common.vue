@@ -8,18 +8,29 @@
         :field-list="fieldList2" />
       <van-field
         :readonly="true"
-        v-model="formData.checkResultText"
         center
-        label="检查结果"
-        right-icon="arrow"
-        placeholder="请选择"
-        @click="isShowSelect=true"
-      />
+        label="检查结果">
+        <template #input>
+          <van-checkbox-group v-model="formData.checkResultList">
+            <van-checkbox
+              v-for="(item,index) in checkItemList"
+              :key="index"
+              :name="item.id"
+              shape="square"
+            >{{ item.text }}</van-checkbox>
+          </van-checkbox-group>
+        </template>
+      </van-field>
       <van-field
         name="uploader"
         label="现场照片">
         <template #input>
-          <van-uploader v-model="formData.annexIds" />
+          <custom-uploader
+            v-model="formData.annexId"
+            :max-count="5"
+            :annex-list="formData.annexList"
+            type="dorm"
+          />
         </template>
       </van-field>
       <van-field
@@ -40,6 +51,7 @@
             :editable="false"
             :not-before="minDate"
             :clearable="false"
+            :disabled="true"
             type="datetime"
             value-type="format"
             format="YYYY-MM-DD HH:mm"
@@ -55,17 +67,6 @@
           native-type="submit">保存</van-button>
       </div>
     </van-form>
-    <van-popup
-      v-model="isShowSelect"
-      position="bottom"
-      style="min-height: 20% ">
-      <van-picker
-        :columns="checkItemList"
-        show-toolbar
-        @confirm="onConfirm"
-        @cancel="isShowSelect = false"
-      />
-    </van-popup>
   </div>
 </template>
 
@@ -74,11 +75,13 @@ import customPanel from '@/components/customPanel'
 import DatePicker from 'vue2-datepicker'
 import dayjs from 'dayjs';
 import { Toast } from 'vant';
+import customUploader from '@/components/custom-uploader'
 export default {
   name: 'CheckCommon',
   components: {
     DatePicker,
-    customPanel
+    customPanel,
+    customUploader
   },
   props: {
     id: {
@@ -90,10 +93,6 @@ export default {
       default: null
     },
     bedId: {
-      type: String,
-      default: null
-    },
-    userId: {
       type: String,
       default: null
     },
@@ -115,22 +114,20 @@ export default {
   },
   data() {
     return {
+      isAdd: true,
       formData: {
         dormId: this.dormId,
-        bedId: null,
-        userId: null,
+        bedId: this.bedId,
         inspectionType: this.type,
         checkUserId: this.$store.getters['core/user'].userId,
-        checkResult: null, // 检查结果
-        checkResultText: null,
-        annexIds: [], // 附件
+        checkResultList: [], // 检查结果
+        annexId: null, // 附件
+        annexList: [],
         remark: null,
-        checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
-        score: 0
+        checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm')
       },
       checkItemList: [],
-      minDate: '',
-      isShowSelect: false
+      minDate: ''
     }
   },
   computed: {
@@ -151,21 +148,41 @@ export default {
     }
   },
   created() {
-    console.log(this.dormId)
+    if (this.id) {
+      this.isAdd = false
+      this.getDetail()
+    }
     this.getDimension()
   },
   methods: {
     getDimension() {
-      this.$api.getInspectionTypes().then(data => {
+      this.$api.getInspectionTypes({ type: this.type }).then(data => {
         this.checkItemList = data.map(item => {
           return {
+            id: item.id,
             value: item.score,
             text: item.name + '(' + item.score + ')'
           }
         })
       })
     },
+    // 获取详情
+    getDetail() {
+      this.$api.getResultDetail(this.id).then(data => {
+        data.checkResultIds = data.checkResult
+        data.checkResultList = data.checkResultIds.split(',')
+        data.checkTime = dayjs(data.checkTime + ' 00:00:00').format('YYYY-MM-DD HH:mm')
+        console.log(22222222, data)
+        this.formData = data
+      })
+    },
     onSubmit() {
+      this.formData.checkResultIds = this.formData.checkResultList.join(',')
+      this.formData.checkResult = this.formData.checkResultList.join(',')
+      if (this.formData.checkTime.length === 16) {
+        this.formData.checkTime += ':00'
+      }
+      console.log(this.formData)
       if (this.isAdd) {
         Toast.loading('新增检查中，请稍后...')
         this.$api.addResult(this.formData).then(data => {
@@ -184,14 +201,17 @@ export default {
     },
     handleExecutorClick() {
       this.$router.push('/task-add-executor');
-    },
-    // 选择检查内容
-    onConfirm(obj) {
-      this.formData.checkResult = obj.value
-      this.formData.checkResultText = obj.text
-      this.isShowSelect = false;
     }
   }
 }
 </script>
+<style lang="scss">
+.check-common {
+  .van-checkbox-group {
+    .van-checkbox {
+      margin: 0 0 8px 10px;
+    }
+  }
+}
+</style>
 

@@ -108,7 +108,23 @@ export function setDromManager(params) {
 
 // 获取检查指标
 export function getInspectionTypes(params) {
-  return get(`${prefix}/dorm/inspection/type`, params)
+  return get(`${prefix}/inspectionType/findALLType`, params)
+}
+// 根据宿舍id获取检查列表
+export function getResultListByDormId(params) {
+  return post(`${prefix}/result/dormInspectionResultlist`, params)
+}
+// 根据userId获取检查列表
+export function getResultListByUserId(params) {
+  return post(`${prefix}/result/userInspectionResultlist`, params)
+}
+// 根据查询条件获取检查列表
+export function getResultList(params) {
+  return post(`${prefix}/result/list`, params)
+}
+// 获取检查详情
+export function getResultDetail(params) {
+  return get(`${prefix}/result/${params}`)
 }
 // 新增检查
 export function addResult(params) {
@@ -117,6 +133,10 @@ export function addResult(params) {
 // 修改检查
 export function updateResult(params) {
   return put(`${prefix}/result`, params)
+}
+// 删除检查
+export function deleteResult(params) {
+  return del(`${prefix}/result/${params}`)
 }
 // 调换申请列表
 export function getExchangeList(params) {

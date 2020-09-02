@@ -7,15 +7,18 @@
         title-active-color="#1989fa">
         <van-tab
           title="学生"
-          name="1"/>
+          name="1" />
         <van-tab
           title="宿舍"
-          name="2"/>
+          name="2" />
       </van-tabs>
       <div class="soa-dorm-count__search">
         <div
           class="title"
-          @click="bindSearchClick">搜索条件<span/></div>
+          @click="bindSearchClick">
+          搜索条件
+          <span />
+        </div>
         <div
           v-if="showSearch"
           class="content">
@@ -24,18 +27,15 @@
               v-model="query.name"
               name="楼栋名称"
               label="楼栋名称"
-              placeholder="楼栋名称"
-            />
+              placeholder="楼栋名称" />
             <van-field
               v-model="query.dormNum"
               name="宿舍号"
               label="宿舍号"
-              placeholder="宿舍号"
-            />
+              placeholder="宿舍号" />
             <van-field
               center
-              label="检查时间起"
-            >
+              label="检查时间起">
               <template #input>
                 <date-picker
                   v-model="query.deadline"
@@ -47,13 +47,13 @@
                   value-type="format"
                   format="YYYY-MM-DD HH:mm"
                   placeholder="请选择检查时间"
-                  append-to-body/>
+                  append-to-body
+                />
               </template>
             </van-field>
             <van-field
               center
-              label="检查时间结"
-            >
+              label="检查时间结">
               <template #input>
                 <date-picker
                   v-model="query.deadline"
@@ -65,7 +65,8 @@
                   value-type="format"
                   format="YYYY-MM-DD HH:mm"
                   placeholder="请选择检查时间"
-                  append-to-body/>
+                  append-to-body
+                />
               </template>
             </van-field>
             <div style="margin: 16px;">
@@ -110,13 +111,16 @@
           ref="demo"
           :data="barData"
           :width="chartWidth">
+          <v-scale
+            x
+            field="label" />
+          <v-scale
+            y
+            field="sales" />
           <v-bar />
-          <v-tooltip :show-item-marker="true" />
         </v-chart>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -154,12 +158,12 @@ export default {
       // 饼状图
       legendOptions: {
         position: 'right',
-        itemFormatter (val) {
+        itemFormatter(val) {
           return val + '  ' + map[val]
         }
       },
       yOptions: {
-        formatter (val) {
+        formatter(val) {
           return val * 100 + '%'
         }
       },
@@ -171,11 +175,11 @@ export default {
         { name: '很差', percent: 0.10, a: '1' }
       ],
       barData: [
-        { year: '1951 年', sales: 38 },
-        { year: '1952 年', sales: 52 },
-        { year: '1956 年', sales: 61 },
-        { year: '1957 年', sales: 145 },
-        { year: '1958 年', sales: 48 }
+        { label: '被子没叠', sales: 38 },
+        { label: '违规电器', sales: 52 },
+        { label: '垃圾乱扔', sales: 61 },
+        { label: '床铺整洁', sales: 145 },
+        { label: '课桌脏乱', sales: 48 }
       ],
       chartWidth: 0
     }
@@ -185,7 +189,7 @@ export default {
   },
   mounted() {
     var _this = this;
-    window.onresize = function() { // 定义窗口大小变更通知事件
+    window.onresize = function () { // 定义窗口大小变更通知事件
       _this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40; // 窗口宽度
     };
   },
@@ -201,37 +205,37 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/mixins/mixins.scss';
-@import '@/assets/style/var.scss';
-@include b(dorm-count){
-    @include e(title){
-        margin: 10px 0;
-        padding: 0 10px;
+@import "@/assets/mixins/mixins.scss";
+@import "@/assets/style/var.scss";
+@include b(dorm-count) {
+  @include e(title) {
+    margin: 10px 0;
+    padding: 0 10px;
+  }
+  @include e(search) {
+    margin-top: 10px;
+    & .title {
+      text-align: center;
+      padding: 10px;
+      border-bottom: 1px solid #f5f6f8;
+      //  box-shadow:0 8px 6px rgba(0, 0, 0, 0.08);
+      & > span {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-width: 8px;
+        border-style: solid;
+        border-color: $--color-light transparent transparent transparent;
+        vertical-align: middle;
+      }
     }
-    @include e(search){
-        margin-top: 10px;
-       & .title {
-         text-align: center;
-         padding: 10px;
-         border-bottom: 1px solid #F5F6F8;
-        //  box-shadow:0 8px 6px rgba(0, 0, 0, 0.08);
-         & > span{
-           display: inline-block;
-           width: 0;
-           height: 0;
-           border-width: 8px;
-           border-style: solid;
-           border-color: $--color-light transparent transparent transparent;
-           vertical-align: middle;
-         }
-       }
-    }
-    @include e(chart) {
-      padding-top: 10px;
-      height: calc(100% - 125px);
-      box-sizing: border-box;
-      overflow: auto;
-      margin-bottom: 40px;
-    }
+  }
+  @include e(chart) {
+    padding-top: 10px;
+    height: calc(100% - 125px);
+    box-sizing: border-box;
+    overflow: auto;
+    margin-bottom: 40px;
+  }
 }
 </style>

@@ -16,32 +16,34 @@
         <div class="soa-list__search">
           <div
             class="title"
-            @click="bindSearchClick">
+            @click="isShowSearch=!isShowSearch">
             搜索条件
             <span class="arrow-down" />
           </div>
           <div
-            v-if="showSearch"
+            v-if="isShowSearch"
             class="content">
             <van-form
               class="soa-custom-form soa-search-form"
               @submit="onSearch">
               <van-field
-                v-model="searchForm.floorName"
+                v-model="searchForm.buildingName"
                 name="楼栋名称"
                 label="楼栋名称"
-                placeholder="楼栋名称" />
+                placeholder="楼栋名称"
+              />
               <van-field
                 v-model="searchForm.dormName"
                 name="宿舍号"
                 label="宿舍号"
                 placeholder="宿舍号" />
               <van-field
-                v-if="active===0"
+                v-if="active==='BED'"
                 v-model="searchForm.userName"
                 name="姓名"
                 label="姓名"
-                placeholder="姓名" />
+                placeholder="姓名"
+              />
               <van-field
                 center
                 label="检查时间起">
@@ -79,17 +81,19 @@
                 </template>
               </van-field>
               <van-field
-                v-if="active===0"
-                v-model="searchForm.xy"
+                v-if="active==='BED'"
+                v-model="searchForm.college"
                 name="学院名称"
                 label="学院名称"
-                placeholder="学院名称" />
+                placeholder="学院名称"
+              />
               <van-field
-                v-if="active===0"
-                v-model="searchForm.zybj"
+                v-if="active==='BED'"
+                v-model="searchForm.sClass"
                 name="专业班级"
                 label="专业班级"
-                placeholder="专业班级" />
+                placeholder="专业班级"
+              />
               <div class="soa-btn-box">
                 <van-button
                   type="default"
@@ -104,40 +108,45 @@
         <van-tabs
           v-model="active"
           @click="onSearch">
-          <van-tab title="学生" />
-          <van-tab title="宿舍" />
+          <van-tab
+            name="BED"
+            title="学生" />
+          <van-tab
+            name="DORM"
+            title="宿舍" />
         </van-tabs>
       </template>
       <template
         slot="item-content"
         slot-scope="slotProps">
         <img
-          v-if="active===0"
+          v-if="active==='BED'"
           class="soa-avatar"
           src="../../../../assets/images/timg.jpg" >
         <div
-          v-if="active===0"
+          v-if="active==='BED'"
           class="soa-list-item-content">
           <div>
             <span>{{ slotProps.item.userName }}</span>
             <span>（{{ slotProps.item.banji }}）</span>
           </div>
-          <div>{{ slotProps.item.dormName }}</div>
+          <div>{{ slotProps.item.bedInfo }}</div>
           <div class="c-light">
-            结果： {{ slotProps.item.checkResult }}
-            <span class="c-ml10">{{ slotProps.item.time }}</span>
+            结果： {{ slotProps.item.inspectionResultsInfo }}
+            <span class="c-ml10">{{ slotProps.item.checkTime }}</span>
           </div>
         </div>
         <div
-          v-if="active===1"
+          v-if="active==='DORM'"
           class="soa-list-item-content">
-          <div>
-            {{ slotProps.item.dormName }}
-          </div>
+          <div>{{ slotProps.item.dormInfo }}</div>
           <div class="c-light">
-            结果： {{ slotProps.item.checkResult }}
-            <span class="c-ml10">{{ slotProps.item.time }}</span>
+            结果： {{ slotProps.item.inspectionResultsInfo }}
+            <span class="c-ml10">{{ slotProps.item.checkTime }}</span>
           </div>
+        </div>
+        <div>
+          {{ slotProps.item.score }}
         </div>
       </template>
     </list-layout>
@@ -163,9 +172,11 @@
 </template>
 
 <script>
+import baseList from '../mixins/base-list'
 import listLayout from '@/components/listLayout'
 import DatePicker from 'vue2-datepicker'
 import checkCommon from '../components/check-common'
+// import dayjs from 'dayjs';
 export default {
   name: 'DormCheckList',
   components: {
@@ -173,21 +184,19 @@ export default {
     DatePicker,
     checkCommon
   },
+  mixins: [baseList],
   data() {
     return {
-      active: 0,
-      searchValue: null,
-      dataList: [],
-      showSearch: false,
+      active: 'BED',
       minDate: '',
       searchForm: {
-        floorName: '',
+        buildingName: '',
         dormName: '',
         userName: null,
-        startTime: null,
-        endTime: null,
-        xy: null,
-        zybj: null
+        startTime: null, // dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD HH:mm'),
+        endTime: null, // dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
+        college: null,
+        sClass: null
       },
       moreOpList: [
         { value: 'edit', label: '编辑' },
@@ -208,41 +217,21 @@ export default {
       this.loadData()
     },
     loadData() {
-      this.pageIndex++;
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            id: this.dataList.length + 1,
-            userName: '张三峰',
-            telephone: '18233422111',
-            banji: '石油化工学院-2019级化工一班',
-            dormName: '福大生活1区1号楼-601',
-            checkResult: '宿舍干净整洁',
-            time: '2020年08月20日 18:00'
-          });
-        }
+      this.pageNum++;
+      this.$api.getResultList({ ...this.searchParams, type: this.active }).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        const rows = data.rows
+        this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
-    },
-    // 条件搜索
-    bindSearchClick() {
-      this.showSearch = !this.showSearch
+      })
     },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
-      if (this.active === 0) {
+      if (this.active === 'BED') {
         // 床位操作项
         switch (val) {
           case 'edit': {

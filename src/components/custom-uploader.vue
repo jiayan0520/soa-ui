@@ -4,7 +4,7 @@
     :after-read="afterRead"
     :before-delete="beforeDelete"
     :disabled="readOnly"
-    :max-count="1"
+    :max-count="maxCount"
     multiple
     config
     @before-read="beforeRead"

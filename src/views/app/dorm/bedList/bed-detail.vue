@@ -5,52 +5,71 @@
     <custom-panel
       :data="data"
       :field-list="fieldList" />
-    <van-collapse v-model="activeNames">
-      <van-collapse-item
-        :value="`最后一次检查：${data.bedCheckInfos[0].time}`"
-        title="床位检查信息"
-        name="1">
-        <div
-          v-for="(item,index) in data.bedCheckInfos"
-          :key="index"
-          class="check-item soa-box-item"
+    <div v-if="data.users">
+      <custom-panel
+        :data="data.users"
+        :field-list="userFieldList" />
+      <van-collapse v-model="activeNames">
+        <van-collapse-item
+          :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
+          title="床位检查信息"
+          name="1"
         >
-          <div class="flex-between">
-            <div>
-              <div class="time">{{ item.time }}</div>
-              <div class="c-info">结果：{{ item.checkResult }}</div>
+          <van-list
+            v-model="checkLoading"
+            :finished="checkFinished"
+            finished-text="没有更多了"
+            @load="getResultList"
+          >
+            <div
+              v-for="(item,index) in checkList"
+              :key="index"
+              class="check-item soa-box-item">
+              <div class="flex-between">
+                <div>
+                  <div class="time">{{ item.checkTime }}</div>
+                  <div class="c-info">结果：{{ item.inspectionResultsInfo }}</div>
+                </div>
+                <div>{{ item.score }}</div>
+              </div>
+              <div
+                class="soa-gengduo"
+                @click.stop="bindCheckMoreClick(index)">
+                <i class="soa-icon soa-icon-gengduo" />
+                <ul
+                  v-if="showCheckMoreIndex === index"
+                  class="soa-op__dropdown">
+                  <div
+                    v-for="btn in moreOpCheckList"
+                    :key="btn.index">
+                    <li @click.stop="clickCheckMoreBtn(btn.value,item)">{{ btn.label }}</li>
+                  </div>
+                </ul>
+              </div>
             </div>
-            <div>{{ item.grade }}</div>
-          </div>
-          <div class="soa-gengduo">
-            <i
-              class="soa-icon soa-icon-gengduo"
-              @click.stop="bindMoreClick(index)" />
-            <ul
-              v-if="showMoreIndex === index"
-              class="soa-op__dropdown">
-              <li
-                v-for="btn in moreOpList"
-                :key="btn.index"
-                @click.stop="clickMoreBtn(btn.value)"
-              >{{ btn.label }}</li>
-            </ul>
-          </div>
-        </div>
-      </van-collapse-item>
-    </van-collapse>
-    <div class="soa-btn-box">
-      <van-button
-        type="info"
-        @click="clickCheckBtn">新增检查</van-button>
+          </van-list>
+        </van-collapse-item>
+      </van-collapse>
+      <div class="soa-btn-box">
+        <van-button
+          type="info"
+          @click="clickCheckBtn">新增检查</van-button>
+      </div>
     </div>
     <!--新建检查项-->
     <van-popup
+      v-if="showCheckPopup"
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <bed-check :data="data" />
+      <bed-check
+        :data="data"
+        :user-id="id"
+        :id="currentCheckId"
+        type="BED"
+        @close="closeCheckPopop"
+      />
     </van-popup>
   </div>
 </template>
@@ -60,6 +79,7 @@ import customPanel from '@/components/customPanel'
 import bedCheck from '../components/check-common'
 import { statusList } from '../utils/dorm-enum'
 import { getQuery } from '@/utils'
+import { Dialog, Toast } from 'vant'
 export default {
   name: 'BedDetail',
   components: {
@@ -77,22 +97,21 @@ export default {
       id: null,
       loading: true,
       activeNames: [],
-      showMoreIndex: -1, // 显示更多的行index
-      showCheckPopup: false,
-      showCheckDetailPopup: false, // 检查项详情，可编辑保存
       data: {},
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
-        { prop: 'userName', label: '姓名' },
         { prop: 'bedName', label: '床位' },
+        { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
+      ],
+      userFieldList: [
+        { prop: 'name', label: '姓名' },
         { prop: 'statusName', label: '状态' },
         { prop: 'sno', label: '学号' },
-        { prop: 'telephone', label: '电话' },
+        { prop: 'mobile', label: '电话' },
         { prop: 'zzmm', label: '政治面貌' },
         { prop: 'college', label: '学院专业' },
         { prop: 'place', label: '籍贯' },
         { prop: 'address', label: '家庭住址' },
-        { prop: 'place', label: '学院专业' },
         {
           prop: 'instructorList',
           label: '辅导员',
@@ -109,13 +128,20 @@ export default {
             { prop: 'userName' },
             { prop: 'grade' },
             { prop: 'telephone', class: 'c-info' }]
-        },
-        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
+        }
       ],
-      moreOpList: [
+      showCheckMoreIndex: -1, // 显示更多的行index
+      showCheckPopup: false,
+      moreOpCheckList: [
         { value: 'edit', label: '编辑' },
         { value: 'del', label: '删除' }
-      ]
+      ],
+      checkLoading: false,
+      checkFinished: false,
+      pageNum: 0,
+      pageSize: 5,
+      checkList: [],
+      currentCheckId: null // 检查对象id
     }
   },
   created() {
@@ -127,46 +153,84 @@ export default {
     getDetail() {
       this.$api.getBedDetail(this.id).then(data => {
         const statusObj = statusList.find(status => status.value === data.status)
+        data.users.statusName = statusObj ? statusObj.text : data.status
         this.data = {
-          dormName: data.buildingName + '-' + data.dormName,
-          userName: '李荣浩',
+          ...data,
+          dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
           bedName: data.bedName,
-          statusName: statusObj ? statusObj.text : data.status,
-          sno: '12312312312',
-          telephone: '15874214741',
-          zzmm: '党员',
-          college: '石油化工学院-2019级过控一班',
-          place: '福建省福州市',
-          address: '福建省福州市闽侯县科技路一号',
           instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
           parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
-          cost: '900',
-          bedCheckInfos: [
-            { checkResult: '桌面脏乱', grade: -10, time: '2020年6月28日 20:01' },
-            { checkResult: '被子没叠', grade: -20, time: '2020年6月28日 20:01' },
-            { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-          ]
+          singleFee: data.soaDormDorm.singleFee
         }
-        console.log(this.data)
+        console.log(1111111, this.data)
+        if (this.data.users) {
+          this.againResultList()
+        }
         this.loading = false
       })
     },
-    // 更多操作
-    bindMoreClick(index) {
-      this.showMoreIndex = this.showMoreIndex === index ? -1 : index
-      console.log(this.showMoreIndex)
+    // 检查项新增修改，删除时重新刷
+    againResultList() {
+      this.checkList = []
+      this.pageNum = 0
+      this.checkLoading = true
+      this.getResultList()
     },
-    // 点击更多操作按钮了
-    clickMoreBtn(val, item) {
+    // 获取用户检查列表
+    getResultList() {
+      if (this.checkLoading) {
+        this.showMoreIndex = -1
+        this.showCheckMoreIndex = -1
+        this.pageNum++
+        this.$api.getResultListByUserId({ userId: this.data.userId, pageNum: this.pageNum, pageSize: this.pageSize }).then(data => {
+          this.checkList = this.checkList.concat(data.rows)
+          // 加载状态结束
+          this.checkLoading = false
+          // 数据全部加载完成
+          if (this.checkList.length >= data.total) {
+            this.checkFinished = true
+          }
+        })
+      }
+    },
+    // 检查项更多操作
+    bindCheckMoreClick(index) {
+      this.showMoreIndex = -1
+      this.showCheckMoreIndex = this.showCheckMoreIndex === index ? -1 : index
+    },
+    // 检查项点击更多操作按钮了
+    clickCheckMoreBtn(val, item) {
       switch (val) {
-        case 'qc':
+        case 'edit':
+          this.currentCheckId = item.id
+          this.showCheckPopup = true
+          break
+        case 'del':
+          Dialog.confirm({
+            title: `确认删除？`,
+            message: `确定删除该检查项，删除的数据无法恢复`
+          }).then(() => {
+            this.$api.deleteResult(item.id).then(res => {
+              Toast(`删除成功！`);
+              this.againResultList()
+            }).catch(error => {
+              Toast(`删除失败！` + error);
+            })
+          })
+
           break
       }
       this.showMoreIndex = -1
     },
-    // 新增床位检查
+    // 新增宿舍检查
     clickCheckBtn() {
+      this.currentCheckId = null
       this.showCheckPopup = true
+    },
+    // 关闭检查项的弹框
+    closeCheckPopop(flag) {
+      flag && this.againResultList()
+      this.showCheckPopup = false
     }
   }
 }
