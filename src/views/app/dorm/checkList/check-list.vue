@@ -4,13 +4,13 @@
       ref="listLayout"
       :data-list="dataList"
       :title="'检查信息统计'"
-      :more-op-list="moreOpList"
-      detail-url="/dorm/bedDetail"
+      :more-op-list="moreOpCheckList"
       op-label="导出数据"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="expontData"
-      @clickMoreBtn="clickMoreBtn"
+      @clickMoreBtn="clickCheckMoreBtn"
+      @handleRowClick="showCheckDetail"
     >
       <template slot="top">
         <div class="soa-list__search">
@@ -131,42 +131,32 @@
             <span>（{{ slotProps.item.banji }}）</span>
           </div>
           <div>{{ slotProps.item.bedInfo }}</div>
-          <div class="c-light">
-            结果： {{ slotProps.item.inspectionResultsInfo }}
-            <span class="c-ml10">{{ slotProps.item.checkTime }}</span>
-          </div>
+          <div class="text-nowrap">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
+          <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>
         <div
           v-if="active==='DORM'"
           class="soa-list-item-content">
           <div>{{ slotProps.item.dormInfo }}</div>
-          <div class="c-light">
-            结果： {{ slotProps.item.inspectionResultsInfo }}
-            <span class="c-ml10">{{ slotProps.item.checkTime }}</span>
-          </div>
+          <div class="text-nowrap">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
+          <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>
-        <div>
-          {{ slotProps.item.score }}
-        </div>
+        <div>{{ slotProps.item.score }}</div>
       </template>
     </list-layout>
-    <!--宿舍检查修改弹框-->
+    <!--检查修改弹框-->
     <van-popup
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
       position="bottom">
       <check-common
-        :type="'dorm'"
-        :data="currentDrom" />
-    </van-popup>
-    <!--床位检查修改弹框-->
-    <van-popup
-      v-model="showCheckBedPopup"
-      :style="{ height: '100%' }"
-      closeable
-      position="bottom">
-      <check-common :data="currentBed" />
+        :type="active"
+        :data="currentCheck"
+        :id="currentCheckId"
+        :is-detail="isCheckDetail"
+        @close="closeCheckPopop"
+      />
     </van-popup>
   </div>
 </template>
@@ -176,7 +166,8 @@ import baseList from '../mixins/base-list'
 import listLayout from '@/components/listLayout'
 import DatePicker from 'vue2-datepicker'
 import checkCommon from '../components/check-common'
-// import dayjs from 'dayjs';
+import baseCheckList from '../mixins/base-check-list'
+import dayjs from 'dayjs';
 export default {
   name: 'DormCheckList',
   components: {
@@ -184,7 +175,7 @@ export default {
     DatePicker,
     checkCommon
   },
-  mixins: [baseList],
+  mixins: [baseList, baseCheckList],
   data() {
     return {
       active: 'BED',
@@ -198,19 +189,14 @@ export default {
         college: null,
         sClass: null
       },
-      moreOpList: [
-        { value: 'edit', label: '编辑' },
-        { value: 'del', label: '删除' }
-      ],
-      showCheckPopup: false,
-      showCheckBedPopup: false,
-      currentDrom: null, // 选中编辑的宿舍检查项
-      currentBed: null // 选中床位编辑检查
+      pageSize: 20
     }
   },
   methods: {
+    againResultList() {
+      this.onSearch()
+    },
     onSearch() {
-      console.log(this.active)
       this.pageIndex = 0
       this.pageTotal = 9999
       this.dataList = []
@@ -221,38 +207,16 @@ export default {
       this.$api.getResultList({ ...this.searchParams, type: this.active }).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        const rows = data.rows
+        const rows = data.rows.map(row => {
+          row.checkTime = dayjs(row.checkTime).format('YYYY年MM月DD日 HH:mm')
+          return row
+        })
         this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
       })
-    },
-    // 点击更多操作按钮了
-    clickMoreBtn(val, item) {
-      if (this.active === 'BED') {
-        // 床位操作项
-        switch (val) {
-          case 'edit': {
-            this.currentBed = item
-            this.showCheckBedPopup = true
-            break
-          }
-          default:
-            break
-        }
-      } else {
-        switch (val) {
-          case 'edit':
-            this.currentDrom = item
-            this.showCheckPopup = true
-            break
-          default:
-            break
-        }
-      }
-      this.showMore = false
     },
     // 导出数据
     expontData() {

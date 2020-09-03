@@ -25,10 +25,12 @@
               v-for="(item,index) in checkList"
               :key="index"
               class="check-item soa-box-item">
-              <div class="flex-between">
+              <div
+                class="flex-between"
+                @click="showCheckDetail(item)">
                 <div>
                   <div class="time">{{ item.checkTime }}</div>
-                  <div class="c-info">结果：{{ item.inspectionResultsInfo }}</div>
+                  <div class="c-info text-nowrap">结果：{{ item.inspectionResultsInfo }}</div>
                 </div>
                 <div>{{ item.score }}</div>
               </div>
@@ -62,11 +64,15 @@
       v-model="showCheckPopup"
       :style="{ height: '100%' }"
       closeable
-      position="bottom">
+      position="bottom"
+    >
       <bed-check
         :data="data"
-        :user-id="id"
+        :dorm-id="data.dormId"
+        :user-id="data.userId"
+        :bed-id="data.id"
         :id="currentCheckId"
+        :is-detail="isCheckDetail"
         type="BED"
         @close="closeCheckPopop"
       />
@@ -79,13 +85,14 @@ import customPanel from '@/components/customPanel'
 import bedCheck from '../components/check-common'
 import { statusList } from '../utils/dorm-enum'
 import { getQuery } from '@/utils'
-import { Dialog, Toast } from 'vant'
+import baseCheckList from '../mixins/base-check-list'
 export default {
   name: 'BedDetail',
   components: {
     bedCheck,
     customPanel
   },
+  mixins: [baseCheckList],
   // props: {
   //   id: {
   //     type: String,
@@ -130,18 +137,8 @@ export default {
             { prop: 'telephone', class: 'c-info' }]
         }
       ],
-      showCheckMoreIndex: -1, // 显示更多的行index
-      showCheckPopup: false,
-      moreOpCheckList: [
-        { value: 'edit', label: '编辑' },
-        { value: 'del', label: '删除' }
-      ],
-      checkLoading: false,
-      checkFinished: false,
-      pageNum: 0,
-      pageSize: 5,
-      checkList: [],
-      currentCheckId: null // 检查对象id
+      apiMethod: 'getResultListByUserId',
+      checkParams: { userId: null }
     }
   },
   created() {
@@ -152,8 +149,10 @@ export default {
     // 获取详情
     getDetail() {
       this.$api.getBedDetail(this.id).then(data => {
-        const statusObj = statusList.find(status => status.value === data.status)
-        data.users.statusName = statusObj ? statusObj.text : data.status
+        if (data.users) {
+          const statusObj = statusList.find(status => status.value === data.status)
+          data.users.statusName = statusObj ? statusObj.text : data.status
+        }
         this.data = {
           ...data,
           dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
@@ -164,73 +163,11 @@ export default {
         }
         console.log(1111111, this.data)
         if (this.data.users) {
+          this.checkParams.userId = this.data.userId
           this.againResultList()
         }
         this.loading = false
       })
-    },
-    // 检查项新增修改，删除时重新刷
-    againResultList() {
-      this.checkList = []
-      this.pageNum = 0
-      this.checkLoading = true
-      this.getResultList()
-    },
-    // 获取用户检查列表
-    getResultList() {
-      if (this.checkLoading) {
-        this.showMoreIndex = -1
-        this.showCheckMoreIndex = -1
-        this.pageNum++
-        this.$api.getResultListByUserId({ userId: this.data.userId, pageNum: this.pageNum, pageSize: this.pageSize }).then(data => {
-          this.checkList = this.checkList.concat(data.rows)
-          // 加载状态结束
-          this.checkLoading = false
-          // 数据全部加载完成
-          if (this.checkList.length >= data.total) {
-            this.checkFinished = true
-          }
-        })
-      }
-    },
-    // 检查项更多操作
-    bindCheckMoreClick(index) {
-      this.showMoreIndex = -1
-      this.showCheckMoreIndex = this.showCheckMoreIndex === index ? -1 : index
-    },
-    // 检查项点击更多操作按钮了
-    clickCheckMoreBtn(val, item) {
-      switch (val) {
-        case 'edit':
-          this.currentCheckId = item.id
-          this.showCheckPopup = true
-          break
-        case 'del':
-          Dialog.confirm({
-            title: `确认删除？`,
-            message: `确定删除该检查项，删除的数据无法恢复`
-          }).then(() => {
-            this.$api.deleteResult(item.id).then(res => {
-              Toast(`删除成功！`);
-              this.againResultList()
-            }).catch(error => {
-              Toast(`删除失败！` + error);
-            })
-          })
-
-          break
-      }
-      this.showMoreIndex = -1
-    },
-    // 新增宿舍检查
-    clickCheckBtn() {
-      this.currentCheckId = null
-      this.showCheckPopup = true
-    },
-    // 关闭检查项的弹框
-    closeCheckPopop(flag) {
-      flag && this.againResultList()
-      this.showCheckPopup = false
     }
   }
 }

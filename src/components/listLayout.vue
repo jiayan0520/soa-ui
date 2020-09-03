@@ -277,6 +277,7 @@ export default {
               position: relative;
               .soa-list-item-content {
                 flex: 1;
+                overflow: hidden;
                 // .item-row {
                 //   display: flex;
                 //   justify-content: space-between;

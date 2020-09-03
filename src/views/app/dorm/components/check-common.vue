@@ -1,5 +1,7 @@
 <template>
-  <div class="check-common">
+  <div
+    v-if="!loading"
+    class="check-common">
     <van-form
       class="soa-custom-form"
       @submit="onSubmit">
@@ -11,7 +13,9 @@
         center
         label="检查结果">
         <template #input>
-          <van-checkbox-group v-model="formData.checkResultList">
+          <van-checkbox-group
+            :disabled="isDetail"
+            v-model="formData.checkResultList">
             <van-checkbox
               v-for="(item,index) in checkItemList"
               :key="index"
@@ -28,6 +32,7 @@
           <custom-uploader
             v-model="formData.annexId"
             :max-count="5"
+            :read-only="isDetail"
             :annex-list="formData.annexList"
             type="dorm"
           />
@@ -35,6 +40,7 @@
       </van-field>
       <van-field
         v-model="formData.remark"
+        :disabled="isDetail"
         maxlength="200"
         show-word-limit
         type="textarea"
@@ -61,7 +67,9 @@
         </template>
       </van-field>
       <van-divider />
-      <div class="soa-btn-box">
+      <div
+        v-if="!isDetail"
+        class="soa-btn-box">
         <van-button
           type="info"
           native-type="submit">保存</van-button>
@@ -84,6 +92,11 @@ export default {
     customUploader
   },
   props: {
+    // 是否是详情，只查看
+    isDetail: {
+      type: Boolean,
+      default: false
+    },
     id: {
       type: String,
       default: null
@@ -93,6 +106,10 @@ export default {
       default: null
     },
     bedId: {
+      type: String,
+      default: null
+    },
+    userId: {
       type: String,
       default: null
     },
@@ -115,11 +132,12 @@ export default {
   data() {
     return {
       isAdd: true,
+      loading: true,
       formData: {
         dormId: this.dormId,
         bedId: this.bedId,
+        userId: this.userId,
         inspectionType: this.type,
-        checkUserId: this.$store.getters['core/user'].userId,
         checkResultList: [], // 检查结果
         annexId: null, // 附件
         annexList: [],
@@ -151,6 +169,8 @@ export default {
     if (this.id) {
       this.isAdd = false
       this.getDetail()
+    } else {
+      this.loading = false
     }
     this.getDimension()
   },
@@ -169,16 +189,15 @@ export default {
     // 获取详情
     getDetail() {
       this.$api.getResultDetail(this.id).then(data => {
-        data.checkResultIds = data.checkResult
         data.checkResultList = data.checkResultIds.split(',')
-        data.checkTime = dayjs(data.checkTime + ' 00:00:00').format('YYYY-MM-DD HH:mm')
+        data.checkTime = dayjs(data.checkTime).format('YYYY-MM-DD HH:mm')
         console.log(22222222, data)
         this.formData = data
+        this.loading = false
       })
     },
     onSubmit() {
       this.formData.checkResultIds = this.formData.checkResultList.join(',')
-      this.formData.checkResult = this.formData.checkResultList.join(',')
       if (this.formData.checkTime.length === 16) {
         this.formData.checkTime += ':00'
       }

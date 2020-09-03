@@ -82,10 +82,12 @@
             v-for="(item,index) in checkList"
             :key="index"
             class="check-item soa-box-item">
-            <div class="flex-between">
+            <div
+              class="flex-between"
+              @click="showCheckDetail(item)">
               <div>
                 <div class="time">{{ item.checkTime }}</div>
-                <div class="c-info">结果：{{ item.inspectionResultsInfo }}</div>
+                <div class="c-info text-nowrap">结果：{{ item.inspectionResultsInfo }}</div>
               </div>
               <div>{{ item.score }}</div>
             </div>
@@ -125,6 +127,7 @@
         :data="data"
         :dorm-id="id"
         :id="currentCheckId"
+        :is-detail="isCheckDetail"
         type="DORM"
         @close="closeCheckPopop"
       />
@@ -136,16 +139,16 @@
 import customPanel from '@/components/customPanel'
 import dormCheck from '../components/check-common'
 import { dormTypeEnum, statusList } from '../utils/dorm-enum'
-import { Dialog, Toast } from 'vant'
 import { getQuery } from '@/utils'
 import bedMoreOp from '../mixins/bed-more-op'
+import baseCheckList from '../mixins/base-check-list'
 export default {
   name: 'DormDetail',
   components: {
     customPanel,
     dormCheck
   },
-  mixins: [bedMoreOp],
+  mixins: [bedMoreOp, baseCheckList],
   // props: {
   //   id: {
   //     type: String,
@@ -180,27 +183,13 @@ export default {
         { prop: 'dormType', label: '宿舍类型' },
         { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
       ],
-      showCheckMoreIndex: -1, // 显示更多的行index
-      showCheckPopup: false,
-      moreOpCheckList: [
-        { value: 'edit', label: '编辑' },
-        { value: 'del', label: '删除' }
-      ],
-      checkLoading: false,
-      checkFinished: false,
-      pageNum: 0,
-      pageSize: 5,
-      checkList: [],
-      currentCheckId: null // 检查对象id
-    }
-  },
-  computed: {
-    system() {
-      return this.$store.getters['core/system']
+      apiMethod: 'getResultListByDormId',
+      checkParams: { dormId: null }
     }
   },
   created() {
     this.id = getQuery('id')
+    this.checkParams.dormId = this.id
     this.getDetail()
     this.againResultList()
   },
@@ -230,70 +219,6 @@ export default {
         }
         this.loading = false
       })
-    },
-    // 检查项新增修改，删除时重新刷
-    againResultList() {
-      this.checkList = []
-      this.pageNum = 0
-      this.checkLoading = true
-      this.getResultList()
-    },
-    // 获取宿舍检查列表
-    getResultList() {
-      if (this.checkLoading) {
-        this.showMoreIndex = -1
-        this.showCheckMoreIndex = -1
-        this.pageNum++
-        this.$api.getResultListByDormId({ dormId: this.id, pageNum: this.pageNum, pageSize: this.pageSize }).then(data => {
-          console.log(data.rows)
-          this.checkList = this.checkList.concat(data.rows)
-          // 加载状态结束
-          this.checkLoading = false
-          // 数据全部加载完成
-          if (this.checkList.length >= data.total) {
-            this.checkFinished = true
-          }
-        })
-      }
-    },
-    // 检查项更多操作
-    bindCheckMoreClick(index) {
-      this.showMoreIndex = -1
-      this.showCheckMoreIndex = this.showCheckMoreIndex === index ? -1 : index
-    },
-    // 检查项点击更多操作按钮了
-    clickCheckMoreBtn(val, item) {
-      switch (val) {
-        case 'edit':
-          this.currentCheckId = item.id
-          this.showCheckPopup = true
-          break
-        case 'del':
-          Dialog.confirm({
-            title: `确认删除？`,
-            message: `确定删除该检查项，删除的数据无法恢复`
-          }).then(() => {
-            this.$api.deleteResult(item.id).then(res => {
-              Toast(`删除成功！`);
-              this.againResultList()
-            }).catch(error => {
-              Toast(`删除失败！` + error);
-            })
-          })
-
-          break
-      }
-      this.showMoreIndex = -1
-    },
-    // 新增宿舍检查
-    clickCheckBtn() {
-      this.currentCheckId = null
-      this.showCheckPopup = true
-    },
-    // 关闭检查项的弹框
-    closeCheckPopop(flag) {
-      flag && this.againResultList()
-      this.showCheckPopup = false
     }
   }
 }

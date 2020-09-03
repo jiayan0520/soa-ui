@@ -97,6 +97,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    overflow: hidden;
+    > div:first-child {
+        flex: 1;
+        overflow: hidden;
+    }
+}
+// 不换行，...
+.text-nowrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
 }
 a {
     margin-right: 10px;
@@ -221,7 +233,7 @@ a {
         }
     }
     &.soa-collapse-overflow {
-        .van-collapse-item__content{
+        .van-collapse-item__content {
             box-sizing: border-box;
             overflow: auto;
             height: 260px;
