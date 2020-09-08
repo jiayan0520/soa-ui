@@ -14,6 +14,9 @@ function getTaskList(params) {
 function getTaskDetail(params) {
   return get(`${prefix}/task/${params}`)
 }
+function getTaskEdit(params) {
+  return get(`${prefix}/task/getTaskEdit/${params}`)
+}
 // 删除任务
 function deleteTask(id) {
   return get(`${prefix}/task/deleteTask/${id}`)
@@ -48,6 +51,7 @@ export {
   addTask,
   getTaskList,
   getTaskDetail,
+  getTaskEdit,
   deleteTask,
   getTaskStatisticsList,
   getTaskExamineList,

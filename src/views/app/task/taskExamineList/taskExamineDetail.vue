@@ -180,7 +180,7 @@ export default {
           })
           this.getData(this.$route.query.id)
         } else {
-          this.$router.replace('/task-examine-list');
+          this.$router.replace('./task/examine');
         }
         done()
         this.show = false

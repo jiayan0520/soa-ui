@@ -1,15 +1,8 @@
 <template>
-  <van-popup
-    v-model="showModal"
-    :style="{ height: '100%' }"
-    closeable
-    position="bottom"
-    @close="closeModal">
-    <div class="soa-task-child__title">添加子任务</div>
+  <div class="soa-task-edit">
     <van-form
-      label-width="110px"
-      class="soa-custom-form"
-      @submit="onSubmit1">
+      label-width="120px"
+      class="soa-custom-form">
       <van-field
         v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
@@ -58,8 +51,7 @@
             value-type="format"
             format="YYYY-MM-DD HH:mm"
             placeholder="请选择时间"
-            append-to-body
-            @change="bindChildDeadlineChange"/>
+            append-to-body/>
         </template>
       </van-field>
       <custom-sheet
@@ -74,6 +66,11 @@
         v-model="form.difficulty"
         :actions="weightActions"
         label="任务权重"/>
+      <user-picker
+        v-model="form.reader"
+        :disabled-users="[userId]"
+        :user-only="true"
+        title="可公开查阅人"/>
       <van-field
         :readonly="true"
         label="附件"
@@ -86,47 +83,36 @@
             accept="*"/>
         </template>
       </van-field>
-      <div class="soa-task-add__submit">
-        <van-button
-          block
-          type="info"
-          native-type="submit">
-          提交
-        </van-button>
-      </div>
+      <van-divider />
+      <childTaskList
+        :list="form.subTasks"
+        :deadline="form.deadline"/>
+      <van-button
+        block
+        class="soa-task-edit__submit"
+        type="info"
+        @click="onSubmit">
+        提交
+      </van-button>
     </van-form>
-  </van-popup>
+  </div>
 </template>
 
 <script>
 import DatePicker from 'vue2-datepicker'
 import userPicker from '@/components/userPicker'
 import customSheet from '@/components/customSheet'
-import { Notify } from 'vant'
-import { criticalActions, infoActions, weightActions } from './taskEnum'
-import dayjs from 'dayjs'
+import childTaskList from '../components/childTaskList'
+import dayjs from 'dayjs';
+import { Toast } from 'vant';
+import { criticalActions, infoActions, weightActions } from '../components/taskEnum'
 export default {
-  name: 'TaskChild',
+  name: 'EditTask',
   components: {
     DatePicker,
     userPicker,
-    customSheet
-  },
-  props: {
-    show: {
-      type: Boolean(),
-      defalut: false,
-      required: true
-    },
-    deadline: {
-      type: String,
-      default: null,
-      required: true
-    },
-    params: {
-      type: Object,
-      default: null
-    }
+    customSheet,
+    childTaskList
   },
   data() {
     return {
@@ -140,14 +126,17 @@ export default {
         dueReminder: 'NOT_NOTICE',
         emergencyCoefficient: 'GENERAL',
         difficulty: 'DICFFICULTY1',
-        files: [] // 附件
+        reader: [], // 可查阅人
+        files: [], // 附件
+        subTasks: [],
+        state: 'NUFINISHED'
       },
-      minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
       showModal: false,
+      minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
       criticalActions,
       infoActions,
       weightActions,
-      fileList: []
+      editObj: null
     }
   },
   computed: {
@@ -155,37 +144,26 @@ export default {
       return this.$store.getters['core/user'].userId
     }
   },
-  watch: {
-    show(val) {
-      this.showModal = val
-      this.form = this.params;
-    }
+  mounted() {
+    this.id = this.$route.query.id;
+    this.getData(this.$route.query.id)
   },
   methods: {
-    // 子任务事件
-    onSubmit1() {
-      console.log('this.deadline', this.deadline)
-      if (this.deadline && this.form.deadline > this.deadline) {
-        this.form.deadline = ''
-        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
-      } else {
-        // 虚拟数据
-        this.form.total = this.form.executor.length;
-        this.form.done = this.form.done || 0;
-        this.$emit('input', this.form);
-      }
+    getData(id) {
+      this.$api.getTaskEdit(id).then((res) => {
+        console.log(res);
+        this.form = res
+      })
     },
-    // 子任务截止时间不能超过主任务的截止时间
-    bindChildDeadlineChange(e) {
-      if (e > this.deadline) {
-        this.form.deadline = ''
-        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
-      }
-    },
-    // 关闭弹出框
-    closeModal() {
-      this.showModal = false;
-      this.$emit('closeModal', true)
+    onSubmit() {
+      Toast.loading({ message: '任务编辑中，请稍后...', duration: 0 })
+      this.form.createUserId = this.userId
+      this.form.opType = 1
+      this.$api.addTask({ ...this.form }).then((res) => {
+        Toast.clear()
+        Toast('任务修改成功')
+        this.$router.push('/task');
+      })
     }
   }
 }
@@ -193,12 +171,10 @@ export default {
 
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
-@include b(task-child){
-   @include e(title){
-        margin:15px 0;
-        text-align: center;
-        font-size: 20px;
-   }
+@import '@/assets/style/var.scss';
+@include b(task-edit){
+  @include e(submit){
+    margin: 16px 0 55px
+  }
 }
-.mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
 </style>

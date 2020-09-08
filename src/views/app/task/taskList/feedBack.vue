@@ -97,7 +97,7 @@ export default {
       }).catch((err) => {
         Toast.clear()
         Toast.fail(err)
-        this.$router.push('/task-list');
+        this.$router.push('/task');
       })
     },
     async handleData() {
@@ -119,7 +119,7 @@ export default {
       this.handleData().then(() => {
         this.$api.saveTaskFeedbackInfo(this.form).then(() => {
           Toast.clear()
-          this.$router.push('/task-list');
+          this.$router.push('/task');
         }).catch(() => {
           Toast.clear()
         })

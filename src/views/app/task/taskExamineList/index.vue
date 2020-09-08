@@ -3,7 +3,7 @@
     ref="listLayout"
     :data-list="dataList"
     :more-op-list="moreOpList"
-    detail-url="/task-examine-detail"
+    detail-url="/task/examine/detail"
     class="soa-task-examine-list"
     @search="onSearch"
     @loadData="onLoad">

@@ -106,7 +106,7 @@ import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
 import { Toast } from 'vant';
 import { uuid32, uploadFile } from '@/utils/index.js'
-import { criticalActions, infoActions, weightActions } from './enum'
+import { criticalActions, infoActions, weightActions } from '../components/taskEnum'
 export default {
   name: 'AddTask',
   components: {
@@ -163,7 +163,7 @@ export default {
       this.$api.addTask({ ...this.form }).then((res) => {
         Toast.clear()
         Toast('任务创建成功')
-        this.$router.push('/task-list');
+        this.$router.push('/task');
       })
     },
     // 上传父任务附件
