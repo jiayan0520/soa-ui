@@ -10,8 +10,11 @@
         :field-list="fieldList2" />
       <van-field
         :readonly="true"
+        :rules="formDataRules.checkResultList"
+        :required="true"
         center
-        label="检查结果">
+        label="检查结果"
+      >
         <template #input>
           <van-checkbox-group
             :disabled="isDetail"
@@ -144,6 +147,11 @@ export default {
         remark: null,
         checkTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm')
       },
+      formDataRules: {
+        checkResultList: [
+          { required: true, message: '请选择检查结果' }
+        ]
+      },
       checkItemList: [],
       minDate: ''
     }
@@ -189,7 +197,7 @@ export default {
     // 获取详情
     getDetail() {
       this.$api.getResultDetail(this.id).then(data => {
-        data.checkResultList = data.checkResultIds.split(',')
+        data.checkResultList = data.checkResultIds ? data.checkResultIds.split(',') : []
         data.checkTime = dayjs(data.checkTime).format('YYYY-MM-DD HH:mm')
         console.log(22222222, data)
         this.formData = data

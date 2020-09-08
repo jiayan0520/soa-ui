@@ -8,7 +8,6 @@
       :title="isShowBar ? '':'宿舍楼列表'"
       :detail-url="detailUrl"
       op-label="管理"
-      class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @changeRowCheckbox="changeRowCheckbox"
@@ -18,7 +17,7 @@
       <template slot="top">
         <div
           v-if="isShowBar"
-          class="tool-bar">
+          class="tool-bar more-tool-bar">
           <van-button
             class="btn-op"
             type="info"

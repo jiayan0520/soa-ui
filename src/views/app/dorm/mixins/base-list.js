@@ -156,6 +156,11 @@ export default {
           })
         })
       }
+    },
+    // 新增
+    add() {
+      this.rowId = null
+      this.isShowEditPopup = true
     }
     // 新增
     // add() {

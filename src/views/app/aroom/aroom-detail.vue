@@ -14,116 +14,65 @@
       :style="{ height: '100%' }"
       closeable
       position="bottom">
-      <div class="aroom-apply">
-        <van-form @submit="onSearch">
-          <van-field
-            center
-            label="申请时间起">
-            <template #input>
-              <date-picker
-                v-model="applyForm.startTime"
-                :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
-                :editable="false"
-                :not-before="minDate"
-                :clearable="false"
-                type="datetime"
-                value-type="format"
-                format="YYYY-MM-DD HH:mm"
-                placeholder="请选择申请时间"
-                append-to-body
-              />
-            </template>
-          </van-field>
-          <van-field
-            center
-            label="申请时间结">
-            <template #input>
-              <date-picker
-                v-model="applyForm.endTime"
-                :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
-                :editable="false"
-                :not-before="minDate"
-                :clearable="false"
-                type="datetime"
-                value-type="format"
-                format="YYYY-MM-DD HH:mm"
-                placeholder="请选择检查时间"
-                append-to-body
-              />
-            </template>
-          </van-field>
-          <van-field
-            v-model="applyForm.reason"
-            name="申请原因"
-            label="申请原因"
-            type="textarea"
-            placeholder="申请原因"
-          />
-          <div class="soa-btn-box">
-            <van-button
-              type="default"
-              @click="showApplyPopup=false">取消</van-button>
-            <van-button
-              type="info"
-              native-type="submit">确定</van-button>
-          </div>
-        </van-form>
-      </div>
+      <aroom-apply
+        :activity-room-id="id"
+        @close="showApplyPopup=false"/>
     </van-popup>
   </div>
 </template>
 
 <script>
 import customPanel from '@/components/customPanel'
-import DatePicker from 'vue2-datepicker'
+import { getQuery } from '@/utils'
+import aroomApply from './aroom-apply'
 export default {
   name: 'AroomDetail',
   components: {
     customPanel,
-    DatePicker
+    aroomApply
   },
   data() {
     return {
-      data: {
-        aroomName: '福大生活1区1号楼-活动室',
-        managementList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        annexList: [
-          { url: 'https://img.yzcdn.cn/vant/leaf.jpg' },
-          // Uploader 根据文件后缀来判断是否为图片文件
-          // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-          { url: 'https://cloud-image', isImage: true }
-        ],
-        remark: '本宿舍属于福大生活区1区，里面入住的大部分是石化学院的学生。宿舍建于2008年，最近一次宿舍翻新是2019年。'
-      },
+      id: null,
+      data: {},
       fieldList: [
-        { prop: 'aroomName', label: '活动室名称' },
+        { prop: 'activityRoomName', label: '活动室名称' },
         {
-          prop: 'managementList',
-          label: '楼管',
+          prop: 'managers',
+          label: '管理员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         },
         {
           prop: 'annexList',
           label: '活动室照片',
           type: 'uploader'
         },
-        { prop: 'remark', label: '活动室简介' }
+        { prop: 'desc', label: '活动室简介' }
       ],
-      minDate: '',
-      showApplyPopup: false,
-      applyForm: {
-        startTime: null,
-        endTime: null,
-        reason: null
-      }
+      showApplyPopup: false
     }
   },
+  computed: {
+    tcBaseUrl() {
+      return this.$store.getters['core/system'].tcBaseUrl
+    }
+  },
+  created() {
+    this.id = getQuery('id')
+    this.getDetail()
+  },
   methods: {
-    onSearch() {
-
+    // 获取详情
+    getDetail() {
+      this.$api.getRoomDetail(this.id).then(data => {
+        data.annexList.forEach(item => {
+          item.url = this.tcBaseUrl + item.fileName
+        });
+        this.data = data
+      })
     }
   }
 }

@@ -172,7 +172,7 @@ export default {
     // 保存
     onSubmit() {
       if (this.isAdd) {
-        Toast.loading('新楼栋中，请稍后...')
+        Toast.loading('新增楼栋中，请稍后...')
         this.$api.addBuilding(this.formData).then(data => {
           Toast.clear()
           Toast('新增楼栋成功')
@@ -224,7 +224,6 @@ export default {
     },
     // 选中管理员，维修人员
     sureChoiceUser(list) {
-      this.currentOutUserIds = null
       if (this.outUserType === 'DORM_MANAGER') {
         list.forEach(item => {
           if (this.formData.buildingManagers.findIndex(u => u.id === item.id) === -1) {
@@ -260,6 +259,10 @@ export default {
       this.formData.longitude = latlng.lng
       this.formData.address = address
       this.isShowAddressPopup = false
+    },
+    // 删除楼栋
+    del(obj, id) {
+      this.handleIdList(id, '删除', 'deleteBuilding')
     }
   }
 }

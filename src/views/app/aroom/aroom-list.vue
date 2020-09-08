@@ -1,14 +1,13 @@
 <template>
   <div class="aroom-list">
     <list-layout
-      ref="listLayoutFloor"
+      ref="listLayout"
       :more-op-list="moreOpList"
       :data-list="dataList"
       :is-show-bar="isShowBar"
       :title="isShowBar ? '':'活动室列表'"
       detail-url="/aroom/detail"
       op-label="管理"
-      class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="isShowBar = true"
@@ -17,7 +16,7 @@
       <template slot="top">
         <div
           v-if="isShowBar"
-          class="tool-bar">
+          class="tool-bar more-tool-bar">
           <van-button
             class="btn-op"
             type="info"
@@ -26,10 +25,12 @@
           </van-button>
           <van-button
             class="btn-op"
-            type="info">新增</van-button>
+            type="info"
+            @click="add">新增</van-button>
           <van-button
             class="btn-op"
-            type="info">删除</van-button>
+            type="info"
+            @click="del">删除</van-button>
           <van-button
             class="btn-op"
             type="info">导出二维码</van-button>
@@ -38,13 +39,11 @@
             type="warning"
             @click="isShowBar = false">取消管理</van-button>
         </div>
-        <form
-          action="/">
+        <form action="/">
           <van-search
-            v-model="searchValue"
+            v-model="searchForm.activityRoomName"
             placeholder="请输入活动室名称"
-            @search="onSearch"
-          />
+            @search="onSearch" />
         </form>
       </template>
       <template
@@ -53,10 +52,10 @@
         <div class="floor-item-content">
           <div class="flex-between">
             <img
-              class="soa-avatar"
-              src="../../../assets/images/timg.jpg" >
+              :src="slotProps.item.fileUrl"
+              class="soa-avatar" >
             <div class="soa-list-item-content">
-              <div>{{ slotProps.item.roomName }}</div>
+              <div>{{ slotProps.item.activityRoomName }}</div>
               <div class="c-light">
                 <span>{{ slotProps.item.headName }}</span>
                 <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
@@ -67,64 +66,40 @@
       </template>
     </list-layout>
     <van-popup
+      v-if="isShowEditPopup"
       v-model="isShowEditPopup"
       :style="{ height: '100%' }"
       closeable
+      class="soa-popup"
       position="bottom">
-      <aroom-edit/>
+      <aroom-edit
+        :id="rowId"
+        @close="closePopup"/>
     </van-popup>
   </div>
 </template>
 
 <script>
-import listLayout from '@/components/listLayout'
 import aroomEdit from './aroom-edit'
+import baseList from '../dorm/mixins/base-list'
 export default {
   name: 'AroomList',
   components: {
-    listLayout,
     aroomEdit
   },
+  mixins: [baseList],
   data() {
     return {
-      isShowBar: false, // 是否展示checkbox框
-      isShowSearch: false, // 是否展示搜索弹框
-      searchValue: '',
-      dataList: [],
-      pageIndex: 0, // 前端分页页码
-      pageSize: 10,
-      pageTotal: 9999, // 总页数
-      isCheckAll: false, // 列表选中全部
-      showMore: false, // 更多操作
+      searchForm: {
+        activityRoomName: null
+      },
       moreOpList: [
         { value: 'edit', label: '编辑' },
-        { value: 'ts', label: '清空宿舍' },
         { value: 'del', label: '删除' }
-      ],
-      isShowEditPopup: false, // 是否展示宿舍编辑弹框
-      rowId: null // 当前编辑的id
+      ]
     }
-  },
-  computed: {
-    params() {
-      return {
-        ...this.searchForm,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
-      }
-    }
-  },
-  created() {
-    this.loadData()
   },
   methods: {
-    // 复选框选择所有
-    changeCheckAll() {
-      this.isCheckAll = !this.isCheckAll
-      this.dataList.forEach((item, index) => {
-        item.isCheck = this.isCheckAll
-      });
-    },
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
@@ -133,51 +108,34 @@ export default {
           this.rowId = item.id
           this.isShowEditPopup = true
           break
-        case 'qc':
+        case 'del':
+          this.del(null, item.id)
           break
       }
       this.showMore = false
     },
-    onSearch() {
-      this.pgeIndex = 0
-      this.pageTotal = 9999
-      this.dataList = []
-      this.loadData()
-    },
     loadData() {
-      this.PageIndex++;
-      console.log(this.params)
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            isCheck: false,
-            isShowMore: false,
-            id: dataList.length + 1,
-            roomName: '福大生活区1号楼1层活动室',
-            headName: '李幸福',
-            telephone: '18233422111'
-          });
-        }
+      this.pageNum++;
+      this.$api.getRoomList(this.searchParams).then(data => {
+        const rows = data.rows
+        rows.forEach(item => {
+          if (item.annexList && item.annexList.length > 0) {
+            item.fileUrl = this.tcBaseUrl + item.annexList[0].fileName
+          }
+        });
         // 加载状态结束
-        this.$refs.listLayoutFloor.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        this.$refs.listLayout.loading = false
+        this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
-          this.$refs.listLayoutFloor.finished = true
+        if (this.dataList.length >= data.total) {
+          this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
+      })
+    },
+    // 删除活动室
+    del(obj, id) {
+      this.handleIdList(id, '删除', 'deleteRoom')
     }
   }
 }
 </script>
-
-<style lang="scss">
-.aroom-list {
-}
-</style>

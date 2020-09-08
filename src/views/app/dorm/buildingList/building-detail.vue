@@ -72,9 +72,6 @@ export default {
     }
   },
   computed: {
-    userId() {
-      return this.$store.getters['core/user'].userId
-    },
     tcBaseUrl() {
       return this.$store.getters['core/system'].tcBaseUrl
     }

@@ -309,21 +309,18 @@ a {
         }
     }
 }
-// 宿舍列表通用样式
-.dorm-list {
-    height: 100%;
-    @media only screen and (max-width: 414px) {
-        .tool-bar {
-            .btn-op {
-                padding: 0 10px;
-            }
+// 列表顶部操作按钮栏的
+@media only screen and (max-width: 414px) {
+    .tool-bar.more-tool-bar {
+        .btn-op {
+            padding: 0 10px;
         }
     }
-    @media only screen and (max-width: 375px) {
-        .tool-bar {
-            .btn-op {
-                padding: 0 6px;
-            }
+}
+@media only screen and (max-width: 375px) {
+    .tool-bar.more-tool-bar {
+        .btn-op {
+            padding: 0 6px;
         }
     }
 }

@@ -18,7 +18,7 @@
       <template slot="top">
         <div
           v-if="isShowBar"
-          class="tool-bar">
+          class="tool-bar more-tool-bar">
           <van-button
             class="btn-op"
             type="info"

@@ -5,7 +5,6 @@
       :data-list="dataList"
       :is-show-bar="true"
       op-label="管理"
-      class="dorm-list"
       @search="onSearch"
       @loadData="loadData"
       @handleRowClick="handleRowClick"
