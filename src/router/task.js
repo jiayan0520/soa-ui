@@ -1,26 +1,29 @@
 export default [
   {
-    path: '/task-add',
+    path: '/task/add',
     name: 'taskAdd',
     component: () => import('@/views/app/task/addTask/index')
   },
   {
-    path: '/task-add-executor',
-    name: 'taskAddExecutor',
-    component: () => import('@/views/app/task/addTask/executor')
-  },
-  {
-    path: '/task-list',
+    path: '/task',
     name: 'taskList',
-    component: () => import('@/views/app/task/taskList/index')
+    component: () => import('@/views/app/task/taskList/index'),
+    meta: {
+      keepAlive: true
+    }
   },
   {
-    path: '/task-list-feekback',
+    path: '/task/edit',
+    name: 'taskEdit',
+    component: () => import('@/views/app/task/taskList/edit')
+  },
+  {
+    path: '/task/feekback',
     name: 'taskFeekback',
     component: () => import('@/views/app/task/taskList/feedBack')
   },
   {
-    path: '/task-detail',
+    path: '/task/detail',
     name: 'taskMessage',
     component: () => import('@/views/app/task/taskList/detail')
   },
@@ -30,27 +33,27 @@ export default [
     component: () => import('@/views/app/task/taskList/detail')
   },
   {
-    path: '/task-single-detail',
+    path: '/task/single-detail',
     name: 'taskSingleDetail',
     component: () => import('@/views/app/task/taskList/singleDetail')
   },
   {
-    path: '/task-rank',
+    path: '/task/rank',
     name: 'taskRank',
     component: () => import('@/views/app/task/taskRank/index')
   },
   {
-    path: '/task-examine-list',
+    path: '/task/examine',
     name: 'taskExamineList',
     component: () => import('@/views/app/task/taskExamineList/index')
   },
   {
-    path: '/task-examine-detail',
+    path: '/task/examine/detail',
     name: 'taskExamineDetail',
     component: () => import('@/views/app/task/taskExamineList/taskExamineDetail')
   },
   {
-    path: '/task-import',
+    path: '/task/import',
     name: 'taskImport',
     component: () => import('@/views/app/task/taskImport/index')
   }

@@ -123,13 +123,13 @@ export default {
     },
     handleExamine() {
       this.$router.push({
-        path: '/task-examine-detail',
+        path: '/task/examine/detail',
         query: { id: this.id }
       })
     },
     //* *** 查看单个执行人详情***//
     bindDetail() {
-      this.$router.push('/task-single-detail')
+      this.$router.push('/task/single-detail')
     },
     handleExecutorClick() {
       console.log('handleExecutorClick')

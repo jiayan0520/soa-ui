@@ -55,13 +55,6 @@
         </div>
       </template>
     </list-layout>
-    <van-popup
-      v-model="isShowEditPopup"
-      :style="{ height: '100%' }"
-      closeable
-      position="bottom">
-      <add-task/>
-    </van-popup>
   </div>
 
 </template>
@@ -84,7 +77,6 @@ export default {
       taskStatus,
       active: 0,
       active1: 0,
-      isShowEditPopup: false,
       content: '',
       dataList: [],
       tab: ['我发布的', '我收到的'],
@@ -95,7 +87,7 @@ export default {
   },
   computed: {
     detailUrl() {
-      return '/task-detail'
+      return '/task/detail'
     },
     infoStyle() {
       return { width: ((document.body.clientWidth > 1024 ? 1024 : document.body.clientWidth) * 0.7) + 'px' }
@@ -141,7 +133,6 @@ export default {
         1: 'FINISHED',
         2: ''
       }
-      console.log('this.$refs', this.$refs.listLayout.loading)
       const parms = {
         type: this.active + 1,
         content: this.content,
@@ -170,8 +161,10 @@ export default {
       switch (value) {
         // 编辑
         case 'edit':
-          this.rowId = item.id
-          this.isShowEditPopup = true
+          this.$router.push({
+            path: '/task/edit',
+            query: { id: item.id }
+          })
           break
         case 'delete':
           this.$dialog.confirm({
@@ -188,7 +181,7 @@ export default {
           break
         case 'submit':
           this.$router.push({
-            path: '/task-list-feekback',
+            path: '/task/feekback',
             query: { id: item.id }
           })
           break
