@@ -7,7 +7,7 @@ export default {
     return {
       isDetail: true,
       moreOpList: [
-        { value: 'exp', label: '导出二维码' },
+        { value: 'qc', label: '导出二维码' },
         { value: 'set', label: '设为舍长' },
         { value: 'out', label: '退舍' },
         { value: 'remind', label: '提醒' },
@@ -35,6 +35,18 @@ export default {
     // 人员点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
+        // 导出二维码
+        case 'qc':
+          this.$api.getBedQRCodeImgs({ ids: item.id, isCheckAll: false }).then(res => {
+            console.log(res)
+            res = this.system.tcBaseUrl + '/profile/bedQrCode/zip/1599740350883.zip'
+            window.open(res)
+            Toast(`导出成功`);
+            this.onSearch()
+          }).catch(error => {
+            Toast(`导出失败！` + error);
+          })
+          break
         case 'set':
           // 设置舍长
           this.$api.setDromManager({ dormId: item.dormId, userId: item.userId }).then(res => {

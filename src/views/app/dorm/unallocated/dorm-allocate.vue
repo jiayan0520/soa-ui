@@ -9,114 +9,82 @@
     >
       <template slot="top">
         <form
-          v-if="isShowSearch"
           action="/">
           <van-search
-            v-model="searchForm.searchValue"
-            show-action
+            v-model="searchForm.searchData"
             placeholder="宿舍号/宿舍楼"
             @search="onSearch"
-            @cancel="isShowSearch=false"
           />
         </form>
       </template>
       <template
         slot="item-content"
         slot-scope="slotProps">
-        <img
-          class="soa-avatar"
-          src="../../../../assets/images/timg.jpg" >
         <div class="soa-list-item-content">
-          <div class="c-light">{{ slotProps.item.dormInfo }}</div>
-          <div class="flex-between">
-            <span>学生宿舍</span>
+          <div>
+            {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}-{{ slotProps.item.bedName }}床
+          </div>
+          <div class="flex-between c-light">
+            {{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}
           </div>
         </div>
         <van-button
           class="soa-list-right-btn"
           type="info"
-          @click="confirm">分配</van-button>
+          @click="confirm(slotProps.item.id)">分配</van-button>
       </template>
     </list-layout>
   </div>
 </template>
 
 <script>
-import listLayout from '@/components/listLayout'
+import baseList from '../mixins/base-list'
+import { dormTypeEnum } from '../utils/dorm-enum'
+import { getQuery } from '@/utils'
+import { Toast } from 'vant'
 export default {
   name: 'DormAllocate',
-  components: {
-    listLayout
-  },
+  mixins: [baseList],
   data() {
     return {
-      isShowSearch: false, // 是否展示搜索弹框
+      userId: null,
+      dormTypeEnum,
       searchForm: {
-        status: null,
-        isHead: 1,
-        isDivide: null,
-        dormType: null,
-        searchValue: ''
-      },
-      dataList: [],
-      pageIndex: 0, // 前端分页页码
-      pageSize: 10,
-      pageTotal: 9999 // 总页数
-    }
-  },
-  computed: {
-    params() {
-      return {
-        ...this.searchForm,
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize
+        status: 'ALL',
+        isDormManager: null,
+        isAlloted: false,
+        dormType: 'ALL',
+        searchData: ''
       }
     }
   },
   created() {
+    this.userId = getQuery('userId')
   },
   methods: {
-    onSearch() {
-      this.pageIndex = 0
-      this.pageTotal = 9999
-      this.dataList = []
-      this.loadData()
-    },
     loadData() {
-      this.pageIndex++;
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            id: this.dataList.length + 1,
-            userName: '张三峰',
-            telephone: '18233422111',
-            banji: '石油化工学院-2019级化工一班',
-            dormInfo: '福大生活一区103栋108宿舍-A床'
-          });
-        }
+      this.pageNum++;
+      this.$api.getBedList(this.searchParams).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        this.dataList = this.dataList.concat(data.rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
+      })
     },
     // 确定分配
-    confirm() {
+    confirm(bedId) {
       this.$dialog.confirm({
         title: '提示',
         message: '确定分配？'
       }).then(() => {
-        this.$router.push({
-          path: '/dorm/unallocated'
+        this.$api.allotBed({ bedId: bedId, userId: this.userId }).then(res => {
+          Toast(`分配成功！`);
+          this.$router.push({
+            path: '/dorm/unallocated'
+          })
         })
       });
     }

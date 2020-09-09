@@ -56,9 +56,6 @@
       />
       <div class="soa-btn-box">
         <van-button
-          type="default"
-          @click="close">取消</van-button>
-        <van-button
           type="info"
           native-type="submit">确定</van-button>
       </div>
@@ -121,7 +118,7 @@ export default {
         Toast('申请活动室成功')
         this.$emit('close', true)
       }).catch(err => {
-        Toast('申请活动室失败' + err)
+        Toast('申请活动室失败,' + err)
       })
     },
     close() {

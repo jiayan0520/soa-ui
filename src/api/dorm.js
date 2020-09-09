@@ -142,3 +142,12 @@ export function deleteResult(params) {
 export function getExchangeList(params) {
   return post(`${prefix}/dromExchangeApplication/list`, params)
 }
+
+// 未分配人员列表
+export function getUnAllottedList(params) {
+  return post(`${prefix}/unAllotted/list`, params)
+}
+// 导出床位二维码
+export function getBedQRCodeImgs(params) {
+  return get(`${prefix}/qrScan/getBedQRCodeImgs`, params)
+}

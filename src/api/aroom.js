@@ -27,8 +27,16 @@ export function deleteRoom(params) {
 export function applyRoom(params) {
   return post(`${prefix}/activityRoomApplication`, params)
 }
-
+// 获取活动室申请详情
+export function getApplyRoomDetail(params) {
+  return get(`${prefix}/activityRoomApplication/${params}`)
+}
 // 活动室申请列表
 export function getApplyRoomList(params) {
   return post(`${prefix}/activityRoomApplication/list`, params)
 }
+// 活动室申请审核
+export function reviewRoom(params) {
+  return put(`${prefix}/activityRoomApplication/review`, params)
+}
+

@@ -27,18 +27,15 @@
           <span>（{{ slotProps.item.banji }}）</span>
         </div>
         <div>{{ slotProps.item.aroomName }}</div>
-        <div class="c-light">{{ slotProps.item.applyTm }} 申请</div>
+        <div class="c-light">{{ slotProps.item.createTime }} 申请</div>
       </div>
-      <van-button
-        v-if="active!==1"
-        class="soa-list-right-btn"
-        type="info">审核</van-button>
     </template>
   </list-layout>
 </template>
 
 <script>
 import baseList from '../../dorm/mixins/base-list'
+import dayjs from 'dayjs'
 export default {
   name: 'AroomAuditList',
   mixins: [baseList],
@@ -66,7 +63,10 @@ export default {
     loadData() {
       this.pageNum++;
       this.$api.getApplyRoomList(this.searchParams).then(data => {
-        const rows = data.rows
+        const rows = data.rows.map(row => {
+          row.createTime = dayjs(row.createTime).format('YYYY年MM月DD日 HH:mm')
+          return row
+        })
         // 加载状态结束
         this.$refs.listLayout.loading = false
         this.dataList = this.dataList.concat(rows)

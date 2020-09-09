@@ -4,27 +4,32 @@
       ref="listLayout"
       :data-list="dataList"
       :title="'未分配人员'"
-      detail-url="/dorm/allocate"
       @search="onSearch"
       @loadData="loadData"
     >
-      <template slot="top" >
+      <template slot="top">
         <van-search
-          v-model="searchValue"
+          v-model="searchForm.searchValue"
           placeholder="姓名/学院名称/专业班级"
-          @search="onSearch"
-        />
+          @search="onSearch" />
       </template>
       <template
         slot="item-content"
         slot-scope="slotProps">
-        <img
-          class="soa-avatar"
-          src="../../../../assets/images/timg.jpg" >
+        <div >
+          <img
+            v-if="slotProps.item.avatar"
+            :src="slotProps.item.avatar"
+            class="soa-avatar"
+          >
+          <div
+            v-else
+            class="soa-avatar">{{ slotProps.item.stuName.substr(-2,2) }}</div>
+        </div>
         <div class="soa-list-item-content">
           <div>
-            <span>{{ slotProps.item.userName }}</span>
-            <span>（{{ slotProps.item.banji }}）</span>
+            <span>{{ slotProps.item.stuName }}</span>
+            <span>（{{ slotProps.item.collegeName }}-{{ slotProps.item.sclassName }}）</span>
           </div>
           <div class="c-light">
             {{ slotProps.item.jg }}
@@ -33,59 +38,50 @@
         </div>
         <van-button
           class="soa-list-right-btn"
-          type="info">分配</van-button>
+          type="info"
+          @click="setBed(slotProps.item.userId)">选床位</van-button>
       </template>
     </list-layout>
   </div>
 </template>
 
 <script>
-import listLayout from '@/components/listLayout'
+import baseList from '../mixins/base-list'
 export default {
   name: 'DormUnallocated',
-  components: {
-    listLayout
-  },
+  mixins: [baseList],
   data() {
     return {
-      searchValue: null,
-      dataList: []
+      searchForm: {
+        searchValue: ''
+      }
     }
   },
   methods: {
-    onSearch() {
-      this.pgeIndex = 0
-      this.pageTotal = 9999
-      this.dataList = []
-      this.loadData()
-    },
     loadData() {
-      this.PageIndex++;
-      console.log(this.params)
-      const dataList = []
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataList.push({
-            id: this.dataList.length + 1,
-            userName: '张三峰',
-            telephone: '18233422111',
-            banji: '石油化工学院-2019级化工一班',
-            jg: '福州市高兴区'
-          });
-        }
+      this.pageNum++;
+      this.$api.getUnAllottedList(this.searchParams).then(data => {
+        const rows = data.rows
+        rows.forEach(item => {
+          if (item.annexList && item.annexList.length > 0) {
+            item.fileUrl = this.tcBaseUrl + item.annexList[0].fileName
+          }
+        });
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.dataList = this.dataList.concat(dataList)
+        this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
-        if (this.dataList.length >= 20) {
+        if (this.dataList.length >= data.total) {
           this.$refs.listLayout.finished = true
         }
-        // if (this.dataList.length < this.pageSize) {
-        //     this.$refs.cardList.finished = true;
-        //   }
-      }, 1000)
+      })
+    },
+    setBed(userId) {
+      console.log(userId)
+      this.$router.push({
+        path: '/dorm/allocate',
+        query: { userId: userId }
+      })
     }
   }
 }

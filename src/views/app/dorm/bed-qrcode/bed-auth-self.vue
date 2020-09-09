@@ -14,7 +14,7 @@
     <!--调换宿舍-->
     <van-popup
       v-model="showCheckPopup"
-      :style="{ height: '100%' }"
+      :style="{ height: '50%' }"
       closeable
       position="bottom">
       <van-form
@@ -152,6 +152,7 @@ export default {
     }
   },
   methods: {
+
     // 更多操作
     bindMoreClick(index) {
       this.showMoreIndex = this.showMoreIndex === index ? -1 : index

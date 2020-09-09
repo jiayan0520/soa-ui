@@ -5,7 +5,7 @@
     :label="title"
     class="soa-user-picker"
     right-icon="add"
-    placeholder=""
+    placeholder
     @click="handleClick"
   />
 </template>
@@ -61,6 +61,7 @@ export default {
   computed: {
     // 单选
     isSingle() {
+      console.log(22222, this.multiple)
       return !this.multiple && this.userOnly
     },
     // 多选并只返回人
@@ -81,6 +82,7 @@ export default {
       // 多选并只返回人
       if (this.isMultipleUserOnly) {
         chooseNumber = this.value.length
+        console.log(444, this.value)
         arrName = this.value.map(p => p.name);
       }
       // 多选并返回人和部门
@@ -88,7 +90,7 @@ export default {
         const arr = [...this.value.users, ...this.value.departments];
         arrName = arr.map(p => p.name);
         const departmentNumber = this.value.departments.map(p => p.number)
-        const sumDepartment = departmentNumber.length && departmentNumber.reduce(function(prev, cur, index, array) {
+        const sumDepartment = departmentNumber.length && departmentNumber.reduce(function (prev, cur, index, array) {
           return prev + cur
         })
         chooseNumber = this.value.users.length + sumDepartment
@@ -101,6 +103,7 @@ export default {
     },
     // 已选人员id数组，用于回显在选人页面
     strChoosedPersonIds() {
+      console.log(33333333333, this.isSingle, this.isMultipleUserOnly)
       return this.isSingle ? [this.value.emplId]
         : (this.isMultipleUserOnly ? this.value.map(p => p.emplId)
           : this.value.users.map(p => p.emplId));
@@ -114,7 +117,7 @@ export default {
     handleClick() {
       this.$dd.biz.contact.complexPicker({
         title: '选择' + this.title,
-        corpId: this.$store.getters[ 'core/system'].corpId,
+        corpId: this.$store.getters['core/system'].corpId,
         multiple: this.multiple,
         limitTips: `最多选择${this.maxUsers}人`,
         maxUsers: this.maxUsers,
@@ -145,7 +148,7 @@ export default {
             this.$emit('input', result);
           }
         },
-        onFail: function(err) {
+        onFail: function (err) {
           console.error(err);
         }
       });
@@ -155,11 +158,11 @@ export default {
 </script>
 <style lang="scss">
 @import "@/assets/style/var.scss";
-@import '@/assets/mixins/mixins.scss';
+@import "@/assets/mixins/mixins.scss";
 
 @include b(user-picker) {
-  & .van-field__right-icon{
-    color: $--color-info
+  & .van-field__right-icon {
+    color: $--color-info;
   }
 }
 </style>

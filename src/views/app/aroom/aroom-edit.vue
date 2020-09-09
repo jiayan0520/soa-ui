@@ -190,5 +190,8 @@ export default {
       width: 7.2em;
     }
   }
+  .van-field__control--custom {
+    display: block;
+  }
 }
 </style>
