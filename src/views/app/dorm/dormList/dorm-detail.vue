@@ -16,7 +16,7 @@
           v-for="(item,index) in data.soaDormBeds"
           :key="index"
           class="soa-box-item people-item">
-          <div>
+          <div @click="routerToBedDetail(item)">
             <div
               v-if="item.users"
               class="flex-between user-info">
@@ -219,6 +219,14 @@ export default {
         }
         this.loading = false
       })
+    },
+    // 跳转到床位详情
+    routerToBedDetail(item) {
+      if (window.location.href.indexOf('qrcode') > -1) {
+        this.$router.push('/bed-qrcode/bedDetail?id=' + item.id);
+      } else {
+        this.$router.push('/dorm/bedDetail?id=' + item.id);
+      }
     }
   }
 }
@@ -239,6 +247,7 @@ export default {
       width: 32px;
       height: 32px;
       font-size: 12px;
+      flex: unset;
     }
     .user-info {
       font-size: 16px;

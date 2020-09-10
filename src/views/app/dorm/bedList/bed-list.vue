@@ -302,8 +302,8 @@ export default {
           }
         }
       }
-      this.$api.getBedQRCodeImgs({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(res => {
-        console.log(res)
+      this.$api.getBedQRCodeImgs({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(data => {
+        window.open(this.system.tcBaseUrl + data.filePath)
         Toast(`导出成功`);
         this.onSearch()
       }).catch(error => {

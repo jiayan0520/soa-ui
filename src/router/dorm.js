@@ -23,7 +23,7 @@ export default [
     name: 'bedDetail',
     component: () => import('@/views/app/dorm/bedList/bed-detail')
   },
-  // 宿舍详情及辅导员以上扫码页
+  // 宿舍详情
   {
     path: '/dorm/dormDetail',
     name: 'dormDetail',
@@ -82,6 +82,18 @@ export default [
     path: '/bed-qrcode/bed-auth-checkman',
     name: 'bed-auth-checkman',
     component: () => import('@/views/app/dorm/bed-qrcode/bed-auth-checkman')
+  },
+  // 床位详情页
+  {
+    path: '/bed-qrcode/bedDetail',
+    name: 'qrcode-bedDetail',
+    component: () => import('@/views/app/dorm/bedList/bed-detail')
+  },
+  // 宿舍详情及辅导员以上扫码页
+  {
+    path: '/bed-qrcode/dormDetail',
+    name: 'qrcode-dormDetail',
+    component: () => import('@/views/app/dorm/dormList/dorm-detail')
   },
   // 宿舍导入
   {

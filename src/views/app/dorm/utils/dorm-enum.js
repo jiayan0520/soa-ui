@@ -14,7 +14,7 @@ export const outUserTypeEnum = {
   MAINTENANCE_WORKER: { label: '维修人员' }
 }
 
-// 站外用户类型
+// 用户类型
 export const statusList = [
   { text: '全部状态', value: 'ALL' },
   { text: '正常', value: 'ACTIVATION', class: 'c-success' },

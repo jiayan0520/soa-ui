@@ -121,6 +121,11 @@ export default {
       type: String,
       default: 'BED'
     },
+    // 检查类型为bed的时候，如果有父亲说明是宿舍检查建立的对象
+    hasParent: {
+      type: Boolean,
+      default: false
+    },
     // 上面一些详情信息介绍字段
     fieldList: {
       type: Array,
@@ -184,7 +189,8 @@ export default {
   },
   methods: {
     getDimension() {
-      this.$api.getInspectionTypes({ type: this.type }).then(data => {
+      const type = this.type === 'BED' && !this.hasParent ? 'BED' : 'DORM'
+      this.$api.getInspectionTypes({ type: type }).then(data => {
         this.checkItemList = data.map(item => {
           return {
             id: item.id,

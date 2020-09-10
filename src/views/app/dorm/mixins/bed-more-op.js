@@ -37,10 +37,8 @@ export default {
       switch (val) {
         // 导出二维码
         case 'qc':
-          this.$api.getBedQRCodeImgs({ ids: item.id, isCheckAll: false }).then(res => {
-            console.log(res)
-            res = this.system.tcBaseUrl + '/profile/bedQrCode/zip/1599740350883.zip'
-            window.open(res)
+          this.$api.getBedQRCodeImgs({ ids: item.id, isCheckAll: false }).then(data => {
+            window.open(this.system.tcBaseUrl + data.filePath)
             Toast(`导出成功`);
             this.onSearch()
           }).catch(error => {

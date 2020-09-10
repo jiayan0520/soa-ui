@@ -18,7 +18,8 @@ export default {
       checkList: [],
       currentCheckId: null, // 检查对象id
       currentCheck: null, // 检查对象
-      isCheckDetail: false
+      isCheckDetail: false,
+      hasParent: false
     }
   },
   mounted() {
@@ -100,6 +101,7 @@ export default {
       this.currentCheckId = item.id
       this.isCheckDetail = true
       this.showCheckPopup = true
+      this.hasParent = !!item.parentId
     }
   }
 }

@@ -5,8 +5,13 @@
     <custom-panel
       :data="data"
       :field-list="fieldList" />
+    <custom-panel
+      v-if="isOnlyCheck==='0'"
+      :data="data"
+      :field-list="fieldList2" />
     <div v-if="data.users">
       <custom-panel
+        v-if="isOnlyCheck==='0'"
         :data="data.users"
         :field-list="userFieldList" />
       <van-collapse v-model="activeNames">
@@ -102,23 +107,25 @@ export default {
   data() {
     return {
       id: null,
+      isOnlyCheck: '0', // 是否只检查，是不用展示那么多信息，卫生员扫码的时候的检查
       loading: true,
       activeNames: [],
       data: {},
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
-        { prop: 'bedName', label: '床位' },
-        { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
+        { prop: 'bedName', label: '床位' }
       ],
+      fieldList2: [{ prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }],
       userFieldList: [
         { prop: 'name', label: '姓名' },
+        { prop: 'isDormManagerText', label: '是否舍长' },
         { prop: 'statusName', label: '状态' },
         { prop: 'sno', label: '学号' },
         { prop: 'mobile', label: '电话' },
-        { prop: 'zzmm', label: '政治面貌' },
+        // { prop: 'zzmm', label: '政治面貌' },
         { prop: 'college', label: '学院专业' },
-        { prop: 'place', label: '籍贯' },
-        { prop: 'address', label: '家庭住址' },
+        // { prop: 'place', label: '籍贯' },
+        // { prop: 'address', label: '家庭住址' },
         {
           prop: 'instructorList',
           label: '辅导员',
@@ -128,14 +135,30 @@ export default {
             { prop: 'telephone', class: 'c-info' }]
         },
         {
-          prop: 'parentList',
-          label: '家长信息',
+          prop: 'managementList',
+          label: '楼管',
           type: 'array',
           childrenFields: [
             { prop: 'userName' },
-            { prop: 'grade' },
+            { prop: 'telephone', class: 'c-info' }]
+        },
+        {
+          prop: 'repairList',
+          label: '维修人员',
+          type: 'array',
+          childrenFields: [
+            { prop: 'userName' },
             { prop: 'telephone', class: 'c-info' }]
         }
+        // {
+        //   prop: 'parentList',
+        //   label: '家长信息',
+        //   type: 'array',
+        //   childrenFields: [
+        //     { prop: 'userName' },
+        //     { prop: 'grade' },
+        //     { prop: 'telephone', class: 'c-info' }]
+        // }
       ],
       apiMethod: 'getResultListByUserId',
       checkParams: { userId: null }
@@ -143,6 +166,7 @@ export default {
   },
   created() {
     this.id = getQuery('id')
+    this.isOnlyCheck = getQuery('isOnlyCheck') || '0'
     this.getDetail()
   },
   methods: {
@@ -152,6 +176,7 @@ export default {
         if (data.users) {
           const statusObj = statusList.find(status => status.value === data.status)
           data.users.statusName = statusObj ? statusObj.text : data.status
+          data.users.isDormManagerText = data.isDormManager ? '否' : '是'
         }
         this.data = {
           ...data,
