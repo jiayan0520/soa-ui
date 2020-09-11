@@ -126,7 +126,7 @@ export default {
         }
       }
       // 全部删除？ 需要做二次确认
-      if (this.isCheckAll) {
+      if (this.isCheckAll && !id) {
         Dialog.confirm({
           title: `确定全部${opLabel}？`,
           message: `全部${opLabel}，${opLabel}的数据无法恢复，请慎重！`

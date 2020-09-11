@@ -1,6 +1,12 @@
 import * as $dd from 'dingtalk-jsapi';
+import { Toast } from 'vant'
 export function complexPicker(system, title, maxUsers) {
   return new Promise(function (resolve, reject) {
+    if ($dd.env.platform === 'notInDingTalk') {
+      Toast('请在钉钉环境下执行该功能！')
+      reject(false)
+      return
+    }
     $dd.biz.contact.complexPicker({
       title: '选择' + title,
       corpId: system.corpId,

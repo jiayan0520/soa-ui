@@ -147,7 +147,9 @@ export default {
         annexId: null, // 楼栋照片
         annexList: [],
         buildingManagerIds: null, // 楼栋管理员
-        maintenanceWorkerIds: null // 楼栋维修员
+        buildingManagers: [],
+        maintenanceWorkerIds: null, // 楼栋维修员
+        maintenanceWorkers: []
       },
       formDataRules: {
         buildingName: [{ required: true, message: '请输入楼栋名称' }],

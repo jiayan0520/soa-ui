@@ -150,7 +150,7 @@
             >舍长</span>
           </div>
           <div class="flex-between">
-            <span class="c-light"> {{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</span>
+            <span class="c-light">{{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</span>
             <span
               :class="slotProps.item.statusClass"
               class="c-ml10"
@@ -227,8 +227,8 @@ export default {
       mainMoreOpList: [
         { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
-        { value: 'out', label: '退舍' }
-        // TODO { value: 'del', label: '删除' } 是否要床位的批量删除？
+        { value: 'out', label: '退舍' },
+        { value: 'del', label: '删除' }
       ]
     }
   },
@@ -240,7 +240,7 @@ export default {
     onSearch() {
       this.pageNum = 0
       this.dataList = []
-      // this.getBedTotal()
+      this.getBedTotal()
       this.loadData()
     },
     getBedTotal() {

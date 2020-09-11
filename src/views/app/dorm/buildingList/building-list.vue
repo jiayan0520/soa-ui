@@ -238,9 +238,9 @@ export default {
       })
     },
     add() {
-      this.$router.push(this.editUrl)
-      // this.rowId = null
-      // this.isShowEditPopup = true
+      // this.$router.push(this.editUrl)
+      this.rowId = null
+      this.isShowEditPopup = true
     },
     // 清空宿舍
     clearDorm(obj, id) {

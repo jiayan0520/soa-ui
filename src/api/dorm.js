@@ -154,7 +154,10 @@ export function dormExchange(params) {
 export function getExchangeList(params) {
   return post(`${prefix}/dromExchangeApplication/list`, params)
 }
-
+// 调换申请详情
+export function getExchangeDetail(params) {
+  return get(`${prefix}/dromExchangeApplication/${params}`)
+}
 // 未分配人员列表
 export function getUnAllottedList(params) {
   return post(`${prefix}/unAllotted/list`, params)

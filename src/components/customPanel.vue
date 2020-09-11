@@ -1,101 +1,47 @@
 <template>
   <div class="custom-panel">
     <slot />
-    <div
+    <custom-cell
       v-for="(field,index) in fieldList"
-      :key="index">
-      <!--折叠框展示形式-->
-      <div v-if="field.type==='collapse'">
-        <van-collapse v-model="field.activeNames">
-          <van-collapse-item
-            :value="field.leftValue"
-            :title="field.label"
-            name="1">
-            <div
-              v-for="(item,index) in data[field.prop]"
-              :key="index"
-              class="check-item soa-box-item"
+      :key="index"
+      :title="field.label">
+      <template slot="value">
+        <!--普通数组展示形式 -->
+        <div v-if="field.type==='array'">
+          <div
+            v-for="(item,index) in data[field.prop]"
+            :key="index">
+            <span
+              v-for="(son,idx) in field.childrenFields"
+              :key="idx"
+              :class="[son.class,item.class]"
             >
-              <div
-                v-for="(child,ci) in field.childrenFields"
-                :key="ci">
-                <div
-                  v-for="(subField,si) in child"
-                  :key="si"
-                  :class="subField.class">
-                  <span v-if="subField.prefix">{{ subField.prefix }}</span>
-                  {{ item[subField.prop] }}
-                </div>
-                <!-- 若只有一个操作按钮，直接用按钮显示，多个是时候用...-->
-                <van-button
-                  v-if="moreOpList.length===1"
-                  class="soa-list-right-btn"
-                  type="info"
-                  @click="clickMoreBtn(moreOpList[0].value,item)"
-                >{{ moreOpList[0].label }}</van-button>
-                <div
-                  v-else-if="moreOpList.length>1"
-                  class="soa-gengduo">
-                  <i
-                    class="soa-icon soa-icon-gengduo"
-                    @click.stop="bindMoreClick(index)"
-                  />
-                  <ul
-                    v-if="showMoreIndex === index"
-                    class="soa-op__dropdown">
-                    <li
-                      v-for="btn in moreOpList"
-                      :key="btn.index"
-                      @click.stop="clickMoreBtn(btn.value,item)"
-                    >{{ btn.label }}</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </van-collapse-item>
-        </van-collapse>
-      </div>
-      <custom-cell
-        v-else
-        :title="field.label">
-        <template slot="value">
-          <!--普通数组展示形式 -->
-          <div v-if="field.type==='array'">
-            <div
-              v-for="(item,index) in data[field.prop]"
-              :key="index">
+              {{ item[son.prop] }}
               <span
-                v-for="(son,idx) in field.childrenFields"
-                :key="idx"
-                :class="[son.class,item.class]"
-              >
-                {{ item[son.prop] }}
-                <span
-                  v-if="son.unit"
-                  class="unit">{{ son.unit }}</span>
-              </span>
-            </div>
+                v-if="son.unit"
+                class="unit">{{ son.unit }}</span>
+            </span>
           </div>
-          <div v-else-if="field.type==='uploader'">
-            <van-uploader
-              v-model="data[field.prop]"
-              :disabled="true"
-              :deletable="false"
-              :show-upload="false"
-              multiple
-            />
-          </div>
-          <span v-else>
-            <slot
-              :field="field"
-              name="item-span">{{ data[field.prop] }}</slot>
-          </span>
-          <span
-            v-if="field.unit"
-            class="unit">{{ field.unit }}</span>
-        </template>
-      </custom-cell>
-    </div>
+        </div>
+        <div v-else-if="field.type==='uploader'">
+          <van-uploader
+            v-model="data[field.prop]"
+            :disabled="true"
+            :deletable="false"
+            :show-upload="false"
+            multiple
+          />
+        </div>
+        <span v-else>
+          <slot
+            :field="field"
+            name="item-span">{{ data[field.prop] }}</slot>
+        </span>
+        <span
+          v-if="field.unit"
+          class="unit">{{ field.unit }}</span>
+      </template>
+    </custom-cell>
   </div>
 </template>
 

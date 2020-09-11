@@ -12,7 +12,7 @@
     <div v-if="data.users">
       <custom-panel
         v-if="isOnlyCheck==='0'"
-        :data="data.users"
+        :data="data"
         :field-list="userFieldList" />
       <van-collapse v-model="activeNames">
         <van-collapse-item
@@ -88,9 +88,9 @@
 <script>
 import customPanel from '@/components/customPanel'
 import bedCheck from '../components/check-common'
-import { statusList } from '../utils/dorm-enum'
 import { getQuery } from '@/utils'
 import baseCheckList from '../mixins/base-check-list'
+import { statusList } from '../utils/dorm-enum'
 export default {
   name: 'BedDetail',
   components: {
@@ -107,10 +107,13 @@ export default {
   data() {
     return {
       id: null,
-      isOnlyCheck: '0', // 是否只检查，是不用展示那么多信息，卫生员扫码的时候的检查
-      loading: true,
-      activeNames: [],
       data: {},
+      loading: true,
+      apiMethod: 'getResultListByUserId',
+      checkParams: { userId: null },
+      hasExchange: true,
+      isOnlyCheck: '0', // 是否只检查，是不用展示那么多信息，卫生员扫码的时候的检查
+      activeNames: [],
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'bedName', label: '床位' }
@@ -159,15 +162,13 @@ export default {
         //     { prop: 'grade' },
         //     { prop: 'telephone', class: 'c-info' }]
         // }
-      ],
-      apiMethod: 'getResultListByUserId',
-      checkParams: { userId: null }
+      ]
     }
   },
   created() {
     this.id = getQuery('id')
-    this.isOnlyCheck = getQuery('isOnlyCheck') || '0'
     this.getDetail()
+    this.isOnlyCheck = getQuery('isOnlyCheck') || '0'
   },
   methods: {
     // 获取详情
@@ -175,11 +176,12 @@ export default {
       this.$api.getBedDetail(this.id).then(data => {
         if (data.users) {
           const statusObj = statusList.find(status => status.value === data.status)
-          data.users.statusName = statusObj ? statusObj.text : data.status
-          data.users.isDormManagerText = data.isDormManager ? '否' : '是'
+          data.statusName = statusObj ? statusObj.text : data.status
         }
         this.data = {
           ...data,
+          ...data.users,
+          isDormManagerText: data.isDormManager ? '是' : '否',
           dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
           bedName: data.bedName,
           instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],

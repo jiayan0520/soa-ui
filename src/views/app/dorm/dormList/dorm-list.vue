@@ -118,7 +118,7 @@
             >{{ slotProps.item.dormManager&&slotProps.item.dormManager.mobile }}</span>
           </div>
           <div class="item-row flex-between c-light">
-            {{ dormTypeEnum[slotProps.item.dormType]?dormTypeEnum[slotProps.item.dormType].label:slotProps.item.dormType }}
+            <div>{{ dormTypeEnum[slotProps.item.dormType]?dormTypeEnum[slotProps.item.dormType].label:slotProps.item.dormType }}</div>
             <div>
               <span>人数：{{ slotProps.item.dormData.userNum }}/{{ slotProps.item.dormData.totalNum }}</span>
               <span
