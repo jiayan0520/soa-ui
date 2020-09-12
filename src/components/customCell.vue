@@ -1,5 +1,5 @@
 <template>
-  <div class="soa-custom-cell">
+  <div class="van-cell soa-custom-cell">
     <div
       :style="titleStyle"
       class="soa-custom-cell__title">{{ title }}</div>

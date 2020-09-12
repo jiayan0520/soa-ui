@@ -8,30 +8,26 @@
       @loadData="loadData"
     >
       <template slot="top">
-        <form
-          action="/">
+        <form action="/">
           <van-search
             v-model="searchForm.searchData"
             placeholder="宿舍号/宿舍楼"
-            @search="onSearch"
-          />
+            @search="onSearch" />
         </form>
       </template>
       <template
         slot="item-content"
         slot-scope="slotProps">
         <div class="soa-list-item-content">
-          <div>
-            {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}-{{ slotProps.item.bedName }}床
-          </div>
-          <div class="flex-between c-light">
-            {{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}
-          </div>
+          <div>{{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}-{{ slotProps.item.bedName }}床</div>
+          <div
+            class="flex-between c-light"
+          >{{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</div>
         </div>
         <van-button
           class="soa-list-right-btn"
           type="info"
-          @click="confirm(slotProps.item.id)">分配</van-button>
+          @click="confirm(slotProps.item)">分配</van-button>
       </template>
     </list-layout>
   </div>
@@ -45,6 +41,12 @@ import { Toast } from 'vant'
 export default {
   name: 'DormAllocate',
   mixins: [baseList],
+  props: {
+    opType: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       userId: null,
@@ -75,17 +77,21 @@ export default {
       })
     },
     // 确定分配
-    confirm(bedId) {
+    confirm(item) {
       this.$dialog.confirm({
         title: '提示',
         message: '确定分配？'
       }).then(() => {
-        this.$api.allotBed({ bedId: bedId, userId: this.userId }).then(res => {
-          Toast(`分配成功！`);
-          this.$router.push({
-            path: '/dorm/unallocated'
+        if (!this.opType) {
+          this.$api.allotBed({ bedId: item.id, userId: this.userId }).then(res => {
+            Toast(`分配成功！`);
+            this.$router.push({
+              path: '/dorm/unallocated'
+            })
           })
-        })
+        } else {
+          this.$emit('confirmBed', item.id, item.soaDormDorm.buildingName + item.soaDormDorm.dormName + item.bedName + '床')
+        }
       });
     }
   }

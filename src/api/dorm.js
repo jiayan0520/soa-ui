@@ -158,6 +158,10 @@ export function getExchangeList(params) {
 export function getExchangeDetail(params) {
   return get(`${prefix}/dromExchangeApplication/${params}`)
 }
+// 调换申请审核
+export function auditExchange(params) {
+  return put(`${prefix}/dromExchangeApplication/review`, params)
+}
 // 未分配人员列表
 export function getUnAllottedList(params) {
   return post(`${prefix}/unAllotted/list`, params)
@@ -170,4 +174,13 @@ export function getBedQRCodeImgs(params) {
 // 扫描二维码校验权限
 export function scanBedQrcode(params) {
   return post(`${prefix}/qrScan/scanBedQrcode`, params)
+}
+
+// 获取学生扣分榜
+export function getStuDemeritList(params) {
+  return post(`${prefix}/statistics/stuDemeritList`, params)
+}
+// 获取学生扣分榜
+export function getDormDemeritList(params) {
+  return post(`${prefix}//statistics/dormDemeritList`, params)
 }

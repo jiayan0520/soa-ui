@@ -16,6 +16,7 @@ export default {
   },
   created() {
     this.id = getQuery('id')
+    this.getlocation()
   },
   methods: {
     getlocation() {
@@ -39,7 +40,7 @@ export default {
             self.routerTo(longitude, latitude)
           },
           onFail: function (err) {
-            alert('钉钉定位失败:' + err)
+            alert('钉钉定位失败:' + JSON.stringify(err))
           }
         });
       } else {

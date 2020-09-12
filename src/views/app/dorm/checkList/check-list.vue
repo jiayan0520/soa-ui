@@ -163,7 +163,6 @@
 
 <script>
 import baseList from '../mixins/base-list'
-import listLayout from '@/components/listLayout'
 import DatePicker from 'vue2-datepicker'
 import checkCommon from '../components/check-common'
 import baseCheckList from '../mixins/base-check-list'
@@ -171,7 +170,6 @@ import dayjs from 'dayjs';
 export default {
   name: 'DormCheckList',
   components: {
-    listLayout,
     DatePicker,
     checkCommon
   },
@@ -195,12 +193,6 @@ export default {
   methods: {
     againResultList() {
       this.onSearch()
-    },
-    onSearch() {
-      this.pageIndex = 0
-      this.pageTotal = 9999
-      this.dataList = []
-      this.loadData()
     },
     loadData() {
       this.pageNum++;
