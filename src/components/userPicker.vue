@@ -3,6 +3,7 @@
     v-model="choosedPerson"
     :readonly="true"
     :label="title"
+    :rules="rules"
     class="soa-user-picker"
     right-icon="add"
     placeholder=""
@@ -17,6 +18,10 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    rules: {
+      type: Array,
+      default: () => []
     },
     // 是否多选
     multiple: {
