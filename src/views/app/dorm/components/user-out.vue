@@ -34,11 +34,9 @@
         </div>
         <form action="/">
           <van-search
-            v-model="searchForm.searchValue"
-            show-action
+            v-model="searchForm.seachKey"
             placeholder="姓名/电话号码"
             @search="onSearch"
-            @cancel="isShowSearch=false"
           />
         </form>
         <div class="soa-list-rank__row rank-title">
@@ -109,6 +107,7 @@ import baseList from '../mixins/base-list'
 import { outUserTypeEnum } from '../utils/dorm-enum'
 import { checkMask } from '@/utils'
 import { complexPicker } from '@/utils/ddApi'
+import { Toast } from 'vant'
 export default {
   name: 'UserOutList',
   components: {
@@ -128,7 +127,7 @@ export default {
   data() {
     return {
       searchForm: {
-        searchValue: null,
+        seachKey: null,
         roleType: this.type
       },
       formData: {
@@ -208,11 +207,13 @@ export default {
       console.log(obj, params)
       if (params.id) {
         this.$api.updateUserOut({ ...params }).then(data => {
+          Toast('修改成功')
           this.loadData()
           this.isShowEditPopup = false
         })
       } else {
         this.$api.addUserOut({ roleType: this.type, ...params }).then(data => {
+          Toast('新增成功')
           this.loadData()
           this.isShowEditPopup = false
         })

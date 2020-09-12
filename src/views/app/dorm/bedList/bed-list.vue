@@ -143,14 +143,14 @@
           <div
             v-if="slotProps.item.soaDormDorm"
             class="c-light">
-            {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}
+            {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}-{{ slotProps.item.bedName }}床
             <span
               v-if="slotProps.item.isDormManager"
               class="c-ml10"
             >舍长</span>
           </div>
           <div class="flex-between">
-            <span class="c-light">学生宿舍</span>
+            <span class="c-light">{{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</span>
             <span
               :class="slotProps.item.statusClass"
               class="c-ml10"
@@ -177,8 +177,9 @@
 <script>
 import baseList from '../mixins/base-list'
 import bedDetail from './bed-detail'
-import { statusList } from '../utils/dorm-enum'
+import { statusList, dormTypeEnum } from '../utils/dorm-enum'
 import bedMoreOp from '../mixins/bed-more-op'
+import { Toast } from 'vant'
 export default {
   name: 'BedList',
   components: {
@@ -188,6 +189,7 @@ export default {
   data() {
     return {
       statusList,
+      dormTypeEnum,
       actionName: 1,
       totalList: [
         { lable: '可容纳', filed: 'total', value: 0 },
@@ -225,8 +227,8 @@ export default {
       mainMoreOpList: [
         { value: 'qc', label: '导出二维码' },
         { value: 'exp', label: '导出数据' },
-        { value: 'out', label: '退舍' }
-        // TODO { value: 'del', label: '删除' } 是否要床位的批量删除？
+        { value: 'out', label: '退舍' },
+        { value: 'del', label: '删除' }
       ]
     }
   },
@@ -238,7 +240,7 @@ export default {
     onSearch() {
       this.pageNum = 0
       this.dataList = []
-      // this.getBedTotal()
+      this.getBedTotal()
       this.loadData()
     },
     getBedTotal() {
@@ -275,6 +277,7 @@ export default {
     clickMainMoreBtn(val) {
       switch (val) {
         case 'qc':
+          this.getBedQRCodeImgs()
           break
         case 'exp':
           break
@@ -285,6 +288,27 @@ export default {
           this.handleIdList(null, '删除', 'deleteBed')
           break
       }
+    },
+    getBedQRCodeImgs(id) {
+      let idList = []
+      if (id) {
+        idList = [id]
+      } else {
+        if (!this.isCheckAll) {
+          idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+          if (idList.length <= 0) {
+            Toast(`请选中一条要导出二维码的记录！`);
+            return;
+          }
+        }
+      }
+      this.$api.getBedQRCodeImgs({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(data => {
+        window.open(this.system.tcBaseUrl + data.filePath)
+        Toast(`导出成功`);
+        this.onSearch()
+      }).catch(error => {
+        Toast(`导出失败！` + error);
+      })
     }
   }
 }

@@ -101,6 +101,10 @@ export function allotBed(params) {
 export function getBedDetail(params) {
   return get(`${prefix}/bed/${params}`)
 }
+// 获取我的床位详情
+export function getMyBedInfo() {
+  return get(`${prefix}/bed/getMyBedInfo`)
+}
 // 设为舍长
 export function setDromManager(params) {
   return put(`${prefix}/dorm/setDromManager`, params)
@@ -117,6 +121,10 @@ export function getResultListByDormId(params) {
 // 根据userId获取检查列表
 export function getResultListByUserId(params) {
   return post(`${prefix}/result/userInspectionResultlist`, params)
+}
+// self获取检查列表
+export function myInspectionResultlist(params) {
+  return post(`${prefix}/result/myInspectionResultlist`, params)
 }
 // 根据查询条件获取检查列表
 export function getResultList(params) {
@@ -138,7 +146,28 @@ export function updateResult(params) {
 export function deleteResult(params) {
   return del(`${prefix}/result/${params}`)
 }
+// 提交调换申请
+export function dormExchange(params) {
+  return post(`${prefix}/dromExchangeApplication`, params)
+}
 // 调换申请列表
 export function getExchangeList(params) {
   return post(`${prefix}/dromExchangeApplication/list`, params)
+}
+// 调换申请详情
+export function getExchangeDetail(params) {
+  return get(`${prefix}/dromExchangeApplication/${params}`)
+}
+// 未分配人员列表
+export function getUnAllottedList(params) {
+  return post(`${prefix}/unAllotted/list`, params)
+}
+// 导出床位二维码
+export function getBedQRCodeImgs(params) {
+  return get(`${prefix}/qrScan/getBedQRCodeImgs`, params)
+}
+
+// 扫描二维码校验权限
+export function scanBedQrcode(params) {
+  return post(`${prefix}/qrScan/scanBedQrcode`, params)
 }

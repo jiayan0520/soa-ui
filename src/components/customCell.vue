@@ -1,5 +1,5 @@
 <template>
-  <div class="van-cell soa-custom-cell">
+  <div class="soa-custom-cell">
     <div
       :style="titleStyle"
       class="soa-custom-cell__title">{{ title }}</div>
@@ -55,6 +55,18 @@ export default {
 @import "@/assets/mixins/mixins.scss";
 
 @include b(custom-cell) {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 16px;
+  overflow: hidden;
+  color: #323233;
+  font-size: 14px;
+  line-height: 24px;
+  background-color: #fff;
   @include e(title) {
     width: 6.2em;
     margin-right: 12px;
@@ -67,6 +79,17 @@ export default {
     span:not(:first-child) {
       margin-left: 10px;
     }
+  }
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: " ";
+    pointer-events: none;
+    right: 16px;
+    bottom: 0;
+    left: 16px;
+    border-bottom: 1px solid #ebedf0;
+    transform: scaleY(0.5);
   }
 }
 </style>

@@ -56,9 +56,14 @@
               class="soa-avatar" >
             <div class="soa-list-item-content">
               <div>{{ slotProps.item.activityRoomName }}</div>
-              <div class="c-light">
-                <span>{{ slotProps.item.headName }}</span>
-                <span class="c-ml10 c-info">{{ slotProps.item.telephone }}</span>
+              <div
+                v-for="(item,index) in slotProps.item.managers "
+                v-show="slotProps.item.managers"
+                :key="index"
+                class="c-light"
+              >
+                <span>{{ item.realName }}</span>
+                <span class="c-ml10 c-info">{{ item.phone }}</span>
               </div>
             </div>
           </div>
@@ -97,6 +102,11 @@ export default {
         { value: 'edit', label: '编辑' },
         { value: 'del', label: '删除' }
       ]
+    }
+  },
+  computed: {
+    tcBaseUrl() {
+      return this.$store.getters['core/system'].tcBaseUrl
     }
   },
   methods: {

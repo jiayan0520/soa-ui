@@ -3,18 +3,53 @@
     <custom-panel
       :data="data"
       :field-list="fieldList" />
+    <van-collapse v-model="activeNames">
+      <van-collapse-item
+        :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
+        title="床位检查信息"
+        name="1"
+      >
+        <van-list
+          v-model="checkLoading"
+          :finished="checkFinished"
+          finished-text="没有更多了"
+          @load="getResultList"
+        >
+          <div
+            v-for="(item,index) in checkList"
+            :key="index"
+            class="check-item soa-box-item">
+            <div
+              class="flex-between"
+              @click="showCheckDetail(item)">
+              <div>
+                <div class="time">
+                  {{ item.checkTime }}
+                  <span v-if="item.parentId">(宿舍检查)</span>
+                </div>
+                <div class="c-info text-nowrap">结果：{{ item.inspectionResultsInfo }}</div>
+              </div>
+              <div>{{ item.score }}</div>
+            </div>
+          </div>
+        </van-list>
+      </van-collapse-item>
+    </van-collapse>
     <div class="soa-btn-box">
       <van-button
+        v-if="hasExchange"
         type="info"
-        @click="clickCheckBtn">申请调换宿舍</van-button>
+        @click="clickChangeBtn">申请调换宿舍</van-button>
       <van-button
+        v-if="!data.isDormManager"
         type="info"
-        class="c-ml10">申请成为舍长</van-button>
+        class="c-ml10"
+        @click="setManager">申请成为舍长</van-button>
     </div>
     <!--调换宿舍-->
     <van-popup
-      v-model="showCheckPopup"
-      :style="{ height: '100%' }"
+      v-model="showChangePopup"
+      :style="{ height: '50%' }"
       closeable
       position="bottom">
       <van-form
@@ -22,6 +57,8 @@
         @submit="changeDorm">
         <van-field
           v-model="changeReason"
+          :required="true"
+          :rules=" [{ required: true, message: '请输入调换理由！' }]"
           maxlength="200"
           type="textarea"
           show-word-limit
@@ -36,57 +73,60 @@
         </div>
       </van-form>
     </van-popup>
+    <!--检查详情-->
+    <van-popup
+      v-if="showCheckPopup"
+      v-model="showCheckPopup"
+      :style="{ height: '100%' }"
+      closeable
+      position="bottom"
+    >
+      <bed-check
+        :data="data"
+        :dorm-id="data.dormId"
+        :user-id="data.userId"
+        :bed-id="data.id"
+        :id="currentCheckId"
+        :is-detail="isCheckDetail"
+        type="BED"
+        @close="closeCheckPopop"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
+// import { getQuery } from '@/utils'
 import customPanel from '@/components/customPanel'
+import { statusList } from '../utils/dorm-enum'
+import baseCheckList from '../mixins/base-check-list'
+import bedCheck from '../components/check-common'
+import { Toast } from 'vant';
 export default {
   name: 'BeaAuthSelf',
   components: {
-    customPanel
+    customPanel,
+    bedCheck
   },
+  mixins: [baseCheckList],
   data() {
     return {
       activeNames: [],
-      showMoreIndex: -1, // 显示更多的行index
-      showCheckPopup: false,
-      data: {
-        dormName: '福大生活1区1号楼-601',
-        userName: '李荣浩',
-        bedName: '1号',
-        statusName: '正常',
-        sno: '12312312312',
-        telephone: '15874214741',
-        zzmm: '党员',
-        college: '石油化工学院-2019级过控一班',
-        place: '福建省福州市',
-        address: '福建省福州市闽侯县科技路一号',
-        instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        managementList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        repairList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-        parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
-        cost: '900',
-        bedCheckInfos: [
-          { checkResult: '桌面脏乱', grade: -10, time: '2020年6月28日 20:01' },
-          { checkResult: '被子没叠', grade: -20, time: '2020年6月28日 20:01' },
-          { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-        ],
-        checkInfos: [
-          { checkResult: '阳台混乱', grade: -10, time: '2020年6月28日 20:01' },
-          { checkResult: '宿舍脏乱', grade: -20, time: '2020年6月28日 20:01' },
-          { checkResult: '非常好', grade: 20, time: '2020年6月28日 20:01' }
-        ]
-      },
+      showChangePopup: false,
+      data: {},
       fieldList: [
         { prop: 'dormName', label: '宿舍名称' },
-        { prop: 'userName', label: '姓名' },
         { prop: 'bedName', label: '床位' },
+        { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' },
+        { prop: 'name', label: '姓名' },
+        { prop: 'isDormManagerText', label: '是否舍长' },
         { prop: 'statusName', label: '状态' },
         { prop: 'sno', label: '学号' },
-        { prop: 'telephone', label: '电话' },
-        { prop: 'zzmm', label: '政治面貌' },
+        { prop: 'mobile', label: '电话' },
+        // { prop: 'zzmm', label: '政治面貌' },
         { prop: 'college', label: '学院专业' },
+        // { prop: 'place', label: '籍贯' },
+        // { prop: 'address', label: '家庭住址' },
         {
           prop: 'instructorList',
           label: '辅导员',
@@ -111,67 +151,60 @@ export default {
             { prop: 'userName' },
             { prop: 'telephone', class: 'c-info' }]
         },
-        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' },
-        {
-          activeNames: [],
-          prop: 'bedCheckInfos',
-          label: '床位检查信息',
-          leftValue: `最后一次检查：2020年6月28日 20:01`,
-          type: 'collapse',
-          childrenFields: [
-            [
-              { prop: 'time', class: 'time' },
-              { prop: 'checkResult', class: 'c-info', isbreak: true, prefix: '结果：' }
-            ],
-            [
-              { prop: 'grade', class: 'c-light' }
-            ]
-          ]
-        },
-        {
-          activeNames: [],
-          prop: 'checkInfos',
-          label: '宿舍检查信息',
-          leftValue: `最后一次检查：2020年6月28日 20:01`,
-          type: 'collapse',
-          childrenFields: [
-            [
-              { prop: 'time', class: 'time' },
-              { prop: 'checkResult', class: 'c-info', isbreak: true, prefix: '结果：' }
-            ],
-            [
-              { prop: 'grade', class: 'c-light' }
-            ]
-          ]
-        }],
-      moreOpList: [
-        { value: 'edit', label: '编辑' },
-        { value: 'del', label: '删除' }
+        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
       ],
-      changeReason: null // 调换宿舍原因
+      changeReason: null, // 调换宿舍原因
+      apiMethod: 'myInspectionResultlist',
+      checkParams: { },
+      hasExchange: true
     }
   },
+  computed: {
+    userId() {
+      return this.$store.getters['core/user'].userId
+    }
+  },
+  created() {
+    this.getDetail()
+  },
   methods: {
-    // 更多操作
-    bindMoreClick(index) {
-      this.showMoreIndex = this.showMoreIndex === index ? -1 : index
-      console.log(this.showMoreIndex)
+    // 获取详情
+    getDetail() {
+      this.$api.getMyBedInfo().then(data => {
+        if (data.users) {
+          const statusObj = statusList.find(status => status.value === data.status)
+          data.users.statusName = statusObj ? statusObj.text : data.status
+        }
+        this.data = {
+          ...data,
+          ...data.users,
+          isDormManagerText: data.isDormManager ? '否' : '是',
+          dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
+          bedName: data.bedName,
+          singleFee: data.soaDormDorm.singleFee
+        }
+        console.log(1111111, this.data)
+        this.againResultList()
+        this.loading = false
+      })
     },
-    // 点击更多操作按钮了
-    clickMoreBtn(val, item) {
-      switch (val) {
-        case 'qc':
-          break
-      }
-      this.showMoreIndex = -1
-    },
-    // 新增床位检查
-    clickCheckBtn() {
-      this.showCheckPopup = true
+    // 申请调换宿舍
+    clickChangeBtn() {
+      this.showChangePopup = true
     },
     // 调换宿舍
     changeDorm() {
-
+      this.$api.dormExchange({ reason: this.changeReason }).then(dara => {
+        Toast('申请成功')
+        this.hasExchange = false
+        this.showChangePopup = false
+      })
+    },
+    // 申请成为舍长
+    setManager() {
+      this.$api.setDromManager({ dormId: this.data.dormId, userId: this.userId }).then(res => {
+        this.getDetail()
+      })
     }
   }
 }

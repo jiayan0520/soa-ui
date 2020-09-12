@@ -16,7 +16,7 @@
           v-for="(item,index) in data.soaDormBeds"
           :key="index"
           class="soa-box-item people-item">
-          <div>
+          <div @click="routerToBedDetail(item)">
             <div
               v-if="item.users"
               class="flex-between user-info">
@@ -65,7 +65,7 @@
         </div>
       </van-collapse-item>
       <van-collapse-item
-        :value="`最后一次检查：${checkList.length>0&&checkList[0].checkTime}`"
+        :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
         :class="{'soa-collapse-overflow':activeNames.includes('2')}"
         title="宿舍检查信息"
         class="soa-collapse-item"
@@ -219,6 +219,14 @@ export default {
         }
         this.loading = false
       })
+    },
+    // 跳转到床位详情
+    routerToBedDetail(item) {
+      if (window.location.href.indexOf('qrcode') > -1) {
+        this.$router.push('/bed-qrcode/bedDetail?id=' + item.id);
+      } else {
+        this.$router.push('/dorm/bedDetail?id=' + item.id);
+      }
     }
   }
 }
@@ -239,6 +247,7 @@ export default {
       width: 32px;
       height: 32px;
       font-size: 12px;
+      flex: unset;
     }
     .user-info {
       font-size: 16px;

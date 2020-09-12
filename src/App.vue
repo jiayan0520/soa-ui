@@ -3,15 +3,15 @@
     <keep-alive>
       <router-view
         v-if="$route.meta.keepAlive"
-        class="app-router"/>
+        class="app-router" />
     </keep-alive>
     <router-view
       v-if="!$route.meta.keepAlive"
-      class="app-router"/>
+      class="app-router" />
     <van-tabbar
+      v-if="hasTabBar"
       v-model="active"
-      class="soa-bottom-bar"
-    >
+      class="soa-bottom-bar">
       <van-tabbar-item
         replace
         to="/message"
@@ -29,11 +29,13 @@ export default {
   name: 'App',
   data() {
     return {
-      active: 1
+      active: 1,
+      hasTabBar: true
     }
   },
   mounted() {
     this.active = window.location.href.indexOf('message') >= 0 ? 0 : 1
+    this.hasTabBar = window.location.href.indexOf('qrcode') >= 0 ? 0 : 1
   }
 }
 </script>
