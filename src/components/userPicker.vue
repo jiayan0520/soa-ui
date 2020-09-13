@@ -66,7 +66,6 @@ export default {
   computed: {
     // 单选
     isSingle() {
-      console.log(22222, this.multiple)
       return !this.multiple && this.userOnly
     },
     // 多选并只返回人
@@ -87,7 +86,6 @@ export default {
       // 多选并只返回人
       if (this.isMultipleUserOnly) {
         chooseNumber = this.value.length
-        console.log(444, this.value)
         arrName = this.value.map(p => p.name);
       }
       // 多选并返回人和部门
