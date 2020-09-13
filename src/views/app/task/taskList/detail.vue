@@ -55,8 +55,11 @@
           :download="item.fileName.split('/').pop()">{{ item.fileName.split('/').pop() }}</a>
       </template>
     </custom-cell>
-    <childTaskList :list="form.subTaskList"/>
-    <!-- <van-cell
+    <childTaskList
+      v-if="!(form.soaTask && form.soaTask.parentTaskId)"
+      :list="form.subTaskList"
+      :deadline="form.soaTask&&form.soaTask.deadline"/>
+      <!-- <van-cell
       v-for="items in form.infos"
       :key="items.index">
       <div class="soa-task-detail__commentList">
@@ -114,12 +117,11 @@ export default {
   methods: {
     getData(id) {
       this.$api.getTaskDetail(id).then((res) => {
-        console.log(res);
         this.form = res
+        this.form.subTaskAnnexList.forEach((item, index) => {
+          this.form.subTaskList[index].annexList = item
+        });
       })
-    },
-    handleDelectClick() {
-      console.log('删除子任务')
     },
     handleExamine() {
       this.$router.push({
@@ -130,12 +132,6 @@ export default {
     //* *** 查看单个执行人详情***//
     bindDetail() {
       this.$router.push('/task/single-detail')
-    },
-    handleExecutorClick() {
-      console.log('handleExecutorClick')
-    },
-    handleAddChildClick() {
-      this.showModal = true;
     },
     // 发送回复内容
     submitFeedBack() {

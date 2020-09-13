@@ -17,7 +17,7 @@
           @click="handleEdit(index)"/>
         <i
           class="van-icon van-icon-clear c-danger"
-          @click="handleDelete(index)"/>
+          @click="handleDelete(index,item)"/>
       </div>
     </div>
     <van-button
@@ -31,6 +31,8 @@
       :show="show"
       :deadline="deadline"
       :params="editTask"
+      :parent-id="parentId"
+      @submit="handleSubmit"
       @input="handleInput"
       @closeModal="closeChildModal"/>
   </div>
@@ -39,6 +41,7 @@
 <script>
 import TaskChildForm from './taskChildForm'
 import { taskStatus } from '../components/taskEnum'
+import { Toast } from 'vant';
 export default {
   name: 'ChildTaskList',
   components: {
@@ -66,6 +69,10 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    parentId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -91,16 +98,28 @@ export default {
         dueReminder: 'NOT_NOTICE',
         emergencyCoefficient: 'GENERAL',
         difficulty: 'DICFFICULTY1',
-        files: [], // 附件
-        state: 'NUFINISHED'
+        annexList: [], // 附件
+        state: 'UNFINISHED'
       }
       return this.taskIndex || this.taskIndex === 0 ? this.list[this.taskIndex] : tempTask
     }
   },
   methods: {
-    handleDelete(index) {
+    handleDelete(index, item) {
       const listtemp = this.list
-      this.$emit('input', listtemp.splice(index, 1))
+      if (item.parentTaskId) {
+        this.$dialog.confirm({
+          title: '提示',
+          message: `请确认要删除任务【${item.title}】，删除后数据将无法恢复`
+        }).then(() => {
+          this.$api.deleteTask(item.id).then(() => {
+            this.$emit('input', listtemp.splice(index, 1))
+            Toast('任务删除成功');
+          })
+        })
+      } else {
+        this.$emit('input', listtemp.splice(index, 1))
+      }
     },
     handleAdd() {
       this.taskIndex = '';
@@ -109,6 +128,11 @@ export default {
     handleEdit(index) {
       this.taskIndex = index;
       this.show = true;
+    },
+    handleSubmit(value) {
+      this.show = false;
+      this.taskIndex = '';
+      this.$emit('submit', value);
     },
     // 获取子任务数据
     handleInput(data) {

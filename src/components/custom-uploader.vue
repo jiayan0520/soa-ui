@@ -6,7 +6,6 @@
     :disabled="readOnly"
     :max-count="maxCount"
     multiple
-    config
     @before-read="beforeRead"
   />
 </template>
@@ -58,6 +57,14 @@ export default {
   computed: {
     tcBaseUrl() {
       return this.$store.getters['core/system'].tcBaseUrl
+    }
+  },
+  watch: {
+    annexList(val) {
+      this.fileList = this.annexList.map(f => {
+        f.url = this.tcBaseUrl + f.fileName
+        return f
+      })
     }
   },
   mounted() {

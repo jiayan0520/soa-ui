@@ -32,7 +32,7 @@
     <custom-cell title="附件信息">
       <template slot="value">
         <van-uploader
-          v-model="form.files"
+          v-model="form.annexList"
           upload-icon="upgrade"
           accept="*"/>
       </template>
@@ -70,16 +70,15 @@ export default {
         content: '',
         remark: '',
         deadline: '',
-        state: 'NUFINISHED'
+        state: 'UNFINISHED'
       },
       form: {
         content: '',
-        files: []
+        annexList: []
       }
     }
   },
   created() {
-    console.log(this.$route.query.id)
     // this.form.taskPerformId = '1c0a3a5184074527973dfe6106085feb'
     this.form.taskPerformId = this.$route.query.id
     this.init()
@@ -103,8 +102,8 @@ export default {
     async handleData() {
       const annexList = []
       const annexId = uuid32()
-      for (var i = 0; i < this.form.files.length; i++) {
-        await uploadFile(this.form.files[i], annexId).then((res) => {
+      for (var i = 0; i < this.form.annexList.length; i++) {
+        await uploadFile(this.form.annexList[i], annexId).then((res) => {
           annexList.push(res)
         }).catch((e) => {
           throw e

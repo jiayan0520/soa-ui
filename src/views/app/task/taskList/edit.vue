@@ -77,15 +77,19 @@
         placeholder=""
       >
         <template #input>
-          <van-uploader
-            v-model="form.files"
-            upload-icon="upgrade"
-            accept="*"/>
+          <custom-uploader
+            v-model="form.annexId"
+            :max-count="5"
+            :annex-list="form.annexList"
+            type="task"
+          />
         </template>
       </van-field>
       <van-divider />
       <childTaskList
+        v-if="!form.parentTaskId"
         :list="form.subTasks"
+        :parent-id="form.id"
         :deadline="form.deadline"/>
       <van-button
         block
@@ -104,11 +108,13 @@ import userPicker from '@/components/userPicker'
 import customSheet from '@/components/customSheet'
 import childTaskList from '../components/childTaskList'
 import dayjs from 'dayjs';
+import customUploader from '@/components/custom-uploader'
 import { Toast } from 'vant';
 import { criticalActions, infoActions, weightActions } from '../components/taskEnum'
 export default {
   name: 'EditTask',
   components: {
+    customUploader,
     DatePicker,
     userPicker,
     customSheet,
@@ -127,9 +133,9 @@ export default {
         emergencyCoefficient: 'GENERAL',
         difficulty: 'DICFFICULTY1',
         reader: [], // 可查阅人
-        files: [], // 附件
+        annexList: [], // 附件
         subTasks: [],
-        state: 'NUFINISHED'
+        state: 'UNFINISHED'
       },
       showModal: false,
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
@@ -151,7 +157,6 @@ export default {
   methods: {
     getData(id) {
       this.$api.getTaskEdit(id).then((res) => {
-        console.log(res);
         this.form = res
       })
     },

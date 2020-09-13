@@ -47,7 +47,7 @@
             <div class="c-ft16">{{ slotProps.item.title }}</div>
             <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
             <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
-            <span class="c-info">{{ slotProps.item.createUserName }}</span> |
+            <span class="c-info">{{ slotProps.item.create_user_id === userId ? '我分配的': slotProps.item.createUserName }}</span> |
             <span :class="[`c-${computeTimes(slotProps.item.deadline).type}`]">{{ computeTimes(slotProps.item.deadline).value }}</span>
             <!-- <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div> -->
           </div>
@@ -86,6 +86,9 @@ export default {
     }
   },
   computed: {
+    userId() {
+      return this.$store.getters['core/user'].userId
+    },
     detailUrl() {
       return '/task/detail'
     },
@@ -94,12 +97,12 @@ export default {
     },
     moreOpList() {
       const publishOp = [
-        { value: 'edit', label: '编辑', allowStatus: { state: ['NUFINISHED'] }},
+        { value: 'edit', label: '编辑', allowStatus: { state: ['UNFINISHED'] }},
         { value: 'delete', label: '删除' },
-        { value: 'fail', label: '任务失败', allowStatus: { state: ['NUFINISHED'] }}
+        { value: 'fail', label: '任务失败', allowStatus: { state: ['UNFINISHED'] }}
       ]
       const reOp = [
-        { value: 'submit', label: '提交', allowStatus: { state: ['NUFINISHED'] }}
+        { value: 'submit', label: '提交', allowStatus: { state: ['UNFINISHED'] }}
       ]
       return this.active ? reOp : publishOp
     }
@@ -129,7 +132,7 @@ export default {
     },
     onLoad() {
       const stateTypeMap = {
-        0: 'NUFINISHED',
+        0: 'UNFINISHED',
         1: 'FINISHED',
         2: ''
       }
@@ -147,7 +150,6 @@ export default {
         const total = (data && data.total) || 0;
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        console.log('this.$refs.listLayout.loading', this.$refs.listLayout.loading)
         this.page++
         // 数据全部加载完成
         if (this.dataList && (this.dataList.length >= total)) {
@@ -174,9 +176,9 @@ export default {
             this.$api.deleteTask(item.id).then(() => {
               Toast('任务删除成功');
               this.onSearch()
+            }).catch(error => {
+              Toast('任务删除失败，请稍后尝试');
             })
-          }).catch(error => {
-            Toast('任务删除失败，请稍后尝试');
           })
           break
         case 'submit':

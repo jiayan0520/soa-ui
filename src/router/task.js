@@ -9,7 +9,7 @@ export default [
     name: 'taskList',
     component: () => import('@/views/app/task/taskList/index'),
     meta: {
-      keepAlive: true
+      keepAlive: false
     }
   },
   {

@@ -80,13 +80,21 @@
         placeholder=""
       >
         <template #input>
+          <custom-uploader
+            v-if="form.parentTaskId || parentId"
+            v-model="form.annexId"
+            :max-count="5"
+            :annex-list="form.annexList"
+            type="task"
+          />
           <van-uploader
-            v-model="form.files"
+            v-else
+            v-model="form.annexList"
             upload-icon="upgrade"
             accept="*"/>
         </template>
       </van-field>
-      <div class="soa-task-add__submit">
+      <div class="soa-task-child__submit">
         <van-button
           block
           type="info"
@@ -102,12 +110,14 @@
 import DatePicker from 'vue2-datepicker'
 import userPicker from '@/components/userPicker'
 import customSheet from '@/components/customSheet'
-import { Notify } from 'vant'
+import { Notify, Toast } from 'vant'
+import customUploader from '@/components/custom-uploader'
 import { criticalActions, infoActions, weightActions } from './taskEnum'
 import dayjs from 'dayjs'
 export default {
   name: 'TaskChild',
   components: {
+    customUploader,
     DatePicker,
     userPicker,
     customSheet
@@ -126,6 +136,10 @@ export default {
     params: {
       type: Object,
       default: null
+    },
+    parentId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -140,7 +154,7 @@ export default {
         dueReminder: 'NOT_NOTICE',
         emergencyCoefficient: 'GENERAL',
         difficulty: 'DICFFICULTY1',
-        files: [] // 附件
+        annexList: [] // 附件
       },
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
       showModal: false,
@@ -164,22 +178,30 @@ export default {
   methods: {
     // 子任务事件
     onSubmit1() {
-      console.log('this.deadline', this.deadline)
       if (this.deadline && this.form.deadline > this.deadline) {
         this.form.deadline = ''
-        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
+        Notify({ type: 'danger', message: `子任务截止时间不得超过父任务时间【${this.deadline}】` });
       } else {
-        // 虚拟数据
-        this.form.total = this.form.executor.length;
-        this.form.done = this.form.done || 0;
-        this.$emit('input', this.form);
+        if (this.form.parentTaskId || this.parentId) {
+          this.form.createUserId = this.userId
+          this.form.opType = this.form.id ? 1 : 0
+          this.form.subTasks = []
+          this.$api.addTask({ ...this.form }).then((res) => {
+            Toast(`${this.form.id ? '编辑' : '创建'}子任务创建成功`)
+            this.$emit('submit', this.form);
+          })
+        } else {
+          this.form.total = this.form.executor.length;
+          this.form.done = this.form.done || 0;
+          this.$emit('input', this.form);
+        }
       }
     },
     // 子任务截止时间不能超过主任务的截止时间
     bindChildDeadlineChange(e) {
       if (e > this.deadline) {
         this.form.deadline = ''
-        Notify({ type: 'danger', message: '子任务截止时间不得超过主任务时间' });
+        Notify({ type: 'danger', message: `子任务截止时间不得超过父任务时间【${this.deadline}】` });
       }
     },
     // 关闭弹出框
@@ -199,6 +221,8 @@ export default {
         text-align: center;
         font-size: 20px;
    }
+   @include e(submit){
+    margin: 16px 0 55px
+  }
 }
-.mx-datepicker-main.mx-datepicker-popup{z-index: 9999!important;}
 </style>

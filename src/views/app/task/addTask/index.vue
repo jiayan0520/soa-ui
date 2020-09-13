@@ -78,7 +78,8 @@
       >
         <template #input>
           <van-uploader
-            v-model="form.files"
+            v-model="form.annexList"
+            :max-count="5"
             upload-icon="upgrade"
             accept="*"/>
         </template>
@@ -128,9 +129,9 @@ export default {
         emergencyCoefficient: 'GENERAL',
         difficulty: 'DICFFICULTY1',
         reader: [], // 可查阅人
-        files: [], // 附件
+        annexList: [], // 附件
         subTasks: [],
-        state: 'NUFINISHED'
+        state: 'UNFINISHED'
       },
       showModal: false,
       minDate: dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
@@ -171,8 +172,8 @@ export default {
       this.form.annexId = ''
       const annexList = []
       const parentAnnexId = uuid32()
-      for (var i = 0; i < this.form.files.length; i++) {
-        await uploadFile(this.form.files[i], parentAnnexId).then((res) => {
+      for (var i = 0; i < this.form.annexList.length; i++) {
+        await uploadFile(this.form.annexList[i], parentAnnexId).then((res) => {
           annexList.push(res)
         }).catch((e) => {
           throw e
@@ -192,12 +193,12 @@ export default {
     },
     // 单个子任务附件上传
     async uploadSubTask(index) {
-      const files = this.form.subTasks[index].files
+      const annexList = this.form.subTasks[index].annexList
       this.form.subTasks[index].annexId = ''
       const subAnnexList = []
       const subAnnexId = uuid32()
-      for (var i = 0; i < files.length; i++) {
-        await uploadFile(files[i], subAnnexId).then((res) => {
+      for (var i = 0; i < annexList.length; i++) {
+        await uploadFile(annexList[i], subAnnexId).then((res) => {
           subAnnexList.push(res)
         }).catch((e) => {
           throw e
