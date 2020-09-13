@@ -41,26 +41,52 @@
       :value="data.reason"
       title="申请原因" />
     <van-field
-      v-model="formData.dormId"
+      v-model="formData.newBedText"
+      :rules="formDataRules.newBedId"
       :readonly="true"
+      :required="true"
       label="分配宿舍"
       right-icon="arrow"
       placeholder="请选择"
+      @click="isShowSelectBedPopup=true"
     />
     <user-picker
       v-model="formData.ccPerson"
       :disabled-users="[userId]"
       :max-users="10"
-      title="抄送人" />
+      title="抄送人"
+    />
+    <van-field
+      :maxlength="500"
+      v-model="formData.resultReason"
+      type="textarea"
+      placeholder="审核理由"
+      label="审核理由"
+    />
     <div class="soa-btn-box">
       <van-button
         type="info"
-        icon="checked">审核通过</van-button>
+        icon="checked"
+        @click="audit('PASS')">审核通过</van-button>
       <van-button
         type="warning"
         class="c-ml10"
-        icon="clear">审核不通过</van-button>
+        icon="clear"
+        @click="audit('NOPASS')">审核不通过</van-button>
     </div>
+    <van-popup
+      v-if="isShowSelectBedPopup"
+      v-model="isShowSelectBedPopup"
+      :style="{ height: '100%' }"
+      closeable
+      class="soa-popup"
+      position="bottom"
+    >
+      <dorm-allocate
+        :op-type="'change'"
+        @confirmBed="confirmBed"
+        @close="isShowSelectBedPopup=false" />
+    </van-popup>
   </div>
 </template>
 
@@ -71,12 +97,15 @@ import baseCheckList from '../mixins/base-check-list'
 import { statusList } from '../utils/dorm-enum'
 import { getQuery } from '@/utils'
 import userPicker from '@/components/userPicker'
+import dormAllocate from '../unallocated/dorm-allocate'
+import { Toast } from 'vant';
 export default {
   name: 'ChangeDetail',
   components: {
     customPanel,
     customCell,
-    userPicker
+    userPicker,
+    dormAllocate
   },
   mixins: [baseCheckList],
   data() {
@@ -87,10 +116,15 @@ export default {
       apiMethod: 'getResultListByUserId',
       checkParams: { userId: null },
       activeNames: [],
-      showCheckPopup: false,
+      isShowSelectBedPopup: false,
       formData: {
-        dormId: null,
-        ccPerson: null // 抄送人
+        newBedId: null,
+        newBedText: null,
+        resultReason: null,
+        ccPerson: [] // 抄送人
+      },
+      formDataRules: {
+        newBedId: [{ required: true, message: '请选择床位' }]
       },
       fieldList: [
         { prop: 'name', label: '姓名' },
@@ -150,7 +184,32 @@ export default {
         }
         this.loading = false
       })
+    },
+    // 分配床位
+    confirmBed(bedId, newBedText) {
+      this.formData.newBedId = bedId
+      this.formData.newBedText = newBedText
+      this.isShowSelectBedPopup = false
+    },
+    // 审核
+    audit(status) {
+      const params = {
+        ccPersonIds: this.formData.ccPerson.map(n => { return n.emplId }).join(','),
+        'id': this.id,
+        'newBedId': this.formData.newBedId,
+        'resultReason': this.formData.resultReason,
+        'status': status
+      }
+      this.$api.auditExchange(params).then(data => {
+        Toast.clear()
+        Toast('操作成功')
+        this.$router.push({
+          path: '/dorm/exchange'
+        })
+        this.$emit('close', true)
+      })
     }
+
   }
 }
 </script>

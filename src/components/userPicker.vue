@@ -4,9 +4,9 @@
     :readonly="true"
     :label="title"
     :rules="rules"
+    :placeholder="`请选择${title}`"
     class="soa-user-picker"
     right-icon="add"
-    placeholder
     @click="handleClick"
   />
 </template>
@@ -98,11 +98,7 @@ export default {
         })
         chooseNumber = this.value.users.length + sumDepartment
       }
-      return chooseNumber
-        ? chooseNumber > 7
-          ? '已选择' + chooseNumber + '人'
-          : arrName.join('，')
-        : '请选择' + this.title;
+      return chooseNumber ? chooseNumber > 7 ? '已选择' + chooseNumber + '人' : arrName.join('，') : '';
     },
     // 已选人员id数组，用于回显在选人页面
     strChoosedPersonIds() {

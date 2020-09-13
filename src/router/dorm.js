@@ -65,6 +65,12 @@ export default [
     name: 'dormExchangeDetail',
     component: () => import('@/views/app/dorm/exchangeDorm/change-detail')
   },
+  // 床位二维码
+  {
+    path: '/bed-qrcode',
+    name: 'bed-qrcode',
+    component: () => import('@/views/app/dorm/bed-qrcode')
+  },
   // 床位二维码无权限
   {
     path: '/bed-qrcode/bed-noauth',
@@ -118,6 +124,12 @@ export default [
     path: '/aroom',
     name: 'aroom',
     component: () => import('@/views/app/aroom')
+  },
+  // 床位二维码
+  {
+    path: '/aroom-qrcode',
+    name: 'aroom-qrcode',
+    component: () => import('@/views/app/aroom/aroom-detail')
   },
   // 活动室详情，包括学生扫码申请页
   {
