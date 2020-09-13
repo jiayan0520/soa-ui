@@ -185,10 +185,11 @@ export default {
         if (this.form.parentTaskId || this.parentId) {
           this.form.createUserId = this.userId
           this.form.opType = this.form.id ? 1 : 0
-          this.form.subTasks = []
+          this.form.parentTaskId = this.parentId
           this.$api.addTask({ ...this.form }).then((res) => {
             Toast(`${this.form.id ? '编辑' : '创建'}子任务创建成功`)
-            this.$emit('submit', this.form);
+            this.form.id = res
+            this.$emit('input', this.form);
           })
         } else {
           this.form.total = this.form.executor.length;
