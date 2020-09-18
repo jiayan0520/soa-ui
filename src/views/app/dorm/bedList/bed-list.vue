@@ -12,6 +12,7 @@
       @loadData="loadData"
       @clickOperator="isShowBar = true"
       @clickMoreBtn="clickMoreBtn"
+      @changeRowCheckbox="changeRowCheckbox"
       @showMoreOpItem="showMoreOpItem"
     >
       <template slot="top">
@@ -152,6 +153,7 @@
           <div class="flex-between">
             <span class="c-light">{{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</span>
             <span
+              v-if="slotProps.item.statusText"
               :class="slotProps.item.statusClass"
               class="c-ml10"
             >状态：{{ slotProps.item.statusText }}</span>
@@ -261,10 +263,12 @@ export default {
         this.$refs.listLayout.loading = false
         const rows = data.rows
         rows.forEach(item => {
-          const status = this.statusList.find(status => status.value === item.status)
-          if (status) {
-            item.statusText = status.text
-            item.statusClass = status.class
+          if (item.userId) {
+            const status = this.statusList.find(status => status.value === item.status)
+            if (status) {
+              item.statusText = status.text
+              item.statusClass = status.class
+            }
           }
         })
         this.dataList = this.dataList.concat(rows)

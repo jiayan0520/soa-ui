@@ -83,6 +83,7 @@ export default {
       this.$emit('change', value);
     },
     afterRead(file) {
+      console.log(file)
       // 上传
       this.$api.upload(file).then((data) => {
         data.annexId = this.value

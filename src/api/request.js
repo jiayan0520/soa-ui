@@ -20,8 +20,8 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(response => {
   const resData = response.data || {};
   if (resData.code >= 300) {
-    Toast(resData.msg)
-    return Promise.reject(resData.msg)
+    Toast(resData.msg || '出现未知错误')
+    return Promise.reject(resData)
   }
   if (Object.prototype.hasOwnProperty.call(resData, 'rows') && Object.prototype.hasOwnProperty.call(resData, 'total')) {
     resData.data = resData

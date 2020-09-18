@@ -9,14 +9,8 @@
     <custom-cell title="班级信息">
       <template slot="value">
         <div
-          v-html="`石油化工学院-过控2018级一班：54人
-        <br/>
-石油化工学院-化工2019级二班：58人
-        <br/>
-老师：8人
-        <br/>
-石油化工学院-油储2019级三班：1人`"
-        />
+          v-for="item in data.classInfos"
+          :key="item">{{ item.className }}:{{ item.count }}人</div>
       </template>
     </custom-cell>
     <custom-cell

@@ -15,7 +15,11 @@ export default {
     }
   },
   created() {
+    window.reload()
+  },
+  mounted() {
     this.id = getQuery('id')
+    alert('进来床位二维码页面了' + this.id)
     this.getlocation()
   },
   methods: {
@@ -26,14 +30,15 @@ export default {
         message: '定位中'
       })
       if (this.$dd.env.platform !== 'notInDingTalk' && (this.$dd.ios || this.$dd.android)) {
+        alert('钉钉环境定位中')
         const self = this
         this.$dd.device.geolocation.get({
           targetAccuracy: 2, // 期望定位精度半径(单位米)
           coordinate: 1, // 1：获取高德坐标；
           withReGeocode: false, // 是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
-          useCache: true, // 默认是true，如果需要频繁获取地理位置，请设置false
+          useCache: false, // 默认是true，如果需要频繁获取地理位置，请设置false
           onSuccess: function (result) {
-            // alert('获取定位信息:' + result.longitude + ',' + result.latitude + ',' + result.address)
+            alert('获取定位信息:' + result.longitude + ',' + result.latitude + ',' + result.address)
             Toast.clear()
             const longitude = result.longitude
             const latitude = result.latitude
@@ -54,8 +59,10 @@ export default {
         latitude: latitude,
         longitude: longitude
       }
+      alert('跳转链接验证')
       this.$api.scanBedQrcode(param).then(data => {
         let url = ''
+        alert(JSON.stringify(data))
         switch (data.funcCode) {
           // 辅导员权限
           case 'bed-all':

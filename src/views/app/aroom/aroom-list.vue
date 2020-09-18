@@ -33,7 +33,8 @@
             @click="del">删除</van-button>
           <van-button
             class="btn-op"
-            type="info">导出二维码</van-button>
+            type="info"
+            @click="getActivityRoomQRCodeImgs">导出二维码</van-button>
           <van-button
             class="btn-op"
             type="warning"
@@ -43,7 +44,8 @@
           <van-search
             v-model="searchForm.activityRoomName"
             placeholder="请输入活动室名称"
-            @search="onSearch" />
+            @search="onSearch"
+          />
         </form>
       </template>
       <template
@@ -76,10 +78,11 @@
       :style="{ height: '100%' }"
       closeable
       class="soa-popup"
-      position="bottom">
+      position="bottom"
+    >
       <aroom-edit
         :id="rowId"
-        @close="closePopup"/>
+        @close="closePopup" />
     </van-popup>
   </div>
 </template>
@@ -87,6 +90,7 @@
 <script>
 import aroomEdit from './aroom-edit'
 import baseList from '../dorm/mixins/base-list'
+import { Toast } from 'vant'
 export default {
   name: 'AroomList',
   components: {
@@ -99,6 +103,7 @@ export default {
         activityRoomName: null
       },
       moreOpList: [
+        { value: 'qc', label: '导出二维码' },
         { value: 'edit', label: '编辑' },
         { value: 'del', label: '删除' }
       ]
@@ -113,6 +118,9 @@ export default {
     // 点击更多操作按钮了
     clickMoreBtn(val, item) {
       switch (val) {
+        case 'qc':
+          this.getActivityRoomQRCodeImgs(item.id)
+          break
         // 编辑
         case 'edit':
           this.rowId = item.id
@@ -145,6 +153,27 @@ export default {
     // 删除活动室
     del(obj, id) {
       this.handleIdList(id, '删除', 'deleteRoom')
+    },
+    getActivityRoomQRCodeImgs(id) {
+      let idList = []
+      if (id) {
+        idList = [id]
+      } else {
+        if (!this.isCheckAll) {
+          idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+          if (idList.length <= 0) {
+            Toast(`请选中一条要导出二维码的记录！`);
+            return;
+          }
+        }
+      }
+      this.$api.getActivityRoomQRCodeImgs({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(data => {
+        window.open(this.tcBaseUrl + data.filePath)
+        Toast(`导出成功`);
+        this.onSearch()
+      }).catch(error => {
+        Toast(`导出失败！` + error);
+      })
     }
   }
 }

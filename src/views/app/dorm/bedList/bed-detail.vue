@@ -78,6 +78,7 @@
         :bed-id="data.id"
         :id="currentCheckId"
         :is-detail="isCheckDetail"
+        :has-parent="hasParent"
         type="BED"
         @close="closeCheckPopop"
       />
@@ -123,7 +124,7 @@ export default {
         { prop: 'name', label: '姓名' },
         { prop: 'isDormManagerText', label: '是否舍长' },
         { prop: 'statusName', label: '状态' },
-        { prop: 'sno', label: '学号' },
+        { prop: 'jobNumber', label: '学号' },
         { prop: 'mobile', label: '电话' },
         // { prop: 'zzmm', label: '政治面貌' },
         { prop: 'college', label: '学院专业' },

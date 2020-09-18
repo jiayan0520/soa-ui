@@ -130,7 +130,7 @@
             <span>{{ slotProps.item.userName }}</span>
             <span>（{{ slotProps.item.banji }}）</span>
           </div>
-          <div>{{ slotProps.item.bedInfo }}</div>
+          <div>{{ slotProps.item.dormInfo }}-{{ slotProps.item.bedInfo }}</div>
           <div class="text-nowrap">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
           <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>
@@ -155,6 +155,7 @@
         :data="currentCheck"
         :id="currentCheckId"
         :is-detail="isCheckDetail"
+        :has-parent="hasParent"
         @close="closeCheckPopop"
       />
     </van-popup>
@@ -196,7 +197,14 @@ export default {
     },
     loadData() {
       this.pageNum++;
-      this.$api.getResultList({ ...this.searchParams, type: this.active }).then(data => {
+      const params = this.searchParams
+      if (params.startTime && params.startTime.length === 16) {
+        params.startTime += ':00'
+      }
+      if (params.endTime && params.endTime.length === 16) {
+        params.endTime += ':00'
+      }
+      this.$api.getResultList({ ...params, type: this.active }).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
         const rows = data.rows.map(row => {

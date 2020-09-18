@@ -128,7 +128,7 @@ export default {
       },
       fieldList: [
         { prop: 'name', label: '姓名' },
-        { prop: 'sno', label: '学号' },
+        { prop: 'jobNumber', label: '学号' },
         { prop: 'mobile', label: '电话' },
         // { prop: 'zzmm', label: '政治面貌' },
         { prop: 'college', label: '学院专业' },
@@ -172,7 +172,7 @@ export default {
           ...data,
           ...data.soaUsers,
           // dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
-          bedName: data.bedName,
+          bedName: data.oldBed.bedName,
           instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
           parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }]
           // singleFee: data.soaDormDorm.singleFee

@@ -36,8 +36,7 @@
           <van-search
             v-model="searchForm.seachKey"
             placeholder="姓名/电话号码"
-            @search="onSearch"
-          />
+            @search="onSearch" />
         </form>
         <div class="soa-list-rank__row rank-title">
           <div class="user-out-all-checkbox">
@@ -107,7 +106,7 @@ import baseList from '../mixins/base-list'
 import { outUserTypeEnum } from '../utils/dorm-enum'
 import { checkMask } from '@/utils'
 import { complexPicker } from '@/utils/ddApi'
-import { Toast } from 'vant'
+import { Dialog, Toast } from 'vant'
 export default {
   name: 'UserOutList',
   components: {
@@ -221,7 +220,29 @@ export default {
     },
     // 删除
     del(obj, id) {
-      this.handleIdList(id, '删除', 'deleteUserOut')
+      let idList = []
+      if (id) {
+        idList = [id]
+      } else {
+        if (!this.isCheckAll) {
+          idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
+          if (idList.length <= 0) {
+            Toast(`请选中一条要删除的记录！`);
+            return;
+          }
+        }
+      }
+      Dialog.confirm({
+        title: `确认删除？`,
+        message: `此次选中${idList.length}条记录，删除的数据无法恢复`
+      }).then(() => {
+        this.$api.deleteUserOut(idList.join(',')).then(res => {
+          Toast(`删除成功，此次共操作${idList.length}条记录！`);
+          this.onSearch()
+        }).catch(error => {
+          Toast(`删除失败！` + error);
+        })
+      })
     },
     // 选择确定
     sure() {

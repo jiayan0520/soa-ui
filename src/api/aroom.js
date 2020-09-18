@@ -39,4 +39,7 @@ export function getApplyRoomList(params) {
 export function reviewRoom(params) {
   return put(`${prefix}/activityRoomApplication/review`, params)
 }
-
+// 导出活动室二维码
+export function getActivityRoomQRCodeImgs(params) {
+  return get(`${prefix}/qrScan/getActivityRoomQRCodeImgs`, params)
+}

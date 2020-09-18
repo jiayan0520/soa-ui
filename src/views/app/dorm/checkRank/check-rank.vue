@@ -124,7 +124,7 @@
         <div class="index-column">{{ slotProps.item.index }}</div>
         <div>
           <span v-if="active===1">{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}</span>
-          <span v-else />
+          <span v-else >{{ slotProps.item.stuName }}</span>
         </div>
         <div class="score-column">{{ slotProps.item.totalScore }}</div>
       </div>

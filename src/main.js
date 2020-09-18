@@ -29,7 +29,7 @@ Vue.prototype.$dd = dd;
 //   components: { App },
 //   template: '<App/>'
 // })
-
+// alert('不是从main.js进来的吗')
 init(
   // 仓库
   store,

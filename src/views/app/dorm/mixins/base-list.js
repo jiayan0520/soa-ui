@@ -138,8 +138,6 @@ export default {
             this.$api[method]({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(res => {
               Toast(`全部${opLabel}成功`);
               this.onSearch()
-            }).catch(error => {
-              Toast(`${opLabel}失败！` + error);
             })
           })
         })
@@ -151,8 +149,6 @@ export default {
           this.$api[method]({ ids: idList.join(','), isCheckAll: false }).then(res => {
             Toast(`${opLabel}成功，此次共操作${idList.length}条记录！`);
             this.onSearch()
-          }).catch(error => {
-            Toast(`${opLabel}失败！` + error);
           })
         })
       }

@@ -16,30 +16,25 @@
       <template
         slot="item-content"
         slot-scope="slotProps">
-        <div >
+        <div>
           <img
             v-if="slotProps.item.avatar"
             :src="slotProps.item.avatar"
-            class="soa-avatar"
-          >
+            class="soa-avatar" >
           <div
             v-else
             class="soa-avatar">{{ slotProps.item.stuName.substr(-2,2) }}</div>
         </div>
         <div class="soa-list-item-content">
-          <div>
-            <span>{{ slotProps.item.stuName }}</span>
-            <span>（{{ slotProps.item.collegeName }}-{{ slotProps.item.sclassName }}）</span>
-          </div>
-          <div class="c-light">
-            {{ slotProps.item.jg }}
-            <span class="c-info c-ml10">{{ slotProps.item.telephone }}</span>
-          </div>
+          <span>{{ slotProps.item.stuName }}</span>
+          <span>（{{ slotProps.item.collegeName }}-{{ slotProps.item.sclassName }}）</span>
+          <span class="c-info c-ml10">{{ slotProps.item.mobile }}</span>
         </div>
         <van-button
           class="soa-list-right-btn"
           type="info"
-          @click="setBed(slotProps.item.userId)">选床位</van-button>
+          @click="setBed(slotProps.item.userId)"
+        >选床位</van-button>
       </template>
     </list-layout>
   </div>
@@ -91,6 +86,10 @@ export default {
 .dorm-unallocated {
   .dorm-allocat-btn {
     height: 30px;
+  }
+  .soa-avatar{
+    width: 40px;
+    height: 40px;
   }
 }
 </style>

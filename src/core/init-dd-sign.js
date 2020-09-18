@@ -5,8 +5,9 @@ import * as $dd from 'dingtalk-jsapi';
  */
 export default async function initDdSign(store, router) {
   const system = store.getters['core/system']
+  // alert('【框架日志】我进来授权了', system.ddSingUrl);
   await api.getAppInfo({ url: system.ddSingUrl }).then(res => {
-    console.log('【框架日志】钉钉签名');
+    // alert('【框架日志】钉钉签名，授权钉钉接口');
     const { agentId, corpId, timeStamp, nonceStr, signature } = res
     $dd.config({
       agentId: agentId, // 必填，微应用ID
@@ -42,6 +43,6 @@ export default async function initDdSign(store, router) {
       // alert('dd error: ' + JSON.stringify(error));
     });
   }).catch(err => {
-    console.log(err);
+    alert('获取app的接口失败了' + err);
   });
 }

@@ -1,4 +1,4 @@
-import { post, get, put, del } from './request'
+import { uploadFile, post, get, put, del } from './request'
 
 // 前缀
 const prefix = `/prod-api/dormmodule`
@@ -74,7 +74,7 @@ export function updateUserOut(params) {
 }
 // 删除
 export function deleteUserOut(params) {
-  return del(`${prefix}/userOut`, params)
+  return del(`${prefix}/userOut/${params}`)
 }
 
 // 床位列表
@@ -182,5 +182,14 @@ export function getStuDemeritList(params) {
 }
 // 获取学生扣分榜
 export function getDormDemeritList(params) {
-  return post(`${prefix}//statistics/dormDemeritList`, params)
+  return post(`${prefix}/statistics/dormDemeritList`, params)
+}
+
+// 宿舍数据导入
+export function importDorm(params) {
+  return uploadFile(`${prefix}/dorm/importData`, params)
+}
+// 入住数据导入
+export function importDormUser(params) {
+  return uploadFile(`${prefix}/bed/importData`, params)
 }

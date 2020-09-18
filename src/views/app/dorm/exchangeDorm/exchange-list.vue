@@ -30,7 +30,7 @@
           <span>{{ slotProps.item.userName }}</span>
           <span>（{{ slotProps.item.banji }}）</span>
         </div>
-        <div class="c-light">{{ slotProps.item.applyTm }} 申请</div>
+        <div class="c-light">{{ slotProps.item.createTime }} 申请</div>
       </div>
       <van-button
         v-if="active!==1"
@@ -43,6 +43,7 @@
 <script>
 import listLayout from '@/components/listLayout'
 import baseList from '../mixins/base-list'
+import dayjs from 'dayjs';
 export default {
   name: 'ExchangeList',
   components: {
@@ -76,7 +77,12 @@ export default {
       this.$api.getExchangeList(this.searchParams).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        const rows = data.rows
+        const rows = data.rows.map(item => {
+          return {
+            createTime: dayjs(item.createTime).format('YYYY年MM月DD日 HH:mm'),
+            userName: item.soaUsers.name
+          }
+        })
         this.dataList = this.dataList.concat(rows)
         // 数据全部加载完成
         if (this.dataList.length >= data.total) {

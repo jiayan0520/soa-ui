@@ -40,7 +40,7 @@ export default {
           this.$api.getBedQRCodeImgs({ ids: item.id, isCheckAll: false }).then(data => {
             window.open(this.system.tcBaseUrl + data.filePath)
             Toast(`导出成功`);
-            this.onSearch()
+            this.loadAgain()
           }).catch(error => {
             Toast(`导出失败！` + error);
           })
