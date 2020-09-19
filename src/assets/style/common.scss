@@ -236,7 +236,7 @@ a {
         .van-collapse-item__content {
             box-sizing: border-box;
             overflow: auto;
-            height: 260px;
+            max-height: 260px;
         }
     }
 }

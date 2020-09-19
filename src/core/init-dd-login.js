@@ -9,7 +9,7 @@ export default async function initDD(store, router) {
   return new Promise(function (resolve, reject) {
     // 通过免登授权码换取用户账号
     const loginByDDCode = async (code) => {
-      alert('【框架日志】2.通过免登授权码登录');
+      console.log('【框架日志】2.通过免登授权码登录');
       await api.getAuthLogin({ code: code }).then(result => {
         // 2*.免密登录成功，将token保存起来
         const token = result.token ? result.token : result

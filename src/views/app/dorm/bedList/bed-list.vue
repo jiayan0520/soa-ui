@@ -177,11 +177,14 @@
 </template>
 
 <script>
+// import axios from 'axios';
 import baseList from '../mixins/base-list'
 import bedDetail from './bed-detail'
 import { statusList, dormTypeEnum } from '../utils/dorm-enum'
 import bedMoreOp from '../mixins/bed-more-op'
 import { Toast } from 'vant'
+import dayjs from 'dayjs';
+import { downLoadByBlob } from '@/utils'
 export default {
   name: 'BedList',
   components: {
@@ -231,7 +234,16 @@ export default {
         { value: 'exp', label: '导出数据' },
         { value: 'out', label: '退舍' },
         { value: 'del', label: '删除' }
-      ]
+      ],
+      progressPercent: 0,
+      exportLoading: '' // 导出的loading对象
+    }
+  },
+  watch: {
+    progressPercent(newVal, oldVal) {
+      if (this.exportLoading && newVal !== 0) {
+        this.exportLoading.message = (this.progressPercent === 100 ? `下载完成` : `文档下载中...${this.progressPercent}%`)
+      }
     }
   },
   created() {
@@ -284,6 +296,7 @@ export default {
           this.getBedQRCodeImgs()
           break
         case 'exp':
+          this.exportData()
           break
         case 'out':
           this.handleIdList(null, '退舍', 'outBed')
@@ -313,6 +326,48 @@ export default {
       }).catch(error => {
         Toast(`导出失败！` + error);
       })
+    },
+    // 导出数据
+    exportData() {
+      // 进度条百分比监听
+      this.exportLoading = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: `文档下载中...0%`
+      })
+      this.$api.exportBed(this.searchParams, {
+        responseType: 'blob',
+        onDownloadProgress: progressEvent => {
+          this.progressPercent = Number((progressEvent.loaded / progressEvent.total * 100).toFixed(2))
+        }
+      }).then(data => {
+        setTimeout(() => {
+          // 下载Blob流
+          const name = `床位信息${dayjs().format('YYYYMMDDHHmmss')}.xls`
+          downLoadByBlob(data, name)
+          this.exportLoading.message = ''
+          Toast.clear()
+          this.progressPercent = 0
+        }, 500);
+      })
+      debugger
+      // axios({
+      //   method: 'get',
+      //   url: window.$soa.tcBaseUrl + '/dormmodule/bed/export',
+      //   responseType: 'blob',
+      //   data: this.searchParams
+      // }).then(data => {
+      //   console.log(data)
+      //   const res = data.data
+      //   setTimeout(() => {
+      //     // this.exportLoading.close()
+      //     // 下载Blob流
+      //     const name = `床位信息${dayjs().format('YYYYMMDDHHmmss')}.xls`
+      //     downLoadByBlob(res, name)
+      //     this.exportLoading = ''
+      //     this.progressPercent = 0
+      //   }, 500);
+      // })
     }
   }
 }

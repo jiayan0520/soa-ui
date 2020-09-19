@@ -193,3 +193,7 @@ export function importDorm(params) {
 export function importDormUser(params) {
   return uploadFile(`${prefix}/bed/importData`, params)
 }
+// 导出床位信息
+export function exportBed(params, config) {
+  return get(`${prefix}/bed/export`, params, 60000, config)
+}

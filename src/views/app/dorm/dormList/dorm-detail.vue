@@ -46,6 +46,7 @@
             </div>
           </div>
           <div
+            :style="`${data.soaDormBeds.length>2?'position:relative':'position:inherit'}`"
             class="soa-gengduo"
             @click.stop="bindMoreClick(index)">
             <i class="soa-icon soa-icon-gengduo" />
