@@ -22,6 +22,11 @@ export default new Router({
       component: () => import('@/views/message/index')
     },
     {
+      path: '/personal',
+      name: 'personal',
+      component: () => import('@/views/personal/index')
+    },
+    {
       path: '/exception-401',
       name: 'exception-401',
       component: () => import('@/views/exception-401')

@@ -20,6 +20,10 @@
         replace
         to="/home"
         icon="apps-o">我的应用</van-tabbar-item>
+      <van-tabbar-item
+        replace
+        to="/personal"
+        icon="chat-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>

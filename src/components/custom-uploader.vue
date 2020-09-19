@@ -90,7 +90,7 @@ export default {
         data.type = this.type
         // 关联上传的附件及该项业主的关联附件id
         this.$api.annex([data]).then((res) => {
-          file.aid = res[0]
+          file.id = res[0]
         }).catch((e) => { throw e })
       }).catch(() => {
         Toast('上传失败')
