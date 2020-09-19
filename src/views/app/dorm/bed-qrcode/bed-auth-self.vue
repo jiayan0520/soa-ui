@@ -49,9 +49,8 @@
     <!--调换宿舍-->
     <van-popup
       v-model="showChangePopup"
-      :style="{ height: '50%' }"
-      closeable
-      position="bottom">
+      class="soa-popup__center"
+      closeable>
       <van-form
         class="soa-custom-form"
         @submit="changeDorm">
@@ -69,7 +68,8 @@
         <div class="soa-btn-box">
           <van-button
             type="info"
-            native-type="submit">保存</van-button>
+            style="width:100px"
+            native-type="submit">申请</van-button>
         </div>
       </van-form>
     </van-popup>

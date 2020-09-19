@@ -7,7 +7,7 @@ export default async function initDdSign(store, router) {
   const system = store.getters['core/system']
   // alert('【框架日志】我进来授权了', system.ddSingUrl);
   await api.getAppInfo({ url: system.ddSingUrl }).then(res => {
-    // alert('【框架日志】钉钉签名，授权钉钉接口');
+    // alert('钉钉签名，授权钉钉接口' + JSON.stringify(res));
     const { agentId, corpId, timeStamp, nonceStr, signature } = res
     $dd.config({
       agentId: agentId, // 必填，微应用ID

@@ -236,7 +236,7 @@ a {
         .van-collapse-item__content {
             box-sizing: border-box;
             overflow: auto;
-            height: 260px;
+            max-height: 260px;
         }
     }
 }
@@ -329,6 +329,11 @@ a {
     > div {
         margin-bottom: 52px;
     }
+}
+// 弹框 中间
+.soa-popup__center {
+    width: 90%;
+    border-radius: 5px;
 }
 
 .van-uploader__wrapper--disabled {

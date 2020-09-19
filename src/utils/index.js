@@ -1,4 +1,5 @@
 import api from '@/api'
+import dayjs from 'dayjs'
 
 // 生成32位uuid
 export function uuid32() {
@@ -78,4 +79,32 @@ export function checkMask(str, pat) {
   }
   var pattern = new RegExp(pat, 'gi')
   if (pattern.test(str)) { return true; } else { return false; }
+}
+// 下载blob的文件流
+export function downLoadByBlob(data, name, type = '') {
+  // 如果没传入name就默认后缀为xls,即Excel
+  const fileName = name || `导出数据${dayjs().format('YYYYMMDDHHmmss')}.xls`
+  const link = document.createElement('a')
+  link.style.display = 'none'
+  let href = ''
+  switch (type) {
+    case 'img':
+      href = data
+      break
+    case 'zip': {
+      const blob = new Blob([data])
+      href = URL.createObjectURL(blob)
+      break
+    }
+    default:
+      href = URL.createObjectURL(data)
+  }
+  link.href = href
+  link.setAttribute(
+    'download',
+    fileName
+  )
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }

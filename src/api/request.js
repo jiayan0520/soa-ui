@@ -71,12 +71,13 @@ export function del(url, data, timeout = TIMEOUT, opt = {}) {
   });
 }
 
-export function get(url, data = {}, timeout = TIMEOUT) {
+export function get(url, data = {}, timeout = TIMEOUT, opt = {}) {
   if (!_.isObject(data)) {
     throw new Error('data is not object, url is ' + url);
   }
   return service({
     url: url,
+    ...opt,
     method: 'get',
     params: data,
     timeout: timeout

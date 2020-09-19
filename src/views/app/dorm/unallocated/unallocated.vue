@@ -87,9 +87,13 @@ export default {
   .dorm-allocat-btn {
     height: 30px;
   }
-  .soa-avatar{
+  .soa-avatar {
     width: 40px;
     height: 40px;
+  }
+  .soa-list-right-btn {
+    margin-left: 15px;
+    padding: 0 10px;
   }
 }
 </style>

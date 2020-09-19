@@ -11,7 +11,7 @@
     <!--申请活动室弹框-->
     <van-popup
       v-model="showApplyPopup"
-      :style="{ height: '100%' }"
+      :style="{ height: '50%' }"
       closeable
       position="bottom">
       <aroom-apply

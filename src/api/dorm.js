@@ -1,7 +1,7 @@
 import { uploadFile, post, get, put, del } from './request'
 
 // 前缀
-const prefix = `/prod-api/dormmodule`
+const prefix = window.$soa.tcBaseUrl + `/dormmodule`
 
 // 宿舍列表
 export function getDormList(params) {
@@ -192,4 +192,8 @@ export function importDorm(params) {
 // 入住数据导入
 export function importDormUser(params) {
   return uploadFile(`${prefix}/bed/importData`, params)
+}
+// 导出床位信息
+export function exportBed(params, config) {
+  return get(`${prefix}/bed/export`, params, 60000, config)
 }

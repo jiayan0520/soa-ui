@@ -10,7 +10,7 @@
       <template slot="value">
         <div
           v-for="item in data.classInfos"
-          :key="item">{{ item.className }}:{{ item.count }}人</div>
+          :key="item">{{ item.parent_names }}:{{ item.count }}人</div>
       </template>
     </custom-cell>
     <custom-cell

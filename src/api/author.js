@@ -1,9 +1,9 @@
 import { get, post } from './request'
 // 前缀
-const prefix = `/prod-api/dingding`
+const prefix = window.$soa.tcBaseUrl + `/dingding`
 // 账号密码模拟登陆
 function loginTest(params) {
-  return post(`/prod-api/loginTest`, params)
+  return post(window.$soa.tcBaseUrl + `/loginTest`, params)
 }
 // 钉钉登录
 function getAuthLogin(params) {
