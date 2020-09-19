@@ -1,9 +1,9 @@
 <template>
   <div class="soa-task-add">
     <van-form
+      ref="form"
       label-width="120px"
-      class="soa-custom-form"
-      @submit="onSubmit">
+      class="soa-custom-form">
       <van-field
         v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
@@ -87,17 +87,17 @@
         </template>
       </van-field>
       <van-divider />
-      <childTaskList
-        :list="form.subTasks"
-        :deadline="form.deadline"/>
-      <van-button
-        block
-        class="soa-task-add__submit"
-        type="info"
-        native-type="submit">
-        提交
-      </van-button>
     </van-form>
+    <childTaskList
+      :list="form.subTasks"
+      :deadline="form.deadline"/>
+    <van-button
+      block
+      class="soa-task-add__submit"
+      type="info"
+      @click="onSubmit">
+      提交
+    </van-button>
   </div>
 </template>
 
@@ -211,17 +211,19 @@ export default {
       }).catch((e) => { throw e })
     },
     onSubmit() {
-      Toast.loading({ message: '任务创建中，请稍后...', duration: 0 })
-      this.uploadParentTask().then(() => {
-        this.subTask().then(() => {
-          this.addTask()
-        }).catch(() => {
+      this.$refs.form.validate().then(valid => {
+        Toast.loading({ message: '任务创建中，请稍后...', duration: 0 })
+        this.uploadParentTask().then(() => {
+          this.subTask().then(() => {
+            this.addTask()
+          }).catch(() => {
+            Toast.clear()
+            Toast('任务创建失败-上传子任务附件失败')
+          })
+        }).catch((e) => {
           Toast.clear()
-          Toast('任务创建失败-上传子任务附件失败')
+          Toast('任务创建失败-上传父任务附件失败')
         })
-      }).catch((e) => {
-        Toast.clear()
-        Toast('任务创建失败-上传父任务附件失败')
       })
     }
   }

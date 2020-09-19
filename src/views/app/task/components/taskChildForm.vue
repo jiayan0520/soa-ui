@@ -27,6 +27,7 @@
       />
       <user-picker
         v-model="form.executor"
+        :rules="[{ required: true, message: '请选择执行人' }]"
         :disabled-users="[userId]"
         :user-only="true"
         title="执行人"/>
@@ -45,8 +46,7 @@
       </van-field>
       <van-field
         center
-        label="截止时间"
-      >
+        label="截止时间">
         <template #input>
           <date-picker
             v-model="form.deadline"
@@ -77,8 +77,7 @@
       <van-field
         :readonly="true"
         label="附件"
-        placeholder=""
-      >
+        placeholder="">
         <template #input>
           <custom-uploader
             v-if="form.parentTaskId || parentId"

@@ -122,8 +122,6 @@ export default {
     onSearch() {
       this.page = 0;
       this.dataList = []
-      this.$refs.listLayout.loading = true
-      this.$refs.listLayout.finished = false
       this.onLoad()
     },
     computeTimes(deadLine) {
@@ -131,6 +129,7 @@ export default {
       return computeDiffTime(deadLineTime)
     },
     onLoad() {
+      this.page++
       const stateTypeMap = {
         0: 'UNFINISHED',
         1: 'FINISHED',
@@ -150,7 +149,7 @@ export default {
         const total = (data && data.total) || 0;
         // 加载状态结束
         this.$refs.listLayout.loading = false
-        this.page++
+        // this.page++
         // 数据全部加载完成
         if (this.dataList && (this.dataList.length >= total)) {
           this.$refs.listLayout.finished = true

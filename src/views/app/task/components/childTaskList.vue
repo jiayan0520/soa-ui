@@ -27,16 +27,14 @@
       @click="handleAdd">
       添加子任务
     </van-button>
-    <template v-if="showModel">
-      <TaskChildForm
-        :show="show"
-        :deadline="deadline"
-        :params="editTask"
-        :parent-id="parentId"
-        @submit="handleSubmit"
-        @input="handleInput"
-        @closeModal="closeChildModal"/>
-    </template>
+    <TaskChildForm
+      :show="show"
+      :deadline="deadline"
+      :params="editTask"
+      :parent-id="parentId"
+      @submit="handleSubmit"
+      @input="handleInput"
+      @closeModal="closeChildModal"/>
   </div>
 </template>
 
@@ -79,7 +77,6 @@ export default {
   },
   data() {
     return {
-      showModel: false,
       show: false,
       taskIndex: '',
       taskStatus
@@ -125,26 +122,17 @@ export default {
       }
     },
     handleAdd() {
-      this.showModel = true
-      this.$nextTick(() => {
-        this.taskIndex = '';
-        this.show = true;
-      })
+      this.taskIndex = '';
+      this.show = true;
     },
     handleEdit(index) {
-      this.showModel = true
-      this.$nextTick(() => {
-        this.taskIndex = index;
-        this.show = true;
-      })
+      this.taskIndex = index;
+      this.show = true;
     },
     handleSubmit(value) {
-      this.showModel = false
-      this.$nextTick(() => {
-        this.show = false;
-        this.taskIndex = '';
-        this.$emit('submit', value);
-      })
+      this.show = false;
+      this.taskIndex = '';
+      this.$emit('submit', value);
     },
     // 获取子任务数据
     handleInput(data) {

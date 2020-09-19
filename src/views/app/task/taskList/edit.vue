@@ -1,9 +1,9 @@
 <template>
   <div class="soa-task-edit">
     <van-form
+      ref="form"
       label-width="120px"
-      class="soa-custom-form"
-      @submit="onSubmit">
+      class="soa-custom-form">
       <van-field
         v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
@@ -88,19 +88,19 @@
         </template>
       </van-field>
       <van-divider />
-      <childTaskList
-        v-if="!form.parentTaskId"
-        :list="form.subTasks"
-        :parent-id="form.id"
-        :deadline="form.deadline"/>
-      <van-button
-        block
-        class="soa-task-edit__submit"
-        type="info"
-        native-type="submit">
-        提交
-      </van-button>
     </van-form>
+    <childTaskList
+      v-if="!form.parentTaskId"
+      :list="form.subTasks"
+      :parent-id="form.id"
+      :deadline="form.deadline"/>
+    <van-button
+      block
+      class="soa-task-edit__submit"
+      type="info"
+      @click="onSubmit">
+      提交
+    </van-button>
   </div>
 </template>
 
@@ -163,13 +163,15 @@ export default {
       })
     },
     onSubmit() {
-      Toast.loading({ message: '任务编辑中，请稍后...', duration: 0 })
-      this.form.createUserId = this.userId
-      this.form.opType = 1
-      this.$api.addTask({ ...this.form }).then((res) => {
-        Toast.clear()
-        Toast('任务修改成功')
-        this.$router.push('/task');
+      this.$refs.form.validate().then(valid => {
+        Toast.loading({ message: '任务编辑中，请稍后...', duration: 0 })
+        this.form.createUserId = this.userId
+        this.form.opType = 1
+        this.$api.addTask({ ...this.form }).then((res) => {
+          Toast.clear()
+          Toast('任务修改成功')
+          this.$router.push('/task');
+        })
       })
     }
   }
