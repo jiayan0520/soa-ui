@@ -138,20 +138,20 @@ export default {
       const parms = {
         type: this.active + 1,
         content: this.content,
-        page: this.page,
-        limit: this.limit,
+        pageNum: this.page,
+        pageSize: this.limit,
         userId: this.$store.getters['core/user'].userId
       }
       stateTypeMap[this.active1] && (parms.state = stateTypeMap[this.active1])
       // 异步更新数据
       this.$api.getTaskList(parms).then((data) => {
-        this.dataList = (data && data.rows) || [];
+        this.dataList = this.dataList.concat(data.rows)
         const total = (data && data.total) || 0;
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // this.page++
         // 数据全部加载完成
-        if (this.dataList && (this.dataList.length >= total)) {
+        if (this.dataList.length >= total) {
           this.$refs.listLayout.finished = true
         }
       })

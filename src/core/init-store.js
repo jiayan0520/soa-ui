@@ -91,7 +91,7 @@ export default function initStore(store, router, cycle) {
         if (JSON.stringify(getters.user) === '{}' && token) {
           try {
             const user = (await api.getUserInfo())
-            commit('setUser', user)
+            commit('setUser', user.soaUsers)
             console.log('【框架日志】用户信息初始化完成：', user)
           } catch (e) {
             console.error('【框架日志】获取用户信息失败，请联系管理员', e)
