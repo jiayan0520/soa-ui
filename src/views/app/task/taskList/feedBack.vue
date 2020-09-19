@@ -1,7 +1,7 @@
 <template>
   <div class="soa-task-feedback">
     <custom-cell
-      :value="feedInfo.createUserName"
+      :value="feedInfo.createTaskUserName"
       title="发起人"/>
     <custom-cell
       :value="feedInfo.title"
@@ -80,7 +80,7 @@ export default {
   },
   created() {
     // this.form.taskPerformId = '1c0a3a5184074527973dfe6106085feb'
-    this.form.taskPerformId = this.$route.query.id
+    this.id = this.$route.query.id
     this.init()
   },
   methods: {
@@ -90,7 +90,7 @@ export default {
         forbidClick: true,
         message: '加载中...'
       })
-      this.$api.getTaskFeedbackInfo({ id: this.form.taskPerformId }).then((res) => {
+      this.$api.getTaskFeedbackInfo({ id: this.id }).then((res) => {
         this.feedInfo = res;
         Toast.clear()
       }).catch((err) => {
@@ -116,6 +116,7 @@ export default {
     feedSubmit() {
       Toast.loading({ message: '提交中，请稍后...', duration: 0 })
       this.handleData().then(() => {
+        this.form.taskPerformId = this.feedInfo.taskPerformId
         this.$api.saveTaskFeedbackInfo(this.form).then(() => {
           Toast.clear()
           this.$router.push('/task');

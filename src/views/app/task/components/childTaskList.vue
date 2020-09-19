@@ -27,14 +27,16 @@
       @click="handleAdd">
       添加子任务
     </van-button>
-    <TaskChildForm
-      :show="show"
-      :deadline="deadline"
-      :params="editTask"
-      :parent-id="parentId"
-      @submit="handleSubmit"
-      @input="handleInput"
-      @closeModal="closeChildModal"/>
+    <template v-if="showModel">
+      <TaskChildForm
+        :show="show"
+        :deadline="deadline"
+        :params="editTask"
+        :parent-id="parentId"
+        @submit="handleSubmit"
+        @input="handleInput"
+        @closeModal="closeChildModal"/>
+    </template>
   </div>
 </template>
 
@@ -77,6 +79,7 @@ export default {
   },
   data() {
     return {
+      showModel: false,
       show: false,
       taskIndex: '',
       taskStatus
@@ -101,7 +104,7 @@ export default {
         annexList: [], // 附件
         state: 'UNFINISHED'
       }
-      return this.taskIndex || this.taskIndex === 0 ? this.list[this.taskIndex] : tempTask
+      return this.taskIndex || this.taskIndex === 0 ? { ...this.list[this.taskIndex] } : tempTask
     }
   },
   methods: {
@@ -122,17 +125,26 @@ export default {
       }
     },
     handleAdd() {
-      this.taskIndex = '';
-      this.show = true;
+      this.showModel = true
+      this.$nextTick(() => {
+        this.taskIndex = '';
+        this.show = true;
+      })
     },
     handleEdit(index) {
-      this.taskIndex = index;
-      this.show = true;
+      this.showModel = true
+      this.$nextTick(() => {
+        this.taskIndex = index;
+        this.show = true;
+      })
     },
     handleSubmit(value) {
-      this.show = false;
-      this.taskIndex = '';
-      this.$emit('submit', value);
+      this.showModel = false
+      this.$nextTick(() => {
+        this.show = false;
+        this.taskIndex = '';
+        this.$emit('submit', value);
+      })
     },
     // 获取子任务数据
     handleInput(data) {

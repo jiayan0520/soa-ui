@@ -44,11 +44,11 @@
           <div
             :style="infoStyle"
             class="soa-task-list__info">
-            <div class="c-ft16">{{ slotProps.item.title }}</div>
-            <div class="c-light">{{ slotProps.item.deadline }} 截止</div>
+            <div class="c-ft16">{{ slotProps.item.taskNumber }}  {{ slotProps.item.title }}</div>
+            <div class="c-light">{{ slotProps.item.deadLine }} 截止</div>
             <div class="c-light">{{ slotProps.item.createTime }} 发布</div>
-            <span class="c-info">{{ slotProps.item.create_user_id === userId ? '我分配的': slotProps.item.createUserName }}</span> |
-            <span :class="[`c-${computeTimes(slotProps.item.deadline).type}`]">{{ computeTimes(slotProps.item.deadline).value }}</span>
+            <span class="c-info">{{ slotProps.item.createUserId === userId ? '我分配的': slotProps.item.createUserName }}</span> |
+            <span :class="[`c-${computeTimes(slotProps.item.deadLine).type}`]">{{ computeTimes(slotProps.item.deadLine).value }}</span>
             <!-- <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div> -->
           </div>
           <div :class="[taskStatus[slotProps.item.state].type,'soa-task-list__status']">{{ taskStatus[slotProps.item.state].label }}</div>
@@ -126,9 +126,9 @@ export default {
       this.$refs.listLayout.finished = false
       this.onLoad()
     },
-    computeTimes(deadline) {
-      const deadlineTime = deadline + ':00'
-      return computeDiffTime(deadlineTime)
+    computeTimes(deadLine) {
+      const deadLineTime = deadLine + ':00'
+      return computeDiffTime(deadLineTime)
     },
     onLoad() {
       const stateTypeMap = {
@@ -159,7 +159,6 @@ export default {
     },
     // 下拉点击事件
     clickMoreBtn(value, item) {
-      console.log('clickMoreBtn', value)
       switch (value) {
         // 编辑
         case 'edit':

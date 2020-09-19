@@ -5,6 +5,7 @@
     :before-delete="beforeDelete"
     :disabled="readOnly"
     :max-count="maxCount"
+    :accept="$store.getters['core/system'].acceptFile"
     multiple
     @before-read="beforeRead"
   />
@@ -93,6 +94,7 @@ export default {
           file.aid = res[0]
         }).catch((e) => { throw e })
       }).catch(() => {
+        this.fileList.splice(this.fileList.length - 1, 1);
         Toast('上传失败')
       })
     },

@@ -2,7 +2,8 @@
   <div class="soa-task-add">
     <van-form
       label-width="120px"
-      class="soa-custom-form">
+      class="soa-custom-form"
+      @submit="onSubmit">
       <van-field
         v-model="form.title"
         :rules="[{ required: true, message: '请输入任务标题' }]"
@@ -21,6 +22,7 @@
       <user-picker
         v-model="form.executor"
         :disabled-users="[userId]"
+        :rules="[{ required: true, message: '请选择执行人' }]"
         :user-only="true"
         title="执行人"/>
       <van-field
@@ -92,7 +94,7 @@
         block
         class="soa-task-add__submit"
         type="info"
-        @click="onSubmit">
+        native-type="submit">
         提交
       </van-button>
     </van-form>

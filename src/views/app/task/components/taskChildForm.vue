@@ -185,9 +185,9 @@ export default {
         if (this.form.parentTaskId || this.parentId) {
           this.form.createUserId = this.userId
           this.form.opType = this.form.id ? 1 : 0
-          this.form.parentTaskId = this.parentId
+          this.form.parentTaskId = this.form.parentTaskId || this.parentId
           this.$api.addTask({ ...this.form }).then((res) => {
-            Toast(`${this.form.id ? '编辑' : '创建'}子任务创建成功`)
+            Toast(`${this.form.id ? '编辑' : '创建'}子任务成功`)
             this.form.id = res
             this.$emit('input', this.form);
           })
