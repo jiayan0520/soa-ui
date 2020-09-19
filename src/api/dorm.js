@@ -1,7 +1,7 @@
 import { uploadFile, post, get, put, del } from './request'
 
 // 前缀
-const prefix = `/prod-api/dormmodule`
+const prefix = window.$soa.tcBaseUrl + `/dormmodule`
 
 // 宿舍列表
 export function getDormList(params) {

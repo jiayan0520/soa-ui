@@ -1,6 +1,6 @@
 import { uploadFile, post } from './request'
 // 前缀
-const prefix = `/prod-api/common`
+const prefix = window.$soa.tcBaseUrl + `/common`
 // 上传附件，保存到附件表
 function upload(params) {
   return uploadFile(`${prefix}/upload`, params)

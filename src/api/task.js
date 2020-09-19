@@ -1,7 +1,7 @@
 import { post, get } from './request'
 
 // 前缀
-const prefix = `/prod-api/taskModule`
+const prefix = window.$soa.tcBaseUrl + `/taskModule`
 
 function addTask(params) {
   return post(`${prefix}/task/saveTask`, params)
