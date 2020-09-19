@@ -71,8 +71,6 @@ export default {
     onSearch() {
       this.page = 0;
       this.dataList = []
-      this.$refs.listLayout.loading = true
-      this.$refs.listLayout.finished = false
       this.onLoad()
     },
     computeTimes(deadline) {
@@ -83,17 +81,17 @@ export default {
       this.page++;
       const params = {
         type: this.active ? 'AUDITED' : 'WAITING',
-        page: this.page,
-        limit: this.limit,
+        pageNum: this.page,
+        pageSize: this.limit,
         content: this.searchValue
       }
       this.$api.getTaskExamineList(params).then((res) => {
-        this.dataList = (res && res.rows) || [];
+        this.dataList = this.dataList.concat(res.rows)
         const total = (res && res.total) || 0;
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.dataList && (this.dataList.length >= total)) {
+        if (this.dataList.length >= total) {
           this.$refs.listLayout.finished = true
         }
       })

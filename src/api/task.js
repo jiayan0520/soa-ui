@@ -27,7 +27,7 @@ function getTaskStatisticsList(params) {
 }
 // 任务审核列表
 function getTaskExamineList(params) {
-  return post(`${prefix}/audit/list?pageNum=${params.page}&pageSize=${params.limit}`, params)
+  return post(`${prefix}/audit/list`, params)
 }
 // 任务审核详情
 function getTaskExaminDetail(params) {
