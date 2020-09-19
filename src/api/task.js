@@ -8,7 +8,7 @@ function addTask(params) {
 }
 // 任务列表
 function getTaskList(params) {
-  return post(`${prefix}/task/list?pageNum=${params.page}&pageSize=${params.limit}`, params)
+  return post(`${prefix}/task/list`, params)
 }
 // 任务详情
 function getTaskDetail(params) {
