@@ -23,7 +23,7 @@
       <van-tabbar-item
         replace
         to="/personal"
-        icon="chat-o">我的</van-tabbar-item>
+        icon="user-o">我的信息</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -38,8 +38,8 @@ export default {
     }
   },
   mounted() {
-    this.active = window.location.href.indexOf('message') >= 0 ? 0 : 1
-    this.hasTabBar = window.location.href.indexOf('qrcode') >= 0 ? 0 : 1
+    this.active = window.location.href.indexOf('message') > -1 ? 0 : window.location.href.indexOf('personal') > -1 ? 2 : 1
+    this.hasTabBar = window.location.href.indexOf('qrcode') > -1 ? 0 : 1
   }
 }
 </script>
