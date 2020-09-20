@@ -51,7 +51,7 @@
             <span :class="[`c-${computeTimes(slotProps.item.deadLine).type}`]">{{ computeTimes(slotProps.item.deadLine).value }}</span>
             <!-- <div class="c-light">{{ slotProps.item.infoNum }}条动态  {{ slotProps.item.done }}/{{ slotProps.item.taskNumber }}完成  （未结算）</div> -->
           </div>
-          <div :class="[taskStatus[slotProps.item.state].type,'soa-task-list__status']">{{ taskStatus[slotProps.item.state].label }}</div>
+          <div :class="[taskStatus[slotProps.item.performState || slotProps.item.state].type,'soa-task-list__status']">{{ taskStatus[slotProps.item.performState || slotProps.item.state].label }}</div>
         </div>
       </template>
     </list-layout>

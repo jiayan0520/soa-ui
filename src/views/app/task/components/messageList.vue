@@ -1,15 +1,15 @@
 <template>
   <div class="soa-task-message-list">
     <van-cell
-      v-for="items in form.infos"
-      :key="items.index">
+      v-for="items in list"
+      :key="items.id">
       <div class="soa-task-message-list__commentList">
-        <div class="name">【{{ items.name }}】</div>
+        <div class="name">【{{ items.userName }}】</div>
         <div class="content">{{ items.content }}</div>
-        <div class="time">{{ items.time }}</div>
+        <div class="time">{{ items.createTime }}</div>
       </div>
     </van-cell>
-    <van-cell>
+    <van-cell v-if="show">
       <van-field
         v-model="inputText"
         center
@@ -36,6 +36,10 @@ export default {
       default() {
         return []
       }
+    },
+    show: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -49,7 +53,7 @@ export default {
 <style lang="scss">
 @import '@/assets/mixins/mixins.scss';
 @import '@/assets/style/var.scss';
-@include b(message-list){
+@include b(task-message-list){
  @include e(commentList){
      display:flex;
      justify-content: space-between;
