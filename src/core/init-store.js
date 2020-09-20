@@ -27,6 +27,10 @@ export default function initStore(store, router, cycle) {
       authorized: state => state.authorized,
       // 用户信息
       user: state => state.user || {},
+      // 用户的组织机构列表
+      userDepList: state => state.userDepList || [],
+      // 用户权限
+      userPopedoms: state => state.userPopedoms || [],
       // 用户token
       token: state => state.token
     },
@@ -41,6 +45,14 @@ export default function initStore(store, router, cycle) {
       // 设置用户信息
       setUser(state, user) {
         state.user = user
+      },
+      // 设置用户的组织机构列表信息
+      setUserDepList(state, userDepList) {
+        state.userDepList = userDepList
+      },
+      // 设置用户权限
+      setUserPopedom(state, userPopedoms) {
+        state.userPopedoms = userPopedoms
       },
       // 设置token信息
       setToken(state, token) {
@@ -92,6 +104,7 @@ export default function initStore(store, router, cycle) {
           try {
             const user = (await api.getUserInfo())
             commit('setUser', user.soaUsers)
+            commit('setUserDepList', user.userDeptsList)
             console.log('【框架日志】用户信息初始化完成：', user)
           } catch (e) {
             console.error('【框架日志】获取用户信息失败，请联系管理员', e)
@@ -100,6 +113,9 @@ export default function initStore(store, router, cycle) {
             dispatch('auth', { msg: `获取用户信息失败，请重新登录` })
           }
         }
+        // 获取用户权限
+        const popedoms = (await api.getUserPopedom())
+        commit('setUserPopedom', popedoms)
 
         // 每次鉴权成功后的固定循环
         await cycle(store, router)

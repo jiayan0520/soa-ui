@@ -137,6 +137,7 @@ export default {
       this.$api.getRoomList(this.searchParams).then(data => {
         const rows = data.rows
         rows.forEach(item => {
+          item.isCheck = this.isCheckAll
           if (item.annexList && item.annexList.length > 0) {
             item.fileUrl = this.tcBaseUrl + item.annexList[0].fileName
           }

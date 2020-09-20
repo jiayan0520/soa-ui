@@ -8,8 +8,6 @@
         v-model="user.avatar"
         center
         label="头像"
-        right-icon="arrow"
-        placeholder="请选择"
       >
         <template #input>
           <div>
@@ -28,53 +26,95 @@
         v-model="user.name"
         center
         label="用户名"
-        right-icon="arrow"
-        placeholder="请选择"
-        @click="showNamePopup = true"
       />
       <van-field
         :readonly="true"
         v-model="user.mobile"
         center
-        label="手机号码"
-      />
+        label="手机号码" />
       <van-field
         :readonly="true"
-        v-model="user.name"
+        v-model="mainDepName"
         center
         label="主组织机构"
         right-icon="arrow"
         placeholder="请选择"
-        @click="showNamePopup = true"
+        @click="isShowDepSelect = true"
       />
     </van-form>
     <van-popup
       v-model="showNamePopup"
       class="soa-peronal-popup">
       <div class="title">请输入</div>
-      <input v-model="user.name">
+      <input v-model="user.name" >
       <div class="btn-box">
         <div @click="showNamePopup=false">取消</div>
         <div @click="showNamePopup=false">确定</div>
       </div>
     </van-popup>
+    <van-popup
+      v-model="isShowDepSelect"
+      position="bottom"
+      style="min-height: 20% ">
+      <van-picker
+        :columns="userDepList"
+        show-toolbar
+        @confirm="onConfirm"
+        @cancel="isShowDepSelect = false"
+      />
+    </van-popup>
   </div>
 </template>
 <script>
+import { Toast } from 'vant'
 export default {
   data() {
     return {
-      showNamePopup: false
+      showNamePopup: false,
+      isShowDepSelect: false,
+      mainDepName: null
     }
   },
   computed: {
     user() {
       return this.$store.getters['core/user']
+    },
+    userDepList() {
+      return this.$store.getters['core/userDepList'].map(item => {
+        return {
+          value: item.deptId,
+          text: item.parentNames.replace('[', '').replace(']', '').split(', ').join('-')
+        }
+      })
     }
+  },
+  watch: {
+    userDepList: {
+      handler() {
+        const mainDep = this.userDepList.find(dep => dep.value === this.user.mainDeptId)
+        this.mainDepName = mainDep ? mainDep.text : ''
+        console.log(this.mainDepName)
+      },
+      immediate: true
+    }
+  },
+  mounted() {
   },
   methods: {
     onSubmit() {
-
+    },
+    // 更新主要组织机构
+    onConfirm(item) {
+      if (this.user.mainDeptId !== item.value) {
+        this.$api.updateUserInfo({ mainDeptId: item.value }).then(data => {
+          this.mainDepName = item.text
+          const user = this.user
+          user.mainDeptId = item.value
+          this.$store.commit('setUser', user)
+          Toast('修改成功')
+        })
+      }
+      this.isShowDepSelect = false
     }
   }
 }
@@ -91,7 +131,7 @@ export default {
       .van-field__control {
         text-align: right;
       }
-      .soa-avatar{
+      .soa-avatar {
         width: 35px;
         height: 35px;
         margin-right: 0;

@@ -17,9 +17,19 @@ function getAppInfo(params) {
 function getUserInfo(params) {
   return get(`${prefix}/getUserInfoByUserId`, params)
 }
+// 修改用户信息
+function updateUserInfo(params) {
+  return post(`${prefix}/user/edit`, params)
+}
+// 获取用户权限
+function getUserPopedom() {
+  return get(`${prefix}/roles/functions`)
+}
 export {
   loginTest,
   getAuthLogin,
   getAppInfo,
-  getUserInfo
+  getUserInfo,
+  updateUserInfo,
+  getUserPopedom
 }

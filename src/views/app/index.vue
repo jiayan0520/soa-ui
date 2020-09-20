@@ -56,6 +56,25 @@ export default {
       activeIndex: [0, 1]
     }
   },
+  computed: {
+    userPopedoms() {
+      return this.$store.getters['core/userPopedoms']
+    },
+    hasDorm() {
+      return this.userPopedoms.findIndex(item => item.funcCode === 'dorm') > -1
+    }
+  },
+  watch: {
+    hasDorm: {
+      handler(val) {
+        // 过滤掉宿舍模块
+        if (!val) {
+          this.moduleList = this.moduleList.filter(module => module.header !== '宿舍管理')
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
     handleClick(index) {
       const indexNum = this.activeIndex.indexOf(index)

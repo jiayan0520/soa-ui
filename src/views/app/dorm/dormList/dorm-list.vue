@@ -285,6 +285,7 @@ export default {
         this.$refs.listLayout.loading = false
         const rows = data.rows
         rows.forEach(item => {
+          item.isCheck = this.isCheckAll
           if (item.dormData.userNum === 0) {
             item.dormData.numLable = '未分配'
             item.dormData.class = 'c-light'

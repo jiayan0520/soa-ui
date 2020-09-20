@@ -275,6 +275,7 @@ export default {
         this.$refs.listLayout.loading = false
         const rows = data.rows
         rows.forEach(item => {
+          item.isCheck = this.isCheckAll
           if (item.userId) {
             const status = this.statusList.find(status => status.value === item.status)
             if (status) {
