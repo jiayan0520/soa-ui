@@ -18,9 +18,6 @@
         <div :class="[taskStatus[feedInfo.state].type]">{{ taskStatus[feedInfo.state].label }}</div>
       </template>
     </custom-cell>
-    <custom-cell
-      :value="feedInfo.remark"
-      title="备注"/>
     <van-field
       v-model="form.content"
       rows="5"
@@ -37,14 +34,16 @@
           accept="*"/>
       </template>
     </custom-cell>
+    <messageList
+      :list="feedInfo.soaTaskNewsList"
+      :show="false"/>
     <div>
       <van-button
         block
         type="info"
         native-type="submit"
         @click="feedSubmit">
-        提交
-      </van-button>
+        提交</van-button>
     </div>
   </div>
 </template>
@@ -52,12 +51,14 @@
 <script>
 import customCell from '@/components/customCell'
 import { taskStatus } from '../components/taskEnum'
+import messageList from '../components/messageList'
 import { uuid32, uploadFile } from '@/utils/index.js'
 import { Toast } from 'vant'
 export default {
   name: 'FeekBack',
   components: {
-    customCell
+    customCell,
+    messageList
   },
   data() {
     return {
@@ -120,8 +121,6 @@ export default {
         this.$api.saveTaskFeedbackInfo(this.form).then(() => {
           Toast.clear()
           this.$router.push('/task');
-        }).catch(() => {
-          Toast.clear()
         })
       }).catch((e) => { Toast.clear(); throw e })
     }

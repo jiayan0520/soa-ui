@@ -51,7 +51,7 @@
       </template>
     </custom-cell>
     <div
-      v-if="params.state!=='PASS'"
+      v-if="params.state==='WAITING'"
       class="soa-task-examine-detail__btn">
       <van-button
         type="info"
@@ -97,6 +97,7 @@
 import customCell from '@/components/customCell'
 import { Notify } from 'vant'
 import { computeDiffTime } from '@/utils/index.js'
+import { Toast } from 'vant'
 export default {
   name: 'TaskExamineList',
   components: {
@@ -132,19 +133,29 @@ export default {
     getData(id) {
       this.$api.getTaskExaminDetail({ id: id }).then((res) => {
         this.params = res;
+        Toast.clear()
       })
     },
     handleChecked() {
+      this.examineForm = {
+        score: '',
+        content: ''
+      }
       this.isCheck = true
       this.show = true
     },
     handleUnchecked() {
+      this.examineForm = {
+        score: '',
+        content: ''
+      }
       this.isCheck = false
       this.show = true
     },
     handleConfirm(action, done) {
       if (action === 'confirm') {
         this.$refs.examineForm.validate().then((valid) => {
+          Toast.loading({ message: '提交中，请稍后...', duration: 0 })
           const parms = {
             auditUserId: this.$store.getters['core/user'].userId,
             state: this.isCheck ? 'PASS' : 'FAILED',
@@ -152,6 +163,8 @@ export default {
             ...this.examineForm
           }
           this.$api.saveTaskExamine(parms).then((res) => {
+            Toast.clear()
+            Toast.loading({ message: '提交成功，正在加载下一条数据', duration: 0 })
             this.getNextPage(done)
           }).catch(() => { done(false) })
         }).catch(() => { done(false) })
@@ -162,8 +175,8 @@ export default {
     getNextPage(done) {
       const params = {
         type: 'WAITING',
-        page: 1,
-        limit: 2
+        pageNum: 1,
+        pageSize: 2
       }
       this.$api.getTaskExamineList(params).then((res) => {
         let taskId = ''
@@ -178,9 +191,11 @@ export default {
           this.$router.push({
             query: { id: taskId }
           })
-          this.getData(this.$route.query.id)
+          this.getData(taskId)
         } else {
-          this.$router.replace('./task/examine');
+          Toast.clear()
+          Toast.loading({ message: '当前无需要审核任务' })
+          this.$router.replace('/task/examine');
         }
         done()
         this.show = false

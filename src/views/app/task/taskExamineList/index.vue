@@ -110,7 +110,7 @@ export default {
     word-wrap:break-word;
   }
   @include e(status){
-    width: 60px;
+    width: 80px;
     text-align: center
   }
 }

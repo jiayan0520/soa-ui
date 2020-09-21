@@ -55,7 +55,7 @@
                 v-if="moreOpList.length"
                 class="soa-gengduo"
                 @click.stop="bindMoreClick(index)">
-                <i class="soa-icon soa-icon-gengduo" />
+                <i :class="['soa-icon',showOpIcon(item) &&'soa-icon-gengduo']" />
                 <ul
                   v-if="showMoreIndex === index"
                   class="soa-op__dropdown">
@@ -150,6 +150,14 @@ export default {
         })
       }
       return isShow
+    },
+    showOpIcon(item) {
+      const vm = this
+      let iconLength = this.moreOpList.length
+      this.moreOpList.forEach(function (btn) {
+        if (!vm.showMoreOpItem(item, btn)) { iconLength = iconLength - 1 }
+      });
+      return iconLength
     },
     // 下拉刷新
     onRefresh() {
