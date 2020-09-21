@@ -1,6 +1,7 @@
 <template>
   <div class="dorm-edit">
     <van-form
+      v-if="!loading"
       class="soa-custom-form"
       @submit="onSubmit">
       <van-field
@@ -26,7 +27,7 @@
         :multiple="false"
         :max-users="1"
         title="舍长"
-      /> -->
+      />-->
       <van-field
         center
         label="宿舍类型">
@@ -48,6 +49,7 @@
         :required="true"
         type="number"
         label="床位数"
+        @change="changeFormatType"
       />
       <van-field
         :rules="formDataRules.bedFormatType"
@@ -170,19 +172,8 @@ export default {
     }
   },
   computed: {
-    peopleNum() {
-      return this.formData.peopleNum
-    },
     userId() {
       return this.$store.getters['core/user'].userId
-    }
-  },
-  watch: {
-    peopleNum(val) {
-      if (val <= 10 && !this.loading) {
-        console.log(111111111111)
-        this.changeFormatType()
-      }
     }
   },
   created() {
@@ -239,14 +230,20 @@ export default {
         } else {
           data.dormManager = { emplId: '', name: '' }
         }
+        console.log(data)
         this.formData = data
-        this.$nextTick(() => {
-          this.loading = false
-        })
+        this.loading = false
       })
     },
     // 保存
     onSubmit() {
+      // 去重床位名
+      const bedNameList = Array.from(new Set(this.formData.bedNames.split(',')))
+      this.formData.bedNames = bedNameList.join(',')
+      if (bedNameList.length !== Number(this.formData.peopleNum)) {
+        Toast('床位数和床位号个数对不上，请重新输入！')
+        return
+      }
       if (this.isAdd) {
         Toast.loading('新增宿舍中，请稍后...')
         this.$api.addDorm(this.formData).then(data => {

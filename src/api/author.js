@@ -19,7 +19,7 @@ function getUserInfo(params) {
 }
 // 修改用户信息
 function updateUserInfo(params) {
-  return post(`${prefix}/user/edit`, params)
+  return post(`${prefix}/users/edit`, params)
 }
 // 获取用户权限
 function getUserPopedom() {

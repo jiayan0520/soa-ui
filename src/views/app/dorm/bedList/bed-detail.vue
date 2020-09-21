@@ -127,7 +127,7 @@ export default {
         { prop: 'jobNumber', label: '学号' },
         { prop: 'mobile', label: '电话' },
         // { prop: 'zzmm', label: '政治面貌' },
-        { prop: 'college', label: '学院专业' },
+        { prop: 'fullDeptNames', label: '学院专业' },
         // { prop: 'place', label: '籍贯' },
         // { prop: 'address', label: '家庭住址' },
         {
@@ -178,6 +178,7 @@ export default {
         if (data.users) {
           const statusObj = statusList.find(status => status.value === data.status)
           data.statusName = statusObj ? statusObj.text : data.status
+          data.fullDeptNames = data.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
         }
         this.data = {
           ...data,

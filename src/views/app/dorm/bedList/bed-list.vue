@@ -137,7 +137,7 @@
             <div v-if="slotProps.item.users">
               <span class="c-info">{{ slotProps.item.users.name }}</span>
               <span class="c-info c-ml10">{{ slotProps.item.users.mobile }}</span>
-              <span class="c-ml10">{{ slotProps.item.banji||'未找到班级信息' }}</span>
+              <span class="c-ml10">{{ slotProps.item.users.fullDeptNames||'未找到班级信息' }}</span>
             </div>
             <div v-else>未分配</div>
           </div>
@@ -282,6 +282,7 @@ export default {
               item.statusText = status.text
               item.statusClass = status.class
             }
+            item.users.fullDeptNames = item.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
           }
         })
         this.dataList = this.dataList.concat(rows)
