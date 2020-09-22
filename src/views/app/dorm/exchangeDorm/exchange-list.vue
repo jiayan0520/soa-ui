@@ -28,7 +28,7 @@
       <div class="soa-list-item-content">
         <div>
           <span>{{ slotProps.item.userName }}</span>
-          <span>（{{ slotProps.item.banji }}）</span>
+          <span>（{{ slotProps.item.fullDeptNames }}）</span>
         </div>
         <div class="c-light">{{ slotProps.item.createTime }} 申请</div>
       </div>
@@ -79,8 +79,10 @@ export default {
         this.$refs.listLayout.loading = false
         const rows = data.rows.map(item => {
           return {
+            id: item.id,
             createTime: dayjs(item.createTime).format('YYYY年MM月DD日 HH:mm'),
-            userName: item.soaUsers.name
+            userName: item.soaUsers.name,
+            fullDeptNames: item.soaUsers.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
           }
         })
         this.dataList = this.dataList.concat(rows)

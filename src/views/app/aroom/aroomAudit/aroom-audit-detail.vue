@@ -1,14 +1,20 @@
 <template>
-  <div class="aroom-audit-detail">
+  <div
+    v-if="!loading"
+    class="aroom-audit-detail">
     <custom-panel
       :data="data"
       :field-list="fieldList" />
     <user-picker
+      v-if="isEdit"
       v-model="data.ccPerson"
       :disabled-users="[userId]"
       :max-users="10"
-      title="抄送人" />
-    <div class="soa-btn-box">
+      title="抄送人"
+    />
+    <div
+      v-if="isEdit"
+      class="soa-btn-box">
       <van-button
         type="info"
         icon="checked"
@@ -38,28 +44,22 @@ export default {
   },
   data() {
     return {
+      loading: true,
       id: null,
       activeNames: [],
       showCheckPopup: false,
       data: {
-        activityRoomName: '福大生活1区1号楼-601',
-        userName: '李荣浩',
-        sno: '12312312312',
-        telephone: '15874214741',
-        college: '石油化工学院-2019级过控一班',
-        applicationReason: '换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍，换专业申请换宿舍',
-        ccPersonIds: null,
-        ccPerson: []
       },
       fieldList: [
         { prop: 'activityRoomName', label: '活动室名称' },
         { prop: 'userName', label: '姓名' },
-        { prop: 'sno', label: '学号' },
-        { prop: 'telephone', label: '电话' },
-        { prop: 'college', label: '班级信息' },
+        { prop: 'jobNumber', label: '学号' },
+        { prop: 'mobile', label: '电话' },
+        { prop: 'fullDeptNames', label: '班级信息' },
         { prop: 'useTime', label: '使用时间' },
         { prop: 'applicationReason', label: '申请原因' }
-      ]
+      ],
+      isEdit: true
     }
   },
   computed: {
@@ -77,6 +77,11 @@ export default {
   methods: {
     // 获取详情
     getDetail() {
+      const statusList = [
+        { value: 'LAUNCH', text: '未完成' },
+        { value: 'PASS', text: '已完成' },
+        { value: 'NOPASS', text: '未通过' }
+      ]
       this.$api.getApplyRoomDetail(this.id).then(data => {
         data.useTime = dayjs(data.startTime).format('YYYY年MM月DD日 HH:mm') + '-' + dayjs(data.endTime).format('YYYY年MM月DD日 HH:mm')
         // if (data.ccPerson) {
@@ -84,7 +89,22 @@ export default {
         // } else {
         data.ccPerson = []
 
-        this.data = data
+        this.data = {
+          ...data,
+          activityRoomName: data.activityRoom.activityRoomName,
+          userName: data.user.name,
+          jobNumber: data.user.jobNumber,
+          mobile: data.user.mobile,
+          fullDeptNames: data.user.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-'),
+          statusName: statusList.find(s => s.value === data.status).text
+        }
+        if (data.status !== 'LAUNCH') {
+          this.isEdit = false
+          this.data.reviewTime = dayjs(data.reviewTime).format('YYYY年MM月DD日 HH:mm')
+          this.fieldList.push({ prop: 'statusName', label: '状态' })
+          this.fieldList.push({ prop: 'reviewTime', label: '审核时间' })
+        }
+        this.loading = false
       })
     },
     audit(status) {

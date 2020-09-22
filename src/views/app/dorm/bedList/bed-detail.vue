@@ -34,7 +34,7 @@
                 class="flex-between"
                 @click="showCheckDetail(item)">
                 <div>
-                  <div class="time">{{ item.checkTime }}</div>
+                  <div class="time">{{ item.checkTime }}<span v-if="item.parentId">(宿舍检查)</span></div>
                   <div class="c-info text-nowrap">结果：{{ item.inspectionResultsInfo }}</div>
                 </div>
                 <div>{{ item.score }}</div>
@@ -75,7 +75,7 @@
         :data="data"
         :dorm-id="data.dormId"
         :user-id="data.userId"
-        :bed-id="data.id"
+        :bed-id="id"
         :id="currentCheckId"
         :is-detail="isCheckDetail"
         :has-parent="hasParent"
@@ -178,17 +178,17 @@ export default {
         if (data.users) {
           const statusObj = statusList.find(status => status.value === data.status)
           data.statusName = statusObj ? statusObj.text : data.status
-          data.fullDeptNames = data.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
+          data.users.fullDeptNames = data.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
         }
         this.data = {
           ...data,
           ...data.users,
           isDormManagerText: data.isDormManager ? '是' : '否',
-          dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
+          dormName: data.dormName,
           bedName: data.bedName,
           instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
           parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
-          singleFee: data.soaDormDorm.singleFee
+          singleFee: data.singleFee
         }
         console.log(1111111, this.data)
         if (this.data.users) {

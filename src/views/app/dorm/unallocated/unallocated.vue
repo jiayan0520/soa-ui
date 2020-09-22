@@ -23,11 +23,11 @@
             class="soa-avatar" >
           <div
             v-else
-            class="soa-avatar">{{ slotProps.item.stuName.substr(-2,2) }}</div>
+            class="soa-avatar">{{ slotProps.item.name.substr(-2,2) }}</div>
         </div>
         <div class="soa-list-item-content">
-          <span>{{ slotProps.item.stuName }}</span>
-          <span>（{{ slotProps.item.collegeName }}-{{ slotProps.item.sclassName }}）</span>
+          <span>{{ slotProps.item.name }}</span>
+          <span>（{{ slotProps.item.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-') }}）</span>
           <span class="c-info c-ml10">{{ slotProps.item.mobile }}</span>
         </div>
         <van-button

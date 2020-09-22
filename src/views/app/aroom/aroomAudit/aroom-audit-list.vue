@@ -23,10 +23,10 @@
       slot-scope="slotProps">
       <div class="soa-list-item-content">
         <div>
-          <span>{{ slotProps.item.userName }}</span>
-          <span>（{{ slotProps.item.banji }}）</span>
+          <span>{{ slotProps.item.user.name }}</span>
+          <span>（{{ slotProps.item.user.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-') }}）</span>
         </div>
-        <div>{{ slotProps.item.aroomName }}</div>
+        <div class="c-light">{{ slotProps.item.activityRoom.activityRoomName }}</div>
         <div class="c-light">{{ slotProps.item.createTime }} 申请</div>
       </div>
     </template>

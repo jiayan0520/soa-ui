@@ -66,6 +66,7 @@ export default {
           this.currentCheck = item
           this.isCheckDetail = false
           this.showCheckPopup = true
+          this.hasParent = !!item.parentId
           break
         case 'del':
           Dialog.confirm({

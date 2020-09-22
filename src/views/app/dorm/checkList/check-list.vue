@@ -127,11 +127,11 @@
           v-if="active==='BED'"
           class="soa-list-item-content">
           <div>
-            <span>{{ slotProps.item.userName }}</span>
-            <span>（{{ slotProps.item.banji }}）</span>
+            <span>{{ slotProps.item.user.name }}</span>
+            <span>（{{ slotProps.item.user.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-') }}）</span>
           </div>
-          <div>{{ slotProps.item.dormInfo }}-{{ slotProps.item.bedInfo }}</div>
-          <div class="text-nowrap">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
+          <div class="c-light">{{ slotProps.item.dormInfo }}-{{ slotProps.item.bedInfo }}</div>
+          <div class="text-nowrap c-light">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
           <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>
         <div

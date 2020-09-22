@@ -88,6 +88,7 @@
         :bed-id="data.id"
         :id="currentCheckId"
         :is-detail="isCheckDetail"
+        :has-parent="hasParent"
         type="BED"
         @close="closeCheckPopop"
       />

@@ -176,7 +176,8 @@ export default {
         { text: '激活状态', value: 'ALL' },
         { text: '全部激活', value: 'ALL_ACTIVTED' },
         { text: '部分激活', value: 'PART_ACTIVTED' },
-        { text: '全未激活', value: 'NO_ACTIVTED' }
+        { text: '全未激活', value: 'NO_ACTIVTED' },
+        { text: '全未分配', value: 'NO_ALLOTED' }
       ],
       dormTypeList: [
         { text: '宿舍类型', value: 'ALL' },

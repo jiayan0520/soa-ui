@@ -19,10 +19,10 @@
         slot="item-content"
         slot-scope="slotProps">
         <div class="soa-list-item-content">
-          <div>{{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}-{{ slotProps.item.bedName }}床</div>
+          <div>{{ slotProps.item.bedName }}床</div>
           <div
             class="flex-between c-light"
-          >{{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</div>
+          >{{ dormTypeEnum[slotProps.item.dormType].label }}</div>
         </div>
         <van-button
           class="soa-list-right-btn"
@@ -83,14 +83,14 @@ export default {
         message: '确定分配？'
       }).then(() => {
         if (!this.opType) {
-          this.$api.allotBed({ bedId: item.id, userId: this.userId }).then(res => {
+          this.$api.allotBed({ bedId: item.bedId, userId: this.userId }).then(res => {
             Toast(`分配成功！`);
             this.$router.push({
               path: '/dorm/unallocated'
             })
           })
         } else {
-          this.$emit('confirmBed', item.id, item.soaDormDorm.buildingName + item.soaDormDorm.dormName + item.bedName + '床')
+          this.$emit('confirmBed', item.bedId, item.soaDormDorm.buildingName + item.soaDormDorm.dormName + item.bedName + '床')
         }
       });
     }

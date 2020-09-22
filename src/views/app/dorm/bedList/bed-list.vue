@@ -142,16 +142,14 @@
             <div v-else>未分配</div>
           </div>
           <div
-            v-if="slotProps.item.soaDormDorm"
             class="c-light">
-            {{ slotProps.item.soaDormDorm.buildingName }}-{{ slotProps.item.soaDormDorm.dormName }}-{{ slotProps.item.bedName }}床
+            {{ slotProps.item.bedName }}床
             <span
               v-if="slotProps.item.isDormManager"
-              class="c-ml10"
-            >舍长</span>
+              class="c-ml10">舍长</span>
           </div>
           <div class="flex-between">
-            <span class="c-light">{{ dormTypeEnum[slotProps.item.soaDormDorm.dormType].label }}</span>
+            <span class="c-light">{{ dormTypeEnum[slotProps.item.dormType].label }}</span>
             <span
               v-if="slotProps.item.statusText"
               :class="slotProps.item.statusClass"
@@ -275,6 +273,7 @@ export default {
         this.$refs.listLayout.loading = false
         const rows = data.rows
         rows.forEach(item => {
+          item.id = item.bedId
           item.isCheck = this.isCheckAll
           if (item.userId) {
             const status = this.statusList.find(status => status.value === item.status)
