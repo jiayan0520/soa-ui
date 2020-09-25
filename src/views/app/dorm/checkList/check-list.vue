@@ -130,14 +130,16 @@
             <span>{{ slotProps.item.user.name }}</span>
             <span>（{{ slotProps.item.user.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-') }}）</span>
           </div>
-          <div class="c-light">{{ slotProps.item.dormInfo }}-{{ slotProps.item.bedInfo }}</div>
+          <div
+            class="c-light"
+          >{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}-{{ slotProps.item.bedName }}床</div>
           <div class="text-nowrap c-light">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
           <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>
         <div
           v-if="active==='DORM'"
           class="soa-list-item-content">
-          <div>{{ slotProps.item.dormInfo }}</div>
+          <div>{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}</div>
           <div class="text-nowrap">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
           <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>

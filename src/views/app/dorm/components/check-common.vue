@@ -164,6 +164,7 @@ export default {
   computed: {
     fieldList2() {
       let fieldList2 = [
+        { prop: 'buildingName', label: '楼栋' },
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'bedName', label: '床位' }
       ]

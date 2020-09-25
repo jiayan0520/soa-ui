@@ -156,7 +156,7 @@ export default {
       ],
       changeReason: null, // 调换宿舍原因
       apiMethod: 'myInspectionResultlist',
-      checkParams: { },
+      checkParams: {},
       hasExchange: true
     }
   },
@@ -180,9 +180,9 @@ export default {
           ...data,
           ...data.users,
           isDormManagerText: data.isDormManager ? '否' : '是',
-          dormName: data.soaDormDorm.buildingName + '-' + data.soaDormDorm.dormName,
+          dormName: data.buildingName + '-' + data.dormName,
           bedName: data.bedName,
-          singleFee: data.soaDormDorm.singleFee
+          singleFee: data.singleFee
         }
         console.log(1111111, this.data)
         this.againResultList()

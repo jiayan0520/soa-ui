@@ -139,20 +139,20 @@ export default {
             { prop: 'telephone', class: 'c-info' }]
         },
         {
-          prop: 'managementList',
+          prop: 'buildingManagers',
           label: '楼管',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         },
         {
-          prop: 'repairList',
+          prop: 'maintenanceWorkers',
           label: '维修人员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         }
         // {
         //   prop: 'parentList',

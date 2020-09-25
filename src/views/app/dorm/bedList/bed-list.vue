@@ -141,12 +141,12 @@
             </div>
             <div v-else>未分配</div>
           </div>
-          <div
-            class="c-light">
-            {{ slotProps.item.bedName }}床
+          <div class="c-light">
+            {{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}-{{ slotProps.item.bedName }}床
             <span
               v-if="slotProps.item.isDormManager"
-              class="c-ml10">舍长</span>
+              class="c-ml10"
+            >舍长</span>
           </div>
           <div class="flex-between">
             <span class="c-light">{{ dormTypeEnum[slotProps.item.dormType].label }}</span>

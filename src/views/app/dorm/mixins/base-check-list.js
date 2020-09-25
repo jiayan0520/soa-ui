@@ -99,6 +99,7 @@ export default {
     },
     // 弹检查详情框
     showCheckDetail(item) {
+      this.currentCheck = item
       this.currentCheckId = item.id
       this.isCheckDetail = true
       this.showCheckPopup = true

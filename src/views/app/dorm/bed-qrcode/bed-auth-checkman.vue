@@ -11,7 +11,8 @@
       <van-collapse-item
         :value="`${data.dormData.userNum}/${data.dormData.totalNum}人`"
         title="人员信息"
-        name="1">
+        name="1"
+      >
         <div
           v-for="(item,index) in data.soaDormBeds"
           :key="index"
@@ -22,7 +23,7 @@
               <span>状态：{{ item.statusName }}</span>
               <span
                 v-if="item.users"
-                class="c-light">最后一次检查：{{ item.endTime }}</span>
+                class="c-light">最后一次检查：{{ item.lastCheckTime }}</span>
             </div>
           </div>
           <van-button
