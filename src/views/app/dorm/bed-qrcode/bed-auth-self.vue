@@ -116,16 +116,17 @@ export default {
       showChangePopup: false,
       data: {},
       fieldList: [
+        { prop: 'buildingName', label: '楼栋' },
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'bedName', label: '床位' },
         { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' },
         { prop: 'name', label: '姓名' },
         { prop: 'isDormManagerText', label: '是否舍长' },
         { prop: 'statusName', label: '状态' },
-        { prop: 'sno', label: '学号' },
+        { prop: 'jobNumber', label: '学号' },
         { prop: 'mobile', label: '电话' },
         // { prop: 'zzmm', label: '政治面貌' },
-        { prop: 'college', label: '学院专业' },
+        { prop: 'fullDeptNames', label: '学院专业' },
         // { prop: 'place', label: '籍贯' },
         // { prop: 'address', label: '家庭住址' },
         {
@@ -137,22 +138,22 @@ export default {
             { prop: 'telephone', class: 'c-info' }]
         },
         {
-          prop: 'managementList',
+          prop: 'buildingManagers',
           label: '楼管',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         },
         {
-          prop: 'repairList',
+          prop: 'maintenanceWorkers',
           label: '维修人员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'realName' },
+            { prop: 'phone', class: 'c-info' }]
         },
-        { prop: 'cost', label: '宿舍费用', unit: '元/人/年' }
+        { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' }
       ],
       changeReason: null, // 调换宿舍原因
       apiMethod: 'myInspectionResultlist',
@@ -180,11 +181,8 @@ export default {
           ...data,
           ...data.users,
           isDormManagerText: data.isDormManager ? '否' : '是',
-          dormName: data.buildingName + '-' + data.dormName,
-          bedName: data.bedName,
-          singleFee: data.singleFee
+          fullDeptNames: data.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
         }
-        console.log(1111111, this.data)
         this.againResultList()
         this.loading = false
       })

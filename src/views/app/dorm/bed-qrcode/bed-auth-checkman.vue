@@ -20,7 +20,10 @@
           <div>
             <div style="color: #323233;">{{ item.bedName }}床</div>
             <div>
-              <span>状态：{{ item.statusName }}</span>
+              <span>
+                状态：
+                <span :class="item.statusClass">{{ item.statusName }}</span>
+              </span>
               <span
                 v-if="item.users"
                 class="c-light">最后一次检查：{{ item.lastCheckTime }}</span>
@@ -111,6 +114,7 @@ import dormCheck from '../components/check-common'
 import { getQuery } from '@/utils'
 import baseCheckList from '../mixins/base-check-list'
 import { statusList } from '../utils/dorm-enum'
+import dayjs from 'dayjs';
 export default {
   name: 'BeaAuthCheckman',
   components: {
@@ -146,8 +150,9 @@ export default {
           dormName: data.buildingName + '-' + data.dormName,
           soaDormBeds: data.soaDormBeds.map(bed => {
             const statusObj = statusList.find(status => status.value === bed.status) || {}
-            bed.statusName = statusObj.text
-            bed.statusClass = statusObj.class
+            bed.statusName = bed.userId ? statusObj.text : '未分配'
+            bed.statusClass = bed.userId ? statusObj.class : ''
+            bed.lastCheckTime = dayjs(bed.lastCheckTime).format('YYYY年MM月DD日 HH:mm')
             return bed
           })
         }

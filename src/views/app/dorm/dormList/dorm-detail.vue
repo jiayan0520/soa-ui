@@ -48,7 +48,8 @@
           <div
             :style="`${data.soaDormBeds.length>2?'position:relative':'position:inherit'}`"
             class="soa-gengduo"
-            @click.stop="bindMoreClick(index)">
+            @click.stop="bindMoreClick(index)"
+          >
             <i class="soa-icon soa-icon-gengduo" />
             <ul
               v-if="showMoreIndex === index"
@@ -164,6 +165,7 @@ export default {
       showMoreIndex: -1, // 显示更多的行index
       data: {},
       fieldList: [
+        { prop: 'buildingName', label: '楼栋' },
         { prop: 'dormName', label: '宿舍名称' },
         {
           prop: 'dormManager',
@@ -199,8 +201,7 @@ export default {
     getDetail() {
       this.$api.getDormDetail(this.id).then(data => {
         this.data = {
-          dormData: data.dormData,
-          dormName: data.buildingName + '-' + data.dormName,
+          ...data,
           dormManager: data.dormManager ? [data.dormManager] : [],
           containList: [
             { name: '可容纳人数：', num: data.dormData.totalNum },
@@ -210,7 +211,6 @@ export default {
             { name: '请假人数：', num: data.dormData.leaveNum, class: 'c-danger' }
           ],
           dormType: dormTypeEnum[data.dormType].label,
-          singleFee: data.singleFee,
           soaDormBeds: data.soaDormBeds.map(bed => {
             const statusObj = statusList.find(status => status.value === bed.status) || {}
             bed.statusName = statusObj.text

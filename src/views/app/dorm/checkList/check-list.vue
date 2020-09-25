@@ -82,14 +82,7 @@
               </van-field>
               <van-field
                 v-if="active==='BED'"
-                v-model="searchForm.college"
-                name="学院名称"
-                label="学院名称"
-                placeholder="学院名称"
-              />
-              <van-field
-                v-if="active==='BED'"
-                v-model="searchForm.sClass"
+                v-model="searchForm.fullDeptNames"
                 name="专业班级"
                 label="专业班级"
                 placeholder="专业班级"
@@ -140,7 +133,7 @@
           v-if="active==='DORM'"
           class="soa-list-item-content">
           <div>{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}</div>
-          <div class="text-nowrap">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
+          <div class="text-nowrap c-light">结果： {{ slotProps.item.inspectionResultsInfo }}</div>
           <div class="c-light">{{ slotProps.item.checkTime }}</div>
         </div>
         <div>{{ slotProps.item.score }}</div>
@@ -187,8 +180,7 @@ export default {
         userName: null,
         startTime: null, // dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD HH:mm'),
         endTime: null, // dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
-        college: null,
-        sClass: null
+        fullDeptNames: null
       },
       pageSize: 20
     }

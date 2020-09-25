@@ -170,6 +170,7 @@ export default {
       ]
       if (this.type === 'DORM') {
         fieldList2 = [
+          { prop: 'buildingName', label: '楼栋' },
           { prop: 'dormName', label: '宿舍名称' }
         ]
       }
@@ -206,7 +207,7 @@ export default {
       this.$api.getResultDetail(this.id).then(data => {
         data.checkResultList = data.checkResultIds ? data.checkResultIds.split(',') : []
         data.checkTime = dayjs(data.checkTime).format('YYYY-MM-DD HH:mm')
-        console.log(22222222, data)
+        // console.log(22222222, data)
         this.formData = data
         this.loading = false
       })
@@ -216,7 +217,7 @@ export default {
       if (this.formData.checkTime.length === 16) {
         this.formData.checkTime += ':00'
       }
-      console.log(this.formData)
+      // console.log(this.formData)
       if (this.isAdd) {
         Toast.loading('新增检查中，请稍后...')
         this.$api.addResult(this.formData).then(data => {

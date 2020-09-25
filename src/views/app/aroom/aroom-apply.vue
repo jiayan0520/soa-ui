@@ -117,8 +117,6 @@ export default {
         Toast.clear()
         Toast('申请活动室成功')
         this.$emit('close', true)
-      }).catch(err => {
-        Toast('申请活动室失败,' + err)
       })
     },
     close() {

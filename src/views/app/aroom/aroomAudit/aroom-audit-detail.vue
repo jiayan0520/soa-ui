@@ -59,7 +59,13 @@ export default {
         { prop: 'useTime', label: '使用时间' },
         { prop: 'applicationReason', label: '申请原因' }
       ],
-      isEdit: true
+      isEdit: true,
+      overFieldList: [
+        { prop: 'statusName', label: '状态' },
+        { prop: 'reviewTime', label: '审核时间' },
+        { prop: 'reviewerUserName', label: '审核人' },
+        { prop: 'ccPersonNames', label: '抄送人' }
+      ]
     }
   },
   computed: {
@@ -96,13 +102,13 @@ export default {
           jobNumber: data.user.jobNumber,
           mobile: data.user.mobile,
           fullDeptNames: data.user.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-'),
-          statusName: statusList.find(s => s.value === data.status).text
+          statusName: statusList.find(s => s.value === data.status).text,
+          ccPersonNames: data.ccPersonNames && data.ccPersonNames.join(',')
         }
         if (data.status !== 'LAUNCH') {
           this.isEdit = false
           this.data.reviewTime = dayjs(data.reviewTime).format('YYYY年MM月DD日 HH:mm')
-          this.fieldList.push({ prop: 'statusName', label: '状态' })
-          this.fieldList.push({ prop: 'reviewTime', label: '审核时间' })
+          this.fieldList = this.fieldList.concat(this.overFieldList)
         }
         this.loading = false
       })

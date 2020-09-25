@@ -34,7 +34,10 @@
                 class="flex-between"
                 @click="showCheckDetail(item)">
                 <div>
-                  <div class="time">{{ item.checkTime }}<span v-if="item.parentId">(宿舍检查)</span></div>
+                  <div class="time">
+                    {{ item.checkTime }}
+                    <span v-if="item.parentId">(宿舍检查)</span>
+                  </div>
                   <div class="c-info text-nowrap">结果：{{ item.inspectionResultsInfo }}</div>
                 </div>
                 <div>{{ item.score }}</div>
@@ -116,6 +119,7 @@ export default {
       isOnlyCheck: '0', // 是否只检查，是不用展示那么多信息，卫生员扫码的时候的检查
       activeNames: [],
       fieldList: [
+        { prop: 'buildingName', label: '楼栋' },
         { prop: 'dormName', label: '宿舍名称' },
         { prop: 'bedName', label: '床位' }
       ],
@@ -184,13 +188,8 @@ export default {
           ...data,
           ...data.users,
           isDormManagerText: data.isDormManager ? '是' : '否',
-          dormName: data.dormName,
-          bedName: data.bedName,
-          instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-          parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }],
-          singleFee: data.singleFee
+          instructorList: []
         }
-        console.log(1111111, this.data)
         if (this.data.users) {
           this.checkParams.userId = this.data.userId
           this.againResultList()

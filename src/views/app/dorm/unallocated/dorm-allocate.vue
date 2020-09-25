@@ -19,10 +19,8 @@
         slot="item-content"
         slot-scope="slotProps">
         <div class="soa-list-item-content">
-          <div>{{ slotProps.item.bedName }}床</div>
-          <div
-            class="flex-between c-light"
-          >{{ dormTypeEnum[slotProps.item.dormType].label }}</div>
+          <div>{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}-{{ slotProps.item.bedName }}床</div>
+          <div class="flex-between c-light">{{ dormTypeEnum[slotProps.item.dormType].label }}</div>
         </div>
         <van-button
           class="soa-list-right-btn"
@@ -90,7 +88,7 @@ export default {
             })
           })
         } else {
-          this.$emit('confirmBed', item.bedId, item.soaDormDorm.buildingName + item.soaDormDorm.dormName + item.bedName + '床')
+          this.$emit('confirmBed', item.bedId, item.buildingName + '-' + item.dormName + '-' + item.bedName + '床')
         }
       });
     }
