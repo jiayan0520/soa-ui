@@ -102,7 +102,7 @@ export default {
         { value: 'fail', label: '任务失败', allowStatus: { state: ['UNFINISHED'] }}
       ]
       const reOp = [
-        { value: 'submit', label: '提交', allowStatus: { state: ['UNFINISHED'] }}
+        { value: 'submit', label: '提交', allowStatus: { performState: ['UNFINISHED'] }}
       ]
       return this.active ? reOp : publishOp
     }
@@ -116,7 +116,12 @@ export default {
         message: '今天是' + nowDate + '，确定任务结算？'
       })
         .then(() => {
-          // on confirm
+          Toast.loading({ message: '任务结算中，请稍后...', duration: 0 })
+          this.$api.settlementExport().then((res) => {
+            const url = this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=' + res.fileName + '&delete=true'
+            window.open(url, '_self')
+            Toast.clear()
+          })
         });
     },
     onSearch() {
