@@ -118,7 +118,7 @@ export default {
         .then(() => {
           Toast.loading({ message: '任务结算中，请稍后...', duration: 0 })
           this.$api.settlementExport().then((res) => {
-            const url = this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=' + res.fileName + '&delete=true'
+            const url = this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=' + res.fileName
             window.open(url, '_self')
             Toast.clear()
           })

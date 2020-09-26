@@ -12,11 +12,11 @@ const menu = [
         label: '任务列表',
         icon: 'icon_calendar'
       },
-      {
-        to: './task/import',
-        label: '导入任务',
-        icon: 'daoru'
-      },
+      // {
+      //   to: './task/import',
+      //   label: '导入任务',
+      //   icon: 'daoru'
+      // },
       {
         to: './task/examine',
         label: '任务审核',
