@@ -49,7 +49,7 @@
               label="宿舍号"
               placeholder="宿舍号" />
             <van-field
-              v-model="searchForm.userName"
+              v-model="searchForm.stuName"
               name="姓名"
               label="姓名"
               placeholder="姓名" />
@@ -90,7 +90,7 @@
               </template>
             </van-field>
             <van-field
-              v-model="searchForm.xy"
+              v-model="searchForm.fulldeptName"
               name="学院班级"
               label="学院班级"
               placeholder="学院班级" />
@@ -149,10 +149,10 @@ export default {
       searchForm: {
         buildingName: '',
         dormName: '',
-        userName: null,
+        stuName: null,
         startTime: null,
         endTime: null,
-        xy: null
+        fulldeptName: null
       },
       rankType: 'up' // 排序类型 'up','down'
     }

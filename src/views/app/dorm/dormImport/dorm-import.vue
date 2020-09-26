@@ -7,7 +7,7 @@
         label="示例">
         <template slot="input">
           <a
-            href="/宿舍导入模板.xlsx"
+            :href="dormImportTempUrl"
             class="c-info">导入示例下载</a>
         </template>
       </van-field>
@@ -38,8 +38,7 @@
         label="示例">
         <template slot="input">
           <a
-            href="/images/myw3schoolimage.jpg"
-            download="w3logo"
+            :href="userImportTempUrl"
             class="c-info">导入示例下载</a>
         </template>
       </van-field>
@@ -142,7 +141,9 @@ export default {
       dormFiles: '',
       dormFileList: [],
       isShowDormErrDialog: false,
-      dormErrData: []
+      dormErrData: [],
+      dormImportTempUrl: this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=宿舍导入模板.xlsx',
+      userImportTempUrl: this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=床位安排.xlsx'
     }
   },
   methods: {

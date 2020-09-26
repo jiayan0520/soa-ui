@@ -28,7 +28,7 @@
                 v-else
                 class="soa-avatar">{{ item.users.name.substr(-2,2) }}</div>
               <span>{{ item.users.name }}</span>
-              <span class="c-ml10">({{ item.users.className||'未找到班级信息' }})</span>
+              <span class="c-ml10">({{ item.users.fullDeptNames }})</span>
             </div>
             <div
               v-else
@@ -212,9 +212,12 @@ export default {
           ],
           dormType: dormTypeEnum[data.dormType].label,
           soaDormBeds: data.soaDormBeds.map(bed => {
-            const statusObj = statusList.find(status => status.value === bed.status) || {}
-            bed.statusName = statusObj.text
-            bed.statusClass = statusObj.class
+            if (bed.users) {
+              const statusObj = statusList.find(status => status.value === bed.status) || {}
+              bed.statusName = statusObj.text
+              bed.statusClass = statusObj.class
+              bed.users.fullDeptNames = bed.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
+            }
             return bed
           })
         }

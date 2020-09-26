@@ -197,3 +197,16 @@ export function importDormUser(params) {
 export function exportBed(params, config) {
   return get(`${prefix}/bed/export`, params, 60000, config)
 }
+// 激活床位
+export function activeBed(params) {
+  return post(`${prefix}/bed/ActiveBed`, params)
+}
+
+// 学生统计信息
+export function getStuStatisticsInfos(params) {
+  return post(`${prefix}/statistics/getStuStatisticsInfos`, params)
+}
+// 宿舍统计信息
+export function getDormStatisticsInfos(params) {
+  return post(`${prefix}/statistics/getDormStatisticsInfos`, params)
+}

@@ -94,7 +94,7 @@ export default {
       if (!val) {
         this.isCheckAll = false
       } else {
-        this.isCheckAll = !this.dataList.some(item => item.isCheck === false) // 全部是选中
+        // this.isCheckAll = !this.dataList.some(item => item.isCheck === false) // 全部是选中
       }
     },
     // 行点击弹详情框

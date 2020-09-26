@@ -104,8 +104,8 @@ import baseCheckList from '../mixins/base-check-list'
 import { getQuery } from '@/utils'
 import userPicker from '@/components/userPicker'
 import dormAllocate from '../unallocated/dorm-allocate'
-import { Toast } from 'vant';
-// import dayjs from 'dayjs'
+import { Toast } from 'vant'
+import dayjs from 'dayjs'
 export default {
   name: 'ChangeDetail',
   components: {
@@ -200,7 +200,7 @@ export default {
         }
         if (data.status !== 'LAUNCH') {
           this.isEdit = false
-          // this.data.reviewTime = dayjs(data.reviewTime).format('YYYY年MM月DD日 HH:mm')
+          this.data.reviewTime = dayjs(data.reviewTime).format('YYYY年MM月DD日 HH:mm')
         }
         this.loading = false
       })

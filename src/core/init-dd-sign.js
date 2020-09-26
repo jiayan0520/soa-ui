@@ -40,7 +40,7 @@ export default async function initDdSign(store, router) {
           errorCode: "错误码"
        }
       **/
-      // alert('dd error: ' + JSON.stringify(error));
+      alert('dd error: ' + JSON.stringify(error));
     });
   }).catch(err => {
     alert('获取app的接口失败了' + err);
