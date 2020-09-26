@@ -47,6 +47,11 @@ function getTaskFeedbackInfo(params) {
 function saveTaskFeedbackInfo(params) {
   return post(`${prefix}/audit/saveTaskFeedbackInfo`, params)
 }
+
+// 任务结算
+function settlementExport(params) {
+  return get(`${prefix}/settlement/export2`, params)
+}
 export {
   addTask,
   getTaskList,
@@ -58,5 +63,6 @@ export {
   getTaskExaminDetail,
   getTaskFeedbackInfo,
   saveTaskExamine,
-  saveTaskFeedbackInfo
+  saveTaskFeedbackInfo,
+  settlementExport
 }
