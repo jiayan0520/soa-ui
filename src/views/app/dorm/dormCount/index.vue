@@ -1,16 +1,15 @@
 <template>
-  <div class="soa-dorm-count">
+  <div
+    v-if="!loading"
+    class="soa-dorm-count">
     <div class="soa-dorm-count__head">
       <h3 class="soa-dorm-count__title">宿舍检测信息</h3>
       <van-tabs
         v-model="active"
-        title-active-color="#1989fa">
-        <van-tab
-          title="学生"
-          name="1" />
-        <van-tab
-          title="宿舍"
-          name="2" />
+        title-active-color="#1989fa"
+        @click="onSearch">
+        <van-tab title="学生" />
+        <van-tab title="宿舍" />
       </van-tabs>
       <div class="soa-dorm-count__search">
         <div
@@ -22,23 +21,31 @@
         <div
           v-if="showSearch"
           class="content">
-          <van-form @submit="onSubmit">
+          <van-form
+            class="soa-custom-form soa-search-form"
+            @submit="onSearch">
             <van-field
-              v-model="query.name"
+              v-model="searchForm.buildingName"
               name="楼栋名称"
               label="楼栋名称"
-              placeholder="楼栋名称" />
+              placeholder="楼栋名称"
+            />
             <van-field
-              v-model="query.dormNum"
+              v-model="searchForm.dormName"
               name="宿舍号"
               label="宿舍号"
               placeholder="宿舍号" />
+            <van-field
+              v-model="searchForm.stuName"
+              name="姓名"
+              label="姓名"
+              placeholder="姓名" />
             <van-field
               center
               label="检查时间起">
               <template #input>
                 <date-picker
-                  v-model="query.deadline"
+                  v-model="searchForm.startTime"
                   :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
                   :editable="false"
                   :not-before="minDate"
@@ -56,7 +63,7 @@
               label="检查时间结">
               <template #input>
                 <date-picker
-                  v-model="query.deadline"
+                  v-model="searchForm.endTime"
                   :time-picker-options="{ start: '00:00', step: '00:15', end: '23:45' }"
                   :editable="false"
                   :not-before="minDate"
@@ -69,21 +76,19 @@
                 />
               </template>
             </van-field>
-            <div style="margin: 16px;">
-              <van-row gutter="10">
-                <van-col span="12">
-                  <van-button
-                    block
-                    type="default"
-                    native-type="submit">重置</van-button>
-                </van-col>
-                <van-col span="12">
-                  <van-button
-                    type="info"
-                    block
-                    native-type="submit">提交</van-button>
-                </van-col>
-              </van-row>
+            <van-field
+              v-model="searchForm.fulldeptName"
+              name="学院班级"
+              label="学院班级"
+              placeholder="学院班级"
+            />
+            <div class="soa-btn-box">
+              <van-button
+                type="default"
+                @click="reset">重置</van-button>
+              <van-button
+                type="info"
+                native-type="submit">提交</van-button>
             </div>
           </van-form>
         </div>
@@ -113,10 +118,10 @@
           :width="chartWidth">
           <v-scale
             x
-            field="label" />
+            field="typeName" />
           <v-scale
             y
-            field="sales" />
+            field="count" />
           <v-bar />
         </v-chart>
       </div>
@@ -148,11 +153,16 @@ export default {
   },
   data() {
     return {
-      active: 1,
+      active: 0,
+      loading: true,
       showSearch: false,
-      query: {
-        name: '',
-        dormNum: ''
+      searchForm: {
+        buildingName: '',
+        dormName: '',
+        stuName: null,
+        startTime: null,
+        endTime: null,
+        fulldeptName: null
       },
       minDate: '',
       // 饼状图
@@ -174,13 +184,7 @@ export default {
         { name: '脏乱', percent: 0.30, a: '1' },
         { name: '很差', percent: 0.10, a: '1' }
       ],
-      barData: [
-        { label: '被子没叠', sales: 38 },
-        { label: '违规电器', sales: 52 },
-        { label: '垃圾乱扔', sales: 61 },
-        { label: '床铺整洁', sales: 145 },
-        { label: '课桌脏乱', sales: 48 }
-      ],
+      barData: null,
       chartWidth: 0
     }
   },
@@ -192,10 +196,20 @@ export default {
     window.onresize = function () { // 定义窗口大小变更通知事件
       _this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40; // 窗口宽度
     };
+    this.onSearch()
   },
   methods: {
-    onSubmit() {
-      console.log('提交信息')
+    // 获取用户信息统计信息
+    onSearch() {
+      let apiMethod = 'getStuStatisticsInfos'
+      if (this.active === 1) {
+        apiMethod = 'getDormStatisticsInfos'
+      }
+      this.$api[apiMethod](this.searchForm).then(data => {
+        console.log(data)
+        this.barData = data
+        this.loading = false
+      })
     },
     bindSearchClick() {
       this.showSearch = !this.showSearch

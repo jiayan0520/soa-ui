@@ -322,9 +322,8 @@ export default {
     exportData() {
       this.$api.exportBed(this.searchParams).then(data => {
         console.log(data)
-        data = '0f2e7a75-ba37-4c0d-a90b-92d0a8aad0ae_床位信息表.xlsx'
         // const href = 'http://yuheng.asuscomm.com:2204/prod-api/common/download?fileName=e5a9f69c-9382-4fcb-8448-5242d9b04759_床位信息表.xlsx&delete=true'
-        window.open(this.system.tcBaseUrl + '/common/download?fileName=' + data + '&delete=true')
+        window.open(this.system.tcBaseUrl + '/common/download?fileName=' + data.excelName + '&delete=true')
         Toast.clear()
       })
     }

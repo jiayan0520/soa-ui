@@ -97,7 +97,6 @@
 </template>
 
 <script>
-// import { getQuery } from '@/utils'
 import customPanel from '@/components/customPanel'
 import { statusList } from '../utils/dorm-enum'
 import baseCheckList from '../mixins/base-check-list'
@@ -158,7 +157,8 @@ export default {
       changeReason: null, // 调换宿舍原因
       apiMethod: 'myInspectionResultlist',
       checkParams: {},
-      hasExchange: true
+      hasExchange: true,
+      id: null
     }
   },
   computed: {
@@ -167,9 +167,46 @@ export default {
     }
   },
   created() {
+    this.getlocation()
     this.getDetail()
   },
   methods: {
+    getlocation() {
+      Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '定位中'
+      })
+      if (this.$dd.env.platform !== 'notInDingTalk' && (this.$dd.ios || this.$dd.android)) {
+        alert('钉钉环境定位中')
+        const self = this
+        this.$dd.device.geolocation.get({
+          targetAccuracy: 2, // 期望定位精度半径(单位米)
+          coordinate: 1, // 1：获取高德坐标；
+          withReGeocode: false, // 是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
+          useCache: false, // 默认是true，如果需要频繁获取地理位置，请设置false
+          onSuccess: function (result) {
+            alert('获取定位信息:' + result.longitude + ',' + result.latitude + ',' + result.address)
+            Toast.clear()
+            const longitude = result.longitude
+            const latitude = result.latitude
+            self.getDetail(longitude, latitude)
+          },
+          onFail: function (err) {
+            alert('钉钉定位失败:' + JSON.stringify(err))
+          }
+        });
+      } else {
+        Toast('请用钉钉扫描')
+      }
+    },
+    // 激活床位
+    activeBed(longitude, latitude) {
+      this.$api.activeBed({
+        longitude: longitude,
+        latitude: latitude
+      })
+    },
     // 获取详情
     getDetail() {
       this.$api.getMyBedInfo().then(data => {
@@ -180,7 +217,7 @@ export default {
         this.data = {
           ...data,
           ...data.users,
-          isDormManagerText: data.isDormManager ? '否' : '是',
+          isDormManagerText: data.isDormManager ? '是' : '否',
           fullDeptNames: data.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-')
         }
         this.againResultList()
