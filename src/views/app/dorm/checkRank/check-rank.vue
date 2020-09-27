@@ -94,7 +94,8 @@
               v-model="searchForm.fullDeptNames"
               name="学院班级"
               label="学院班级"
-              placeholder="学院班级" />
+              placeholder="学院班级"
+            />
             <div class="soa-btn-box">
               <van-button
                 type="default"
@@ -188,10 +189,10 @@ export default {
       this.searchForm = {
         buildingName: '',
         dormName: '',
-        userName: null,
+        stuName: null,
         startTime: null,
         endTime: null,
-        xy: null
+        fullDeptNames: ''
       }
       this.$forceUpdate();
     },

@@ -95,11 +95,13 @@
         </div>
       </div>
     </div>
-    <div class="soa-dorm-count__chart">
+    <div
+      v-if="barData.length>0"
+      class="soa-dorm-count__chart">
       <div class="soa-dorm-count__circle">
         <div class="c-tc">占比统计</div>
         <v-chart
-          :data="barData"
+          :data="pieData"
           :width="chartWidth">
           <v-scale
             :options="yOptions"
@@ -127,6 +129,9 @@
         </v-chart>
       </div>
     </div>
+    <div
+      v-else
+      class="no-data">未查到数据</div>
   </div>
 </template>
 
@@ -161,36 +166,57 @@ export default {
       },
       minDate: '',
       // 饼状图
-      legendOptions: {
-        position: 'right',
-        itemFormatter(val) {
-          console.log(333, val)
-          return val + '  '
-        }
-      },
       yOptions: {
         formatter(val) {
-          console.log(2222222, val)
           return val * 100 + '%'
         }
       },
-      barData: null,
+      pieMap: null,
+      barData: [],
+      pieData: [],
       chartWidth: 0
+    }
+  },
+  computed: {
+    legendOptions() {
+      const self = this
+      return {
+        position: 'right',
+        itemFormatter(val) {
+          const item = self.pieData.find(item => item.typeName === val)
+          if (item) {
+            return val + (item.percent * 100).toFixed(1) + '%'
+          } else {
+            return val
+          }
+        }
+      }
     }
   },
   created() {
     this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40;
   },
   mounted() {
-    var _this = this;
     window.onresize = function () { // 定义窗口大小变更通知事件
-      _this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40; // 窗口宽度
+      this.resize() // 窗口宽度
     };
     this.onSearch()
   },
   methods: {
+    reset() {
+      this.searchForm = {
+        buildingName: '',
+        dormName: '',
+        stuName: null,
+        startTime: null,
+        endTime: null,
+        fullDeptNames: ''
+      }
+      this.$forceUpdate();
+    },
     // 获取用户信息统计信息
     onSearch() {
+      this.loading = true
       let apiMethod = 'getStuStatisticsInfos'
       if (this.active === 1) {
         apiMethod = 'getDormStatisticsInfos'
@@ -204,13 +230,24 @@ export default {
       }
       params.fullDeptNames = params.fullDeptNames.replace('-', ', ')
       this.$api[apiMethod](params).then(data => {
-        console.log(data)
         this.barData = data
+        let sumCount = 0
+        data.map(item => {
+          sumCount += item.count
+        })
+        this.pieData = data.map(item => {
+          item.percent = (item.count / sumCount)
+          return item
+        })
+        this.resize()
         this.loading = false
       })
     },
     bindSearchClick() {
       this.showSearch = !this.showSearch
+    },
+    resize() {
+      this.chartWidth = document.body.clientWidth > 1024 ? (1024 - 40) : document.body.clientWidth - 40; // 窗口宽度
     }
   }
 }
@@ -221,14 +258,12 @@ export default {
 @import "@/assets/style/var.scss";
 @include b(dorm-count) {
   @include e(title) {
-    margin: 10px 0;
     padding: 0 10px;
   }
   @include e(search) {
     margin-top: 10px;
     & .title {
       text-align: center;
-      padding: 10px;
       border-bottom: 1px solid #f5f6f8;
       //  box-shadow:0 8px 6px rgba(0, 0, 0, 0.08);
       & > span {
@@ -248,6 +283,13 @@ export default {
     box-sizing: border-box;
     overflow: auto;
     margin-bottom: 40px;
+  }
+  .no-data {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    height: 200px;
+    justify-content: center;
   }
 }
 </style>
