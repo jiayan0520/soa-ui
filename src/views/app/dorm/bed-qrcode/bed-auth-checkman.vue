@@ -41,7 +41,7 @@
         :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
         :class="{'soa-collapse-overflow':activeNames.includes('2')}"
         title="宿舍检查信息"
-        class="soa-collapse-item"
+        class="soa-collapse-item soa-collapse-overflow"
         name="2"
         include
       >

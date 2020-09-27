@@ -99,5 +99,6 @@ export default {
 <style lang="scss">
 .dorm-allocate {
   height: 100%;
+  padding: 0 10px;
 }
 </style>

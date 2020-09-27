@@ -9,6 +9,7 @@
       <van-collapse-item
         :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
         title="床位检查信息"
+        class="soa-collapse-item soa-collapse-overflow"
         name="1"
       >
         <van-list
@@ -158,7 +159,9 @@ export default {
       overFieldList: [
         { prop: 'statusName', label: '状态' },
         { prop: 'reviewTime', label: '审核时间' },
-        { prop: 'resultReason', label: '审核意见' }
+        { prop: 'resultReason', label: '审核意见' },
+        { prop: 'reviewerName', label: '审核人' },
+        { prop: 'ccPersonNames', label: '抄送人' }
       ],
       tabList: [
         { value: 'LAUNCH', text: '未完成' },
@@ -189,8 +192,8 @@ export default {
           ...data,
           ...data.users,
           fullDeptNames: data.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-'),
-          instructorList: [{ userName: '杨荣发', telephone: '14777777747' }, { userName: '杨荣', telephone: '14777777747' }],
-          parentList: [{ userName: '李国强', telephone: '14777777747', role: '父亲' }, { userName: '张秀哈', telephone: '14777777747', role: '母亲' }]
+          instructorList: [],
+          ccPersonNames: data.ccPersonNames && data.ccPersonNames.join(',')
           // singleFee: data.soaDormDorm.singleFee
         }
         console.log(1111111, this.data)

@@ -181,7 +181,7 @@ export default {
           this.$emit('close', true)
           // this.$router.push('/dorm/buildingList')
         }).catch(err => {
-          Toast('新增楼栋失败' + err)
+          Toast.fail('新增楼栋失败' + err)
         })
       } else {
         Toast.loading('修改楼栋中，请稍后...')
@@ -191,7 +191,7 @@ export default {
           // this.$router.push('/dorm/buildingList')
           this.$emit('close', true)
         }).catch(err => {
-          Toast('修改楼栋失败' + err)
+          Toast.fail('修改楼栋失败' + err)
         })
       }
     },

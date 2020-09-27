@@ -20,7 +20,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(response => {
   const resData = response.data || {};
   if (resData.code >= 300) {
-    Toast(resData.msg || '出现未知错误')
+    Toast.fail(resData.msg || '出现未知错误')
     return Promise.reject(resData)
   }
   if (Object.prototype.hasOwnProperty.call(resData, 'rows') && Object.prototype.hasOwnProperty.call(resData, 'total')) {
@@ -29,7 +29,7 @@ service.interceptors.response.use(response => {
   return resData.data
 }, error => {
   if (error && error.stack && error.stack.indexOf('timeout') !== -1) {
-    Toast('请求超时,请稍后重试!');
+    Toast.fail('请求超时,请稍后重试!');
     return Promise.reject(error)
   }
   // Toast('服务器异常,请稍后重试!');

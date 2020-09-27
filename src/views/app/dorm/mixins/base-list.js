@@ -120,7 +120,7 @@ export default {
         if (!this.isCheckAll) {
           idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
           if (idList.length <= 0) {
-            Toast(`请选中一条要${opLabel}的记录！`);
+            Toast.fail(`请选中一条要${opLabel}的记录！`);
             return;
           }
         }

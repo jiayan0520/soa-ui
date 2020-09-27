@@ -77,7 +77,7 @@ export default {
               Toast(`删除成功！`);
               this.againResultList()
             }).catch(error => {
-              Toast(`删除失败！` + error);
+              Toast.fail(`删除失败！` + error);
             })
           })
 

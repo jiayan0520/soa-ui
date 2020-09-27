@@ -7,6 +7,7 @@
       <van-collapse-item
         :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
         title="床位检查信息"
+        class="soa-collapse-item soa-collapse-overflow"
         name="1"
       >
         <van-list
@@ -64,7 +65,6 @@
           name="调换理由"
           placeholder="点击编辑调换理由"
         />
-        <van-divider />
         <div class="soa-btn-box">
           <van-button
             type="info"
@@ -178,7 +178,7 @@ export default {
         message: '定位中'
       })
       if (this.$dd.env.platform !== 'notInDingTalk' && (this.$dd.ios || this.$dd.android)) {
-        alert('钉钉环境定位中')
+        // alert('钉钉环境定位中')
         const self = this
         this.$dd.device.geolocation.get({
           targetAccuracy: 2, // 期望定位精度半径(单位米)
@@ -186,18 +186,18 @@ export default {
           withReGeocode: false, // 是否需要带有逆地理编码信息；该功能需要网络请求，请根据自己的业务场景使用
           useCache: false, // 默认是true，如果需要频繁获取地理位置，请设置false
           onSuccess: function (result) {
-            alert('获取定位信息:' + result.longitude + ',' + result.latitude + ',' + result.address)
+            // alert('获取定位信息:' + result.longitude + ',' + result.latitude + ',' + result.address)
             Toast.clear()
             const longitude = result.longitude
             const latitude = result.latitude
-            self.getDetail(longitude, latitude)
+            self.activeBed(longitude, latitude)
           },
           onFail: function (err) {
             alert('钉钉定位失败:' + JSON.stringify(err))
           }
         });
       } else {
-        Toast('请用钉钉扫描')
+        Toast.fail('请用钉钉扫描')
       }
     },
     // 激活床位
@@ -205,6 +205,9 @@ export default {
       this.$api.activeBed({
         longitude: longitude,
         latitude: latitude
+      }).then(data => {
+        Toast('激活成功')
+        this.data.users.statusName = '正常'
       })
     },
     // 获取详情

@@ -112,6 +112,10 @@ export default {
       if (this.formData.endTime.length === 16) {
         this.formData.endTime += ':00'
       }
+      if (this.formData.endTime < this.formData.startTime) {
+        Toast.fail('结束时间应大于开始时间，请重新选择')
+        return
+      }
       Toast.loading('申请活动室中，请稍后...')
       this.$api.applyRoom(this.formData).then(data => {
         Toast.clear()

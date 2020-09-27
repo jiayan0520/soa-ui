@@ -19,7 +19,7 @@
           <div @click="routerToBedDetail(item)">
             <div
               v-if="item.users"
-              class="flex-between user-info">
+              class="user-info">
               <img
                 v-if="item.users.avatar"
                 :src="item.users.avatar"
@@ -27,8 +27,10 @@
               <div
                 v-else
                 class="soa-avatar">{{ item.users.name.substr(-2,2) }}</div>
-              <span>{{ item.users.name }}</span>
-              <span class="c-ml10">({{ item.users.fullDeptNames }})</span>
+              <div style="    width: calc(100% - 32px);">
+                <span>{{ item.users.name }}</span>
+                <span class="c-ml10">({{ item.users.fullDeptNames }})</span>
+              </div>
             </div>
             <div
               v-else
@@ -255,6 +257,7 @@ export default {
     }
     .user-info {
       font-size: 16px;
+      display: flex;
     }
     .no-user-info {
       font-size: 16px;

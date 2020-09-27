@@ -212,7 +212,7 @@ export default {
         // 编辑
         case 'edit':
           if (item.dormData.userNum > 0) {
-            Toast('已有床位绑定用户，不可修改！')
+            Toast.fail('已有床位绑定用户，不可修改！')
             return
           }
           this.rowId = item.id
@@ -223,7 +223,7 @@ export default {
           break
         case 'del':
           if (item.dormData.userNum > 0) {
-            Toast('已有床位绑定用户，不可删除！')
+            Toast.fail('已有床位绑定用户，不可删除！')
             return
           }
           this.del(null, item.id)

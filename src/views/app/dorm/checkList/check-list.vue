@@ -180,7 +180,7 @@ export default {
         userName: null,
         startTime: null, // dayjs(new Date()).subtract(7, 'day').format('YYYY-MM-DD HH:mm'),
         endTime: null, // dayjs(new Date()).format('YYYY-MM-DD HH:mm'),
-        fullDeptNames: null
+        fullDeptNames: ''
       },
       pageSize: 20
     }
@@ -198,6 +198,7 @@ export default {
       if (params.endTime && params.endTime.length === 16) {
         params.endTime += ':00'
       }
+      params.fullDeptNames = params.fullDeptNames.replace('-', ', ')
       this.$api.getResultList({ ...params, type: this.active }).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false

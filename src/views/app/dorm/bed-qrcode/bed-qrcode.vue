@@ -18,7 +18,7 @@ export default {
   },
   mounted() {
     this.id = getQuery('id')
-    alert('进来床位二维码页面了' + this.id)
+    // alert('进来床位二维码页面了' + this.id)
     this.routerTo()
   },
   methods: {
@@ -27,10 +27,10 @@ export default {
       const param = {
         bedId: this.id
       }
-      alert('跳转链接验证')
+      // alert('跳转链接验证')
       this.$api.scanBedQrcode(param).then(data => {
         let url = ''
-        alert(JSON.stringify(data))
+        // alert(JSON.stringify(data))
         switch (data.funcCode) {
           // 辅导员权限
           case 'bed-all':

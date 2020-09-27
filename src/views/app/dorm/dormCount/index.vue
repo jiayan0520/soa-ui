@@ -77,7 +77,8 @@
               </template>
             </van-field>
             <van-field
-              v-model="searchForm.fulldeptName"
+              v-if="active===0"
+              v-model="searchForm.fullDeptNames"
               name="学院班级"
               label="学院班级"
               placeholder="学院班级"
@@ -98,7 +99,7 @@
       <div class="soa-dorm-count__circle">
         <div class="c-tc">占比统计</div>
         <v-chart
-          :data="data"
+          :data="barData"
           :width="chartWidth">
           <v-scale
             :options="yOptions"
@@ -106,7 +107,7 @@
           <v-tooltip disabled />
           <v-pie
             :radius="0.85"
-            series-field="name" />
+            series-field="typeName" />
           <v-legend :options="legendOptions" />
         </v-chart>
       </div>
@@ -132,12 +133,6 @@
 <script>
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VScale } from 'vux'
 import DatePicker from 'vue2-datepicker'
-const map = {
-  '完美': '25%',
-  '良好': '35%',
-  '脏乱': '30%',
-  '很差': '10%'
-}
 export default {
   name: 'Index',
   components: {
@@ -162,28 +157,23 @@ export default {
         stuName: null,
         startTime: null,
         endTime: null,
-        fulldeptName: null
+        fullDeptNames: ''
       },
       minDate: '',
       // 饼状图
       legendOptions: {
         position: 'right',
         itemFormatter(val) {
-          return val + '  ' + map[val]
+          console.log(333, val)
+          return val + '  '
         }
       },
       yOptions: {
         formatter(val) {
+          console.log(2222222, val)
           return val * 100 + '%'
         }
       },
-      map,
-      data: [
-        { name: '完美', percent: 0.25, a: '1' },
-        { name: '良好', percent: 0.35, a: '1' },
-        { name: '脏乱', percent: 0.30, a: '1' },
-        { name: '很差', percent: 0.10, a: '1' }
-      ],
       barData: null,
       chartWidth: 0
     }
@@ -205,7 +195,15 @@ export default {
       if (this.active === 1) {
         apiMethod = 'getDormStatisticsInfos'
       }
-      this.$api[apiMethod](this.searchForm).then(data => {
+      const params = this.searchForm
+      if (params.startTime && params.startTime.length === 16) {
+        params.startTime += ':00'
+      }
+      if (params.endTime && params.endTime.length === 16) {
+        params.endTime += ':00'
+      }
+      params.fullDeptNames = params.fullDeptNames.replace('-', ', ')
+      this.$api[apiMethod](params).then(data => {
         console.log(data)
         this.barData = data
         this.loading = false

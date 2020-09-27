@@ -130,7 +130,7 @@ export default {
           Toast('新增活动室成功')
           this.$emit('close', true)
         }).catch(err => {
-          Toast('新增活动室失败' + err)
+          Toast.fail('新增活动室失败' + err)
         })
       } else {
         Toast.loading('修改活动室中，请稍后...')
@@ -139,7 +139,7 @@ export default {
           Toast('修改活动室成功')
           this.$emit('close', true)
         }).catch(err => {
-          Toast('修改活动室失败' + err)
+          Toast.fail('修改活动室失败' + err)
         })
       }
     },

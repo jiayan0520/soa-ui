@@ -9,16 +9,16 @@
   >
     <template slot="tool-bar-left">
       <div
-        :style="`${rankType?'color:#ff976a':''}`"
+        :style="`${sort?'color:#ff976a':''}`"
         class="rank-sort"
-        @click="changeRankType">
+        @click="changeSort">
         分数
         <div class="sort-arrow">
           <div
-            :style="`${rankType==='up'?'border-bottom-color:#ff976a':''}`"
+            :style="`${sort==='ASC'?'border-bottom-color:#ff976a':''}`"
             class="arrow-up" />
           <div
-            :style="`${rankType==='down'?'border-top-color:#ff976a':''}`"
+            :style="`${sort==='DESC'?'border-top-color:#ff976a':''}`"
             class="arrow-down" />
         </div>
       </div>
@@ -90,7 +90,8 @@
               </template>
             </van-field>
             <van-field
-              v-model="searchForm.fulldeptName"
+              v-if="active===0"
+              v-model="searchForm.fullDeptNames"
               name="学院班级"
               label="学院班级"
               placeholder="学院班级" />
@@ -121,7 +122,7 @@
       slot="item-content"
       slot-scope="slotProps">
       <div class="soa-list-rank__row rank-item">
-        <div class="index-column">{{ slotProps.item.rowNum }}</div>
+        <div class="index-column">{{ slotProps.item.row_num }}</div>
         <div>
           <span v-if="active===1">{{ slotProps.item.buildingName }}-{{ slotProps.item.dormName }}</span>
           <span v-else>{{ slotProps.item.stuName }}</span>
@@ -152,9 +153,9 @@ export default {
         stuName: null,
         startTime: null,
         endTime: null,
-        fulldeptName: null
+        fullDeptNames: ''
       },
-      rankType: 'up' // 排序类型 'up','down'
+      sort: 'DESC' // 排序类型 'DESC','ASC'
     }
   },
   methods: {
@@ -171,7 +172,8 @@ export default {
       if (params.endTime && params.endTime.length === 16) {
         params.endTime += ':00'
       }
-      this.$api[apiMethod]({ ...params, rankType: this.rankType }).then(data => {
+      params.fullDeptNames = params.fullDeptNames.replace('-', ', ')
+      this.$api[apiMethod]({ ...params, sort: this.sort }).then(data => {
         // 加载状态结束
         this.$refs.listLayout.loading = false
         this.dataList = this.dataList.concat(data.rows)
@@ -197,11 +199,11 @@ export default {
       this.showSearch = !this.showSearch
     },
     // 改变 排序类型
-    changeRankType() {
-      if (this.rankType === 'up') {
-        this.rankType = 'down'
-      } else if (this.rankType === 'down') {
-        this.rankType = 'up'
+    changeSort() {
+      if (this.sort === 'ASC') {
+        this.sort = 'DESC'
+      } else if (this.sort === 'DESC') {
+        this.sort = 'ASC'
       }
       this.onSearch()
     }

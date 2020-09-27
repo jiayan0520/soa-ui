@@ -33,7 +33,7 @@
         <div class="c-light">{{ slotProps.item.createTime }} 申请</div>
       </div>
       <van-button
-        v-if="active!==1"
+        v-if="active===0"
         class="soa-list-right-btn"
         type="info">分配</van-button>
     </template>

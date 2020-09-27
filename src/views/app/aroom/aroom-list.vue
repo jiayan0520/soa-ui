@@ -173,7 +173,7 @@ export default {
         Toast(`导出成功`);
         this.onSearch()
       }).catch(error => {
-        Toast(`导出失败！` + error);
+        Toast.fail(`导出失败！` + error);
       })
     }
   }

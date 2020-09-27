@@ -227,7 +227,7 @@ export default {
         if (!this.isCheckAll) {
           idList = this.dataList.filter(item => item.isCheck).map(item => { return item.id })
           if (idList.length <= 0) {
-            Toast(`请选中一条要删除的记录！`);
+            Toast.fail(`请选中一条要删除的记录！`);
             return;
           }
         }
@@ -240,7 +240,7 @@ export default {
           Toast(`删除成功，此次共操作${idList.length}条记录！`);
           this.onSearch()
         }).catch(error => {
-          Toast(`删除失败！` + error);
+          Toast.fail(`删除失败！` + error);
         })
       })
     },

@@ -332,10 +332,16 @@ a {
 }
 // 弹框 中间
 .soa-popup__center {
-    width: 90%;
+    width: 80%;
     border-radius: 5px;
 }
 
 .van-uploader__wrapper--disabled {
     opacity: 1;
+}
+
+// 失败轻提示
+.van-toast.van-toast--fail{
+    width: unset;
+    min-width: 88px;
 }

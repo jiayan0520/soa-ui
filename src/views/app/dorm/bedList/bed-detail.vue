@@ -17,6 +17,7 @@
       <van-collapse v-model="activeNames">
         <van-collapse-item
           :value="`${checkList.length>0?'最后一次检查：'+checkList[0].checkTime:'无检查信息'}`"
+          class="soa-collapse-item soa-collapse-overflow"
           title="床位检查信息"
           name="1"
         >

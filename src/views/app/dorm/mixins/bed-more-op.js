@@ -42,7 +42,7 @@ export default {
             Toast(`导出成功`);
             this.loadAgain()
           }).catch(error => {
-            Toast(`导出失败！` + error);
+            Toast.fail(`导出失败！` + error);
           })
           break
         case 'set':
@@ -123,7 +123,7 @@ export default {
           Toast(`退舍成功！`);
           this.loadAgain()
         }).catch(error => {
-          Toast(`退舍失败！` + error);
+          Toast.fail(`退舍失败！` + error);
         })
       })
     },
@@ -137,7 +137,7 @@ export default {
           Toast(`删除成功！`);
           this.loadAgain()
         }).catch(error => {
-          Toast(`删除失败！` + error);
+          Toast.fail(`删除失败！` + error);
         })
       })
     },

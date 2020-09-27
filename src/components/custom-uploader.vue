@@ -95,7 +95,7 @@ export default {
         }).catch((e) => { throw e })
       }).catch(() => {
         this.fileList.splice(this.fileList.length - 1, 1);
-        Toast('上传失败')
+        Toast.fail('上传失败')
       })
     },
     beforeRead() {
@@ -104,11 +104,10 @@ export default {
       if (this.readOnly) {
         return;
       }
-      console.log(file)
       this.$api.deleteFile([file.id]).then(() => {
         this.fileList.splice(this.fileList.indexOf(file), 1);
       }).catch(() => {
-        Toast('删除失败')
+        Toast.fail('删除失败')
       })
     }
   }
