@@ -159,8 +159,7 @@ export default {
       showModal: false,
       criticalActions,
       infoActions,
-      weightActions,
-      fileList: []
+      weightActions
     }
   },
   computed: {

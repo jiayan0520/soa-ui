@@ -1,16 +1,16 @@
 <template>
   <div class="soa-task-detail">
     <custom-cell
-      :value="form.soaTask && form.usersMap[form.soaTask.createUserId]"
+      :value="form.createUserName"
       title="发起人"/>
     <custom-cell
-      :value="form.soaTask && form.soaTask.title"
+      :value="form.title"
       title="任务名称"/>
     <custom-cell
-      :value="form.soaTask && form.soaTask.content"
+      :value="form.content"
       title="任务详情"/>
     <custom-cell
-      :value="form.soaTask && form.soaTask.deadline"
+      :value="form.deadline"
       title="截止时间"/>
     <van-collapse v-model="activeNames">
       <van-collapse-item
@@ -56,10 +56,10 @@
       </template>
     </custom-cell>
     <childTaskList
-      v-if="!(form.soaTask && form.soaTask.parentTaskId)"
-      :list="form.subTaskList"
-      :deadline="form.soaTask&&form.soaTask.deadline"/>
-      <!-- <van-cell
+      v-if="!form.parentTaskId"
+      :list="form.subTasks"
+      :deadline="form.deadline"/>
+    <van-cell
       v-for="items in form.infos"
       :key="items.index">
       <div class="soa-task-detail__commentList">
@@ -85,7 +85,7 @@
           </template>
         </van-field>
       </van-cell>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -116,11 +116,8 @@ export default {
   },
   methods: {
     getData(id) {
-      this.$api.getTaskDetail(id).then((res) => {
+      this.$api.getTaskEdit(id).then((res) => {
         this.form = res
-        this.form.subTaskAnnexList.forEach((item, index) => {
-          this.form.subTaskList[index].annexList = item
-        });
       })
     },
     handleExamine() {
