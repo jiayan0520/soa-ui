@@ -77,7 +77,7 @@ export default function initStore(store, router, cycle) {
         if (!isAuthorizedUser && !isAuthorizedPath) {
           // 非钉钉环境直接跳回到登录页，若是钉钉，需要调用钉钉的登录
           const result = (await initDD(store, router))
-          if (!result) {
+          if (!result && path.indexOf('qrcode') === -1) {
             router.push('/login')
           }
           console.warn('【框架日志】' + msg)

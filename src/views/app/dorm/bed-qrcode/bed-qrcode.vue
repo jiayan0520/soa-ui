@@ -4,13 +4,15 @@
 
 <script>
 import { getQuery } from '@/utils'
+import { Toast } from 'vant'
 export default {
   name: 'BedQrcode',
   components: {
   },
   data() {
     return {
-      id: null
+      id: null,
+      userPopedoms: this.$store.getters['core/userPopedoms']
     }
   },
   created() {
@@ -18,7 +20,10 @@ export default {
   },
   mounted() {
     this.id = getQuery('id')
-    // alert('进来床位二维码页面了' + this.id)
+    alert('进来床位二维码页面了,id:' + this.id)
+    if (!this.id) {
+      Toast.fail('未找到床位id')
+    }
     this.routerTo()
   },
   methods: {
@@ -30,26 +35,19 @@ export default {
       // alert('跳转链接验证')
       this.$api.scanBedQrcode(param).then(data => {
         let url = ''
-        // alert(JSON.stringify(data))
-        switch (data.funcCode) {
-          // 辅导员权限
-          case 'bed-all':
-            url = '/bed-qrcode/dormDetail?id=' + data.dormId
-            break;
-          // 床位检查
-          case 'bed-check':
-            url = '/bed-qrcode/bed-auth-checkman?id=' + data.dormId
-            break;
-          // 自己扫描
-          case 'bed-self':
-            url = '/bed-qrcode/bed-auth-self'
-            break;
-          // 无权限
-          case 'bed-no':
-            url = '/bed-qrcode/bed-noauth'
-            break;
+        alert('跳转链接验证' + JSON.stringify(data))
+        if (data.funcCode === 'bed-self') {
+          url = '/bed-qrcode/bed-auth-self' // 自己扫描
+        } else if (this.userPopedoms.findIndex(item => item.funcCode === 'bed-all') > -1) {
+          url = '/bed-qrcode/dormDetail?id=' + data.dormId // 辅导员权限
+        } else if (this.userPopedoms.findIndex(item => item.funcCode === 'bed-check') > -1) {
+          url = '/bed-qrcode/bed-auth-checkman?id=' + data.dormId // 床位检查
+        } else {
+          url = '/bed-qrcode/bed-noauth' // 无权限case 'bed-no':
         }
         this.$router.push(url);
+      }).catch(err => {
+        console.log('获取二维码权限失败！', err)
       })
     }
   }
