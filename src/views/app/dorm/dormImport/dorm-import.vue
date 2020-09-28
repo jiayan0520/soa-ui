@@ -6,9 +6,9 @@
         :readonly="true"
         label="示例">
         <template slot="input">
-          <a
-            :href="dormImportTempUrl"
-            class="c-info">导入示例下载</a>
+          <div
+            class="c-info"
+            @click.stop="downTemp(1)">导入示例下载</div>
         </template>
       </van-field>
       <van-field
@@ -37,9 +37,9 @@
         :readonly="true"
         label="示例">
         <template slot="input">
-          <a
-            :href="userImportTempUrl"
-            class="c-info">导入示例下载</a>
+          <div
+            class="c-info"
+            @click="downTemp(2)">导入示例下载</div>
         </template>
       </van-field>
       <van-field
@@ -141,9 +141,12 @@ export default {
       dormFiles: '',
       dormFileList: [],
       isShowDormErrDialog: false,
-      dormErrData: [],
-      dormImportTempUrl: this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=宿舍导入模板.xlsx',
-      userImportTempUrl: this.$store.getters['core/system'].tcBaseUrl + '/common/download?fileName=床位安排.xlsx'
+      dormErrData: []
+    }
+  },
+  computed: {
+    tcBaseUrl() {
+      return this.$store.getters['core/system'].tcBaseUrl
     }
   },
   methods: {
@@ -184,6 +187,13 @@ export default {
           Toast.fail('导入的模版不是正规模版，请下载模版填写数据再上报！')
         }
       })
+    },
+    downTemp(type) {
+      if (type === 1) {
+        window.open(this.tcBaseUrl + '/common/download?fileName=导入模板-宿舍信息.xlsx', '_self')
+      } else {
+        window.open(this.tcBaseUrl + '/common/download?fileName=导入模板-床位安排.xlsx', '_self')
+      }
     }
   }
 }

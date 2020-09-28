@@ -9,7 +9,7 @@
       @search="onSearch"
       @loadData="loadData"
       @clickOperator="expontData"
-      @clickMoreBtn="clickCheckMoreBtn"
+      @clickMoreBtn="expontData"
       @handleRowClick="showCheckDetail"
     >
       <template slot="top">
@@ -163,6 +163,7 @@ import DatePicker from 'vue2-datepicker'
 import checkCommon from '../components/check-common'
 import baseCheckList from '../mixins/base-check-list'
 import dayjs from 'dayjs';
+import { Toast } from 'vant'
 export default {
   name: 'DormCheckList',
   components: {
@@ -183,6 +184,11 @@ export default {
         fullDeptNames: ''
       },
       pageSize: 20
+    }
+  },
+  computed: {
+    system() {
+      return this.$store.getters['core/system']
     }
   },
   methods: {
@@ -215,6 +221,19 @@ export default {
     },
     // 导出数据
     expontData() {
+      const params = this.searchParams
+      if (params.startTime && params.startTime.length === 16) {
+        params.startTime += ':00'
+      }
+      if (params.endTime && params.endTime.length === 16) {
+        params.endTime += ':00'
+      }
+      params.fullDeptNames = params.fullDeptNames.replace('-', ', ')
+      this.$api.exportResult({ ...params, type: this.active }).then(data => {
+        // const href = 'http://yuheng.asuscomm.com:2204/prod-api/common/download?fileName=e5a9f69c-9382-4fcb-8448-5242d9b04759_床位信息表.xlsx&delete=true'
+        window.open(this.system.tcBaseUrl + '/common/download?fileName=' + data.excelName + '&delete=true', '_self')
+        Toast.clear()
+      })
     }
   }
 }

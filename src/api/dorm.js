@@ -130,6 +130,10 @@ export function myInspectionResultlist(params) {
 export function getResultList(params) {
   return post(`${prefix}/result/list`, params)
 }
+// 导出检查记录
+export function exportResult(params, config) {
+  return get(`${prefix}/result/export`, params, 60000, config)
+}
 // 获取检查详情
 export function getResultDetail(params) {
   return get(`${prefix}/result/${params}`)

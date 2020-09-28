@@ -38,7 +38,7 @@
     </van-collapse>
     <div class="soa-btn-box">
       <van-button
-        v-if="hasExchange"
+        v-if="!data.hasLanuchApplication"
         type="info"
         @click="clickChangeBtn">申请调换宿舍</van-button>
       <van-button
@@ -129,12 +129,12 @@ export default {
         // { prop: 'place', label: '籍贯' },
         // { prop: 'address', label: '家庭住址' },
         {
-          prop: 'instructorList',
+          prop: 'counsellors',
           label: '辅导员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'name' },
+            { prop: 'mobile', class: 'c-info' }]
         },
         {
           prop: 'buildingManagers',
@@ -157,7 +157,6 @@ export default {
       changeReason: null, // 调换宿舍原因
       apiMethod: 'myInspectionResultlist',
       checkParams: {},
-      hasExchange: true,
       id: null
     }
   },
@@ -235,13 +234,13 @@ export default {
     changeDorm() {
       this.$api.dormExchange({ reason: this.changeReason }).then(dara => {
         Toast('申请成功')
-        this.hasExchange = false
+        this.data.hasLanuchApplication = true
         this.showChangePopup = false
       })
     },
     // 申请成为舍长
     setManager() {
-      this.$api.setDromManager({ dormId: this.data.dormId, userId: this.userId }).then(res => {
+      this.$api.setDromManager({ dormId: this.data.dormId, userId: this.data.userId }).then(res => {
         this.getDetail()
       })
     }

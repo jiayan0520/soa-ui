@@ -136,12 +136,12 @@ export default {
         // { prop: 'place', label: '籍贯' },
         // { prop: 'address', label: '家庭住址' },
         {
-          prop: 'instructorList',
+          prop: 'counsellors',
           label: '辅导员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'name' },
+            { prop: 'mobile', class: 'c-info' }]
         },
         {
           prop: 'buildingManagers',
@@ -188,8 +188,7 @@ export default {
         this.data = {
           ...data,
           ...data.users,
-          isDormManagerText: data.isDormManager ? '是' : '否',
-          instructorList: []
+          isDormManagerText: data.isDormManager ? '是' : '否'
         }
         if (this.data.users) {
           this.checkParams.userId = this.data.userId

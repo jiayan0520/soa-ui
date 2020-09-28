@@ -311,7 +311,7 @@ export default {
         }
       }
       this.$api.getBedQRCodeImgs({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(data => {
-        window.open(this.system.tcBaseUrl + data.filePath)
+        window.open(this.system.tcBaseUrl + data.filePath, '_self')
         Toast(`导出成功`);
         this.onSearch()
       }).catch(error => {
@@ -321,9 +321,9 @@ export default {
     // 导出数据
     exportData() {
       this.$api.exportBed(this.searchParams).then(data => {
-        console.log(data)
+        console.log(this.system.tcBaseUrl + '/common/download?fileName=' + data.excelName + '')
         // const href = 'http://yuheng.asuscomm.com:2204/prod-api/common/download?fileName=e5a9f69c-9382-4fcb-8448-5242d9b04759_床位信息表.xlsx&delete=true'
-        window.open(this.system.tcBaseUrl + '/common/download?fileName=' + data.excelName + '&delete=true')
+        window.open(this.system.tcBaseUrl + '/common/download?fileName=' + data.excelName + '&delete=true', '_self')
         Toast.clear()
       })
     }

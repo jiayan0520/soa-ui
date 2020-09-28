@@ -169,7 +169,7 @@ export default {
         }
       }
       this.$api.getActivityRoomQRCodeImgs({ ids: idList.join(','), isCheckAll: this.isCheckAll }).then(data => {
-        window.open(this.tcBaseUrl + data.filePath)
+        window.open(this.tcBaseUrl + data.filePath, '_self')
         Toast(`导出成功`);
         this.onSearch()
       }).catch(error => {

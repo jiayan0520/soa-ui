@@ -144,12 +144,12 @@ export default {
         // { prop: 'place', label: '籍贯' },
         // { prop: 'address', label: '家庭住址' },
         {
-          prop: 'instructorList',
+          prop: 'counsellors',
           label: '辅导员',
           type: 'array',
           childrenFields: [
-            { prop: 'userName' },
-            { prop: 'telephone', class: 'c-info' }]
+            { prop: 'name' },
+            { prop: 'mobile', class: 'c-info' }]
         },
         { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' },
         { prop: 'buildingName', label: '楼栋' },
@@ -161,7 +161,7 @@ export default {
         { prop: 'reviewTime', label: '审核时间' },
         { prop: 'resultReason', label: '审核意见' },
         { prop: 'reviewerName', label: '审核人' },
-        { prop: 'ccPersonNames', label: '抄送人' }
+        { prop: 'ccPersonsNames', label: '抄送人' }
       ],
       tabList: [
         { value: 'LAUNCH', text: '未完成' },
@@ -192,9 +192,7 @@ export default {
           ...data,
           ...data.users,
           fullDeptNames: data.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-'),
-          instructorList: [],
-          ccPersonNames: data.ccPersonNames && data.ccPersonNames.join(',')
-          // singleFee: data.soaDormDorm.singleFee
+          ccPersonsNames: data.ccPersonsNames && data.ccPersonsNames.join(',')
         }
         console.log(1111111, this.data)
         if (this.data.users) {
