@@ -152,11 +152,14 @@ export default {
             { prop: 'mobile', class: 'c-info' }]
         },
         { prop: 'singleFee', label: '宿舍费用', unit: '元/人/年' },
-        { prop: 'buildingName', label: '楼栋' },
-        { prop: 'dormName', label: '宿舍名称' },
-        { prop: 'bedName', label: '床位' }
+        { prop: 'currentBuildingName', label: '当前楼栋' },
+        { prop: 'currentDormName', label: '当前宿舍名称' },
+        { prop: 'currentBedName', label: '当前床位' }
       ],
       overFieldList: [
+        { prop: 'oldBuildingName', label: '原楼栋' },
+        { prop: 'oldDormName', label: '原宿舍名称' },
+        { prop: 'oldBedName', label: '原床位' },
         { prop: 'statusName', label: '状态' },
         { prop: 'reviewTime', label: '审核时间' },
         { prop: 'resultReason', label: '审核意见' },
@@ -194,7 +197,6 @@ export default {
           fullDeptNames: data.users.fullDeptNames.replace('[', '').replace(']', '').split(', ').join('-'),
           ccPersonsNames: data.ccPersonsNames && data.ccPersonsNames.join(',')
         }
-        console.log(1111111, this.data)
         if (this.data.users) {
           this.checkParams.userId = this.data.users.userId
           this.againResultList()
@@ -230,7 +232,6 @@ export default {
         this.$emit('close', true)
       })
     }
-
   }
 }
 </script>
