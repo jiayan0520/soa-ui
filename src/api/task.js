@@ -52,6 +52,10 @@ function saveTaskFeedbackInfo(params) {
 function settlementExport(params) {
   return get(`${prefix}/settlement/export2`, params)
 }
+
+function getStatisticsList(params) {
+  return post(`${prefix}/statistics/list`, params)
+}
 export {
   addTask,
   getTaskList,
@@ -64,5 +68,6 @@ export {
   getTaskFeedbackInfo,
   saveTaskExamine,
   saveTaskFeedbackInfo,
-  settlementExport
+  settlementExport,
+  getStatisticsList
 }

@@ -7,12 +7,6 @@
     @loadData="onLoad"
   >
     <template slot="top">
-      <van-tabs
-        v-model="active"
-        @click="onSearch">
-        <van-tab title="个人" />
-        <van-tab title="部门" />
-      </van-tabs>
       <div class="soa-task-rank__row rank-title">
         <div
           v-for="item in title"
@@ -25,9 +19,9 @@
       <div class="soa-task-rank__row rank-item">
         <div>{{ slotProps.item.index }}</div>
         <div>{{ slotProps.item.name }}</div>
-        <div>{{ slotProps.item.number }}</div>
-        <div>{{ slotProps.item.total }}</div>
-        <div>{{ slotProps.item.average }}</div>
+        <div>{{ slotProps.item.user_perfom_count }}</div>
+        <div>{{ slotProps.item.score_sum }}</div>
+        <div>{{ slotProps.item.score_avg }}</div>
       </div>
     </template>
   </list-layout>
@@ -42,30 +36,36 @@ export default {
   },
   data() {
     return {
-      active: 0,
       searchValue: '',
       list: [],
       title: ['排名', '姓名', '完成数量', '总质量分', '平均质量分'],
       limit: 20, // 每页行数
-      page: 1// 当前页码 total 总条数
+      page: 0// 当前页码 total 总条数
     }
   },
   methods: {
     onSearch(searchValue) {
-      this.page = 1
+      this.page = 0;
       this.list = []
       this.$refs.listLayout.loading = true
       this.$refs.listLayout.finished = false
       this.onLoad()
     },
     onLoad() {
-      this.$api.getTaskStatisticsList({ page: this.page, limit: this.limit }).then((data) => {
-        console.log(data)
-        this.list = data.rows
+      this.page++
+      this.$api.getStatisticsList({ pageNum: this.page, pageSize: this.limit }).then((data) => {
+        let listLength = this.list.length
+        data.rows.forEach(item => {
+          item.index = listLength + 1
+          listLength = listLength + 1
+        });
+        this.list = this.list.concat(data.rows)
+        const total = (data && data.total) || 0;
+
         // 加载状态结束
         this.$refs.listLayout.loading = false
         // 数据全部加载完成
-        if (this.list.length >= data.total) {
+        if (this.list.length >= total) {
           this.$refs.listLayout.finished = true
         }
       })
